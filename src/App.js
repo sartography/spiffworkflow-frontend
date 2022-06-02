@@ -6,11 +6,11 @@
 //   BpmnPropertiesProviderModule,
 // } from 'bpmn-js-properties-panel';
 //
-import React, { useEffect, useState } from "react";
-import Modeler from "bpmn-js/lib/Modeler";
+// import React, { useEffect, useState } from "react";
+// import Modeler from "bpmn-js/lib/Modeler";
 import "bpmn-js/dist/assets/diagram-js.css";
 import "bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css";
-import axios from "axios";
+// import axios from "axios";
 import ReactEditor from "./react_editor"
 
 function App() {
@@ -172,23 +172,13 @@ function App() {
   // );
 
 
-  function onShown() {
-    console.log('diagram shown');
-  }
-
-  function onLoading() {
-    console.log('diagram loading');
-  }
-
   function onError(err) {
-    console.log('failed to show diagram');
+    console.log('ERROR:', err);
   }
 
   return (
     <ReactEditor
       url={process.env.PUBLIC_URL + '/sample.bpmn'}
-      onShown={ onShown }
-      onLoading={ onLoading }
       onError={ onError }
     />
   );
