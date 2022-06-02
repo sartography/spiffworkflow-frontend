@@ -5,21 +5,15 @@ import {
 } from 'bpmn-js-properties-panel';
 import React, { useEffect, useState } from "react";
 
+// import "bpmn-js/dist/assets/diagram-js.css"
+// import "bpmn-js/dist/assets/bpmn-js.css"
+// import "bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css"
+
 import "bpmn-js-properties-panel/dist/assets/properties-panel.css"
 import './bpmn-js-properties-panel.css';
-
-export default function ReactEditor(props) {
-  const containerRef = React.useRef();
-  const container = containerRef.current;
-  const [diagramXML, setDiagramXML] = useState("");
-  const [loaded, setLoaded] = useState(false);
-
-  useEffect(() => {
-    if (loaded) {
-      return;
-    }
+    console.log("WE CALL HERE1");
     const bpmnViewer = new BpmnModeler({
-      container: container,
+      container: "#canvas",
       keyboard: {
         bindTo: document
       },
@@ -32,6 +26,34 @@ export default function ReactEditor(props) {
       ]
     });
 
+export default function ReactEditor(props) {
+    console.log("WE CALL HERE2");
+  // const containerRef = React.useRef();
+  // const container = containerRef.current;
+  const [diagramXML, setDiagramXML] = useState("");
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    if (loaded) {
+      return;
+    }
+    console.log("HERE1");
+    // console.log("loaded", loaded)
+    // const bpmnViewer = new BpmnModeler({
+    //   container: "#canvas",
+    //   keyboard: {
+    //     bindTo: document
+    //   },
+    //   propertiesPanel: {
+    //     parent: '#js-properties-panel'
+    //   },
+    //   additionalModules: [
+    //     BpmnPropertiesPanelModule,
+    //     BpmnPropertiesProviderModule
+    //   ]
+    // });
+    console.log("HERE2");
+
     bpmnViewer.on('import.done', (event) => {
       const {
         error,
@@ -43,14 +65,19 @@ export default function ReactEditor(props) {
 
       bpmnViewer.get('canvas').zoom('fit-viewport');
     });
+    console.log("HERE3");
+
 
     if (diagramXML) {
+    console.log("HERE4");
       return displayDiagram(bpmnViewer, diagramXML);
     }
 
     if (props.url && !diagramXML) {
+    console.log("HERE5");
       return fetchDiagram(props.url);
     }
+    console.log("HERE6");
 
     return () => {
       bpmnViewer.destroy();
@@ -73,20 +100,24 @@ export default function ReactEditor(props) {
     function displayDiagram(bpmnViewerToUse, diagramXMLToDisplay) {
       setLoaded(true);
       bpmnViewerToUse.importXML(diagramXMLToDisplay);
+      console.log("loadedSet", loaded)
     }
-  }, [props, diagramXML, container]);
+  // }, [props, diagramXML, container, loaded]);
+  }, [props, diagramXML, loaded]);
 
+  // console.log("WE RETURN")
   return (
-    <div className="content with-diagram" id="js-drop-zone">
-    <div className="canvas" id="canvas" ref={ containerRef }
-    style={{
-      border: "1px solid #000000",
-        height: "90vh",
-        width: "90vw",
-        margin: "auto"
-    }}
-    ></div>
-    <div className="properties-panel-parent" id="js-properties-panel"></div>
-    </div>
+    <div></div>
+    // <div className="content with-diagram" id="js-drop-zone">
+    // <div className="canvas" id="canvas" ref={ containerRef }
+    // style={{
+    //   border: "1px solid #000000",
+    //     height: "90vh",
+    //     width: "90vw",
+    //     margin: "auto"
+    // }}
+    // ></div>
+    // <div className="properties-panel-parent" id="js-properties-panel"></div>
+    // </div>
   );
 }
