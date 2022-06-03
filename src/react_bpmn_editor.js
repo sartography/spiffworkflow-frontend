@@ -28,7 +28,7 @@ const bpmnViewer = new BpmnModeler({
   ]
 });
 
-export default function ReactEditor(props) {
+export default function ReactBpmnEditor(props) {
   const [diagramXML, setDiagramXML] = useState("");
   const [loaded, setLoaded] = useState(false);
 
