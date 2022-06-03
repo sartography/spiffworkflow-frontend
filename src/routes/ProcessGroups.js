@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { BACKEND_BASE_URL } from '../config';
 
 // Example process group json
 // {'admin': False, 'display_name': 'Test Workflows', 'display_order': 0, 'id': 'test_process_group'}
 export default function ProcessGroups() {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [errro, setError] = useState(null);
+  const [error, setError] = useState(null);
   const [items, setItems] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/v1.0/process-groups", {
+    fetch(`${BACKEND_BASE_URL}/process-groups`, {
       headers: new Headers({
         'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJVSUQxIn0.Olnuo3Luuv0AM_4mBfH35SovXCyN3Zt9in7zZaNMSMA',
         'Content-Type': 'application/x-www-form-urlencoded'
@@ -23,9 +25,9 @@ export default function ProcessGroups() {
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow
         // exceptions from actual bugs in components.
-        (error) => {
+        (newError) => {
           setIsLoaded(true);
-          setError(error);
+          setError(newError);
         }
       )
   }, []);
@@ -36,7 +38,7 @@ export default function ProcessGroups() {
       <ul>
         {items.map(item => (
           <li key={item.id}>
-            {item.id} {item.display_name} {item.display_order}
+            <Link to={`/process-groups/${item.id}`}>{item.id}</Link>
           </li>
         ))}
       </ul>

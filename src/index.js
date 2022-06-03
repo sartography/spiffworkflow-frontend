@@ -9,6 +9,9 @@ import {
   Route,
 } from "react-router-dom";
 import ProcessGroups from "./routes/ProcessGroups"
+import ProcessGroupShow from "./routes/ProcessGroupShow"
+import ProcessModelShow from "./routes/ProcessModelShow"
+import ProcessModelEditDiagram from "./routes/ProcessModelEditDiagram"
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -18,6 +21,9 @@ root.render(
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="process-groups" element={<ProcessGroups />} />
+        <Route path="process-groups/:process_group_id" element={<ProcessGroupShow />} />
+        <Route path="process-models/:process_model_id" element={<ProcessModelShow />} />
+        <Route path="process-models/:process_model_id/file/:file_name" element={<ProcessModelEditDiagram />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
