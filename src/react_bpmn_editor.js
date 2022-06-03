@@ -4,6 +4,8 @@ import {
   BpmnPropertiesProviderModule,
 } from 'bpmn-js-properties-panel';
 import React, { useEffect, useState } from "react";
+import { BACKEND_BASE_URL } from './config';
+import { HOT_AUTH_TOKEN } from './config';
 
 import "bpmn-js-properties-panel/dist/assets/properties-panel.css"
 import './bpmn-js-properties-panel.css';
@@ -51,20 +53,33 @@ export default function ReactBpmnEditor(props) {
 
 
     if (diagramXML) {
+      console.log("diagramXML", diagramXML)
       return displayDiagram(bpmnViewer, diagramXML);
     }
 
-    if (props.url && !diagramXML) {
-      return fetchDiagram(props.url);
-    }
+    // if (props.diagramXML) {
+    //   if (!diagramXML) {
+    //     console.log("TO SET DIAG");
+    //     // console.log("props.diagramXML", props.diagramXML)
+    //     setDiagramXML(props.diagramXML)
+    //   }
+    // }
+
+    // if (props.url && !diagramXML) {
+      return fetchDiagram(props.process_model_id, props.file_name);
+    // }
 
     return () => {
       bpmnViewer.destroy();
     }
 
-    function fetchDiagram(url) {
-      fetch(url)
-        .then(response => response.text())
+    function fetchDiagram(process_model_id, file_name) {
+      fetch(`${BACKEND_BASE_URL}/process-models/${process_model_id}/file/${file_name}`, {
+        headers: new Headers({
+          'Authorization': `Bearer ${HOT_AUTH_TOKEN}`
+        })
+      })
+        .then(response => response.json().file_contents)
         .then(text => setDiagramXML(text))
         .catch(err => handleError(err));
     }
@@ -78,6 +93,8 @@ export default function ReactBpmnEditor(props) {
 
     function displayDiagram(bpmnViewerToUse, diagramXMLToDisplay) {
       setLoaded(true);
+      console.log("WE IMPORT");
+      console.log("diagramXML", diagramXMLToDisplay)
       bpmnViewerToUse.importXML(diagramXMLToDisplay);
     }
   }, [props, diagramXML, loaded]);

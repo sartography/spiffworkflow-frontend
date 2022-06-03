@@ -4,6 +4,7 @@ import { BACKEND_BASE_URL } from '../config';
 import { HOT_AUTH_TOKEN } from '../config';
 import { useParams } from "react-router-dom";
 
+import ReactBpmnEditor from "../react_bpmn_editor"
 
 export default function ProcessModelEditDiagram() {
   let params = useParams();
@@ -34,10 +35,16 @@ export default function ProcessModelEditDiagram() {
       )
   }, []);
 
+      // url={process.env.PUBLIC_URL + '/sample.bpmn'}
+      // diagramXML={item.file_contents}
   if (item) {
     return (
       <main style={{ padding: "1rem 0" }}>
       <h2>Process Model File: {item.name}</h2>
+      <ReactBpmnEditor
+        process_model_id={params.process_model_id}
+        file_name={item.name}
+      />
       </main>
     );
   } else {
