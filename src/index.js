@@ -1,25 +1,25 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {
   BrowserRouter,
   Routes,
   Route,
 } from "react-router-dom";
+
 import ProcessGroups from "./routes/ProcessGroups"
 import ProcessGroupShow from "./routes/ProcessGroupShow"
 import ProcessModelShow from "./routes/ProcessModelShow"
 import ProcessModelEditDiagram from "./routes/ProcessModelEditDiagram"
 
 
+// <Route path="/" element={<App />} />
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<App />} />
         <Route path="process-groups" element={<ProcessGroups />} />
         <Route path="process-groups/:process_group_id" element={<ProcessGroupShow />} />
         <Route path="process-models/:process_model_id" element={<ProcessModelShow />} />

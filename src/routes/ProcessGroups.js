@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { BACKEND_BASE_URL } from '../config';
+import { HOT_AUTH_TOKEN } from '../config';
 
 // Example process group json
 // {'admin': False, 'display_name': 'Test Workflows', 'display_order': 0, 'id': 'test_process_group'}
@@ -12,8 +13,7 @@ export default function ProcessGroups() {
   useEffect(() => {
     fetch(`${BACKEND_BASE_URL}/process-groups`, {
       headers: new Headers({
-        'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJVSUQxIn0.Olnuo3Luuv0AM_4mBfH35SovXCyN3Zt9in7zZaNMSMA',
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Authorization': `Bearer ${HOT_AUTH_TOKEN}`
       })
     })
       .then(res => res.json())
