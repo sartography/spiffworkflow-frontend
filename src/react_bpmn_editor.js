@@ -13,36 +13,53 @@ import "bpmn-js-properties-panel/dist/assets/properties-panel.css"
 import './bpmn-js-properties-panel.css';
 
 
-// instantiating this here so it doesn't get
-// reinstantiate below when useEffect is called
-// multiple times by react
-//
-// if we could reliabley store this in a var or state
-// then we may not need this out here
-const bpmnViewer = new BpmnModeler({
-  container: "#canvas",
-  keyboard: {
-    bindTo: document
-  },
-  propertiesPanel: {
-    parent: '#js-properties-panel'
-  },
-  additionalModules: [
-    BpmnPropertiesPanelModule,
-    BpmnPropertiesProviderModule
-  ]
-});
-
 export default function ReactBpmnEditor(props) {
   const [diagramXML, setDiagramXML] = useState("");
   const [loaded, setLoaded] = useState(false);
+  const [bpmnViewerState, setBpmnViewerState] = useState(null);
 
   useEffect(() => {
-    if (loaded) {
+    document.getElementById("bpmn-js-container-thing").innerHTML = "";
+    var temp = document.createElement('template');
+
+    temp.innerHTML = `
+      <div class="content with-diagram" id="js-drop-zone">
+        <div class="canvas" id="canvas"
+                            style="border:1px solid #000000; height:90vh; width:90vw; margin:auto;"></div>
+        <div class="properties-panel-parent" id="js-properties-panel"></div>
+      </div>
+    `
+
+    var frag = temp.content;
+    document.getElementById("bpmn-js-container-thing").appendChild(frag);
+
+    const bpmnViewer = new BpmnModeler({
+      container: "#canvas",
+      keyboard: {
+        bindTo: document
+      },
+      propertiesPanel: {
+        parent: '#js-properties-panel'
+      },
+      additionalModules: [
+        BpmnPropertiesPanelModule,
+        BpmnPropertiesProviderModule
+      ]
+    });
+    setBpmnViewerState(bpmnViewer)
+
+    return () => {
+      document.getElementById("bpmn-js-container-thing").innerHTML = "";
+      setLoaded(false);
+    }
+  }, [])
+
+  useEffect(() => {
+    if (loaded || !bpmnViewerState) {
       return;
     }
 
-    bpmnViewer.on('import.done', (event) => {
+    bpmnViewerState.on('import.done', (event) => {
       const {
         error,
       } = event;
@@ -51,13 +68,13 @@ export default function ReactBpmnEditor(props) {
         return handleError(error);
       }
 
-      bpmnViewer.get('canvas').zoom('fit-viewport');
+      bpmnViewerState.get('canvas').zoom('fit-viewport');
     });
 
 
     if (diagramXML) {
       // console.log("diagramXML", diagramXML)
-      return displayDiagram(bpmnViewer, diagramXML);
+      return displayDiagram(bpmnViewerState, diagramXML);
     }
 
     // if (props.diagramXML) {
@@ -74,7 +91,7 @@ export default function ReactBpmnEditor(props) {
     }
 
     return () => {
-      bpmnViewer.destroy();
+      bpmnViewerState.destroy();
     }
 
     function fetchDiagram(process_model_id, file_name) {
@@ -104,7 +121,7 @@ export default function ReactBpmnEditor(props) {
       // console.log("diagramXML", diagramXMLToDisplay)
       bpmnViewerToUse.importXML(diagramXMLToDisplay);
     }
-  }, [props, diagramXML, loaded]);
+  }, [props, diagramXML, loaded, bpmnViewerState]);
 
   return (
     <div></div>

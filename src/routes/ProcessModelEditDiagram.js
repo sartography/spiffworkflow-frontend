@@ -45,6 +45,7 @@ export default function ProcessModelEditDiagram() {
   if (item) {
     return (
       <main style={{ padding: "1rem 0" }}>
+      <h2>Process Model File: {item.name}</h2>
       <ReactBpmnEditor
         process_model_id={params.process_model_id}
         file_name={item.name}
