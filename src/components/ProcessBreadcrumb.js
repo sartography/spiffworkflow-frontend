@@ -1,19 +1,8 @@
-import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { BACKEND_BASE_URL } from '../config';
-import { HOT_AUTH_TOKEN } from '../config';
-import { useParams } from "react-router-dom";
 import Breadcrumb from 'react-bootstrap/Breadcrumb'
 import 'bootstrap/dist/css/bootstrap.css';
 
 export default function ProcessBreadcrumb(props) {
-  // const [isLoaded, setIsLoaded] = useState(false);
-  // const [errro, setError] = useState(null);
-  // const [processModel, setProcessModel] = useState(null);
-
-  useEffect(() => {
-  }, []);
-
   let processGroupBreadcrumb = ''
   let processModelBreadcrumb = ''
   if (props.processModelId) {

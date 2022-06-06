@@ -41,7 +41,6 @@ export default function ProcessModelEditDiagram() {
   }
 
   if (processModelFile) {
-    console.log("processModelFile", processModelFile)
     return (
       <main style={{ padding: "1rem 0" }}>
       <ProcessBreadcrumb

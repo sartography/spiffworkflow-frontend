@@ -4,6 +4,7 @@ import { BACKEND_BASE_URL } from '../config';
 import { HOT_AUTH_TOKEN } from '../config';
 import { useParams } from "react-router-dom";
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb'
+import FileInput from '../components/FileInput'
 import 'bootstrap/dist/css/bootstrap.css';
 
 export default function ProcessModelShow() {
@@ -43,6 +44,9 @@ export default function ProcessModelShow() {
         processModelId={params.process_model_id}
       />
       <h2>Process Model: {processModel.id}</h2>
+      <FileInput
+        processModel={processModel}
+      />
       <ul>
       {processModel.files.map(file_bpmn => (
         <li key={file_bpmn.name}>
