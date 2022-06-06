@@ -15,7 +15,6 @@ import './bpmn-js-properties-panel.css';
 
 export default function ReactBpmnEditor(props) {
   const [diagramXML, setDiagramXML] = useState("");
-  const [loaded, setLoaded] = useState(false);
   const [bpmnViewerState, setBpmnViewerState] = useState(null);
 
   useEffect(() => {
@@ -47,15 +46,10 @@ export default function ReactBpmnEditor(props) {
       ]
     });
     setBpmnViewerState(bpmnViewer)
-
-    return () => {
-      document.getElementById("bpmn-js-container-thing").innerHTML = "";
-      setLoaded(false);
-    }
   }, [])
 
   useEffect(() => {
-    if (loaded || !bpmnViewerState) {
+    if (!bpmnViewerState) {
       return;
     }
 
@@ -71,40 +65,38 @@ export default function ReactBpmnEditor(props) {
       bpmnViewerState.get('canvas').zoom('fit-viewport');
     });
 
-
-    if (diagramXML) {
-      // console.log("diagramXML", diagramXML)
-      return displayDiagram(bpmnViewerState, diagramXML);
+    var diagramXMLToUse = props.diagramXML || diagramXML
+    if (diagramXMLToUse) {
+      return displayDiagram(bpmnViewerState, diagramXMLToUse);
     }
 
-    // if (props.diagramXML) {
-    //   if (!diagramXML) {
-    //     console.log("TO SET DIAG");
-    //     // console.log("props.diagramXML", props.diagramXML)
-    //     setDiagramXML(props.diagramXML)
-    //   }
-    // }
-
-    // if (props.url && !diagramXML) {
     if (!diagramXML) {
-      return fetchDiagram(props.process_model_id, props.file_name);
+      if (props.url) {
+        return fetchDiagramFromURL(props.url);
+      } else {
+        return fetchDiagramFromJsonAPI(props.process_model_id, props.file_name);
+      }
     }
 
     return () => {
       bpmnViewerState.destroy();
     }
 
-    function fetchDiagram(process_model_id, file_name) {
-      fetch(process.env.PUBLIC_URL + '/sample.bpmn', {
-      // fetch(`${BACKEND_BASE_URL}/process-models/${process_model_id}/file/${file_name}`, {
+    function fetchDiagramFromURL(url) {
+      fetch(url)
+        .then(response => response.text())
+        .then(text => setDiagramXML(text))
+        .catch(err => handleError(err));
+    }
+
+    function fetchDiagramFromJsonAPI(process_model_id, file_name) {
+      fetch(`${BACKEND_BASE_URL}/process-models/${process_model_id}/file/${file_name}`, {
         headers: new Headers({
           'Authorization': `Bearer ${HOT_AUTH_TOKEN}`
         })
       })
-        // .then(response => response.json())
-        // .then(response_json => setDiagramXML(response_json.file_contents))
-        .then(response => response.text())
-        .then(response_json => setDiagramXML(response_json))
+        .then(response => response.json())
+        .then(response_json => setDiagramXML(response_json.file_contents))
         .catch(err => handleError(err));
     }
 
@@ -116,25 +108,11 @@ export default function ReactBpmnEditor(props) {
     }
 
     function displayDiagram(bpmnViewerToUse, diagramXMLToDisplay) {
-      setLoaded(true);
-      // console.log("WE IMPORT");
-      // console.log("diagramXML", diagramXMLToDisplay)
       bpmnViewerToUse.importXML(diagramXMLToDisplay);
     }
-  }, [props, diagramXML, loaded, bpmnViewerState]);
+  }, [props, diagramXML, bpmnViewerState]);
 
   return (
     <div></div>
-    // <div className="content with-diagram" id="js-drop-zone">
-    // <div className="canvas" id="canvas" ref={ containerRef }
-    // style={{
-    //   border: "1px solid #000000",
-    //     height: "90vh",
-    //     width: "90vw",
-    //     margin: "auto"
-    // }}
-    // ></div>
-    // <div className="properties-panel-parent" id="js-properties-panel"></div>
-    // </div>
   );
 }

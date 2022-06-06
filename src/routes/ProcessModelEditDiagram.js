@@ -39,16 +39,18 @@ export default function ProcessModelEditDiagram() {
     console.log('ERROR:', err);
   }
 
-      // url={process.env.PUBLIC_URL + '/sample.bpmn'}
-      // diagramXML={item.file_contents}
-      // <h2>Process Model File: {item.name}</h2>
+  // url={process.env.PUBLIC_URL + '/sample.bpmn'}
+  // diagramXML={item.file_contents}
+  // <h2>Process Model File: {item.name}</h2>
   if (item) {
     return (
       <main style={{ padding: "1rem 0" }}>
       <h2>Process Model File: {item.name}</h2>
+      <div id="bpmn-js-container-thing"></div>
       <ReactBpmnEditor
         process_model_id={params.process_model_id}
         file_name={item.name}
+        diagramXML={item.file_contents}
         onError={ onError }
       />
       </main>
