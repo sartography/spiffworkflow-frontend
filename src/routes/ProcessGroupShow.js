@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { BACKEND_BASE_URL } from '../config';
 import { HOT_AUTH_TOKEN } from '../config';
 import { useParams } from "react-router-dom";
+import ProcessBreadcrumb from '../components/ProcessBreadcrumb'
 
 
 // Example process group json
@@ -12,7 +13,7 @@ export default function ProcessGroupShow() {
 
   const [isLoaded, setIsLoaded] = useState(false);
   const [errro, setError] = useState(null);
-  const [item, setItem] = useState(null);
+  const [processGroup, setItem] = useState(null);
 
   useEffect(() => {
     fetch(`${BACKEND_BASE_URL}/process-groups/${params.process_group_id}`, {
@@ -36,12 +37,15 @@ export default function ProcessGroupShow() {
       )
   }, []);
 
-  if (item) {
+  if (processGroup) {
     return (
       <main style={{ padding: "1rem 0" }}>
-      <h2>Process Group: {item.id}</h2>
+      <ProcessBreadcrumb
+        processGroupId={processGroup.id}
+      />
+      <h2>Process Group: {processGroup.id}</h2>
       <ul>
-      {item.process_models.map(process_model => (
+      {processGroup.process_models.map(process_model => (
         <li key={process_model.id}>
         <Link to={`/process-models/${process_model.id}`}>{process_model.id}</Link>
         </li>
@@ -50,8 +54,6 @@ export default function ProcessGroupShow() {
       </main>
     );
   } else {
-    return (
-      <h2>None Found</h2>
-    )
+    return (<></>)
   }
 }

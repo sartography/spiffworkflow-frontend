@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { BACKEND_BASE_URL } from '../config';
 import { HOT_AUTH_TOKEN } from '../config';
+import ProcessBreadcrumb from '../components/ProcessBreadcrumb'
 
 // Example process group json
 // {'admin': False, 'display_name': 'Test Workflows', 'display_order': 0, 'id': 'test_process_group'}
@@ -34,7 +35,8 @@ export default function ProcessGroups() {
 
   return (
     <main style={{ padding: "1rem 0" }}>
-      <h2>Process Groups</h2>
+      <ProcessBreadcrumb />
+    <h2>Process Groups</h2>
       <ul>
         {items.map(item => (
           <li key={item.id}>

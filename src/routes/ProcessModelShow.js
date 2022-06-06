@@ -3,14 +3,15 @@ import { Link } from "react-router-dom";
 import { BACKEND_BASE_URL } from '../config';
 import { HOT_AUTH_TOKEN } from '../config';
 import { useParams } from "react-router-dom";
-
+import ProcessBreadcrumb from '../components/ProcessBreadcrumb'
+import 'bootstrap/dist/css/bootstrap.css';
 
 export default function ProcessModelShow() {
   let params = useParams();
 
   const [isLoaded, setIsLoaded] = useState(false);
   const [errro, setError] = useState(null);
-  const [item, setItem] = useState(null);
+  const [processModel, setProcessModel] = useState(null);
 
   useEffect(() => {
     fetch(`${BACKEND_BASE_URL}/process-models/${params.process_model_id}`, {
@@ -22,7 +23,7 @@ export default function ProcessModelShow() {
       .then(
         (result) => {
           setIsLoaded(true);
-          setItem(result);
+          setProcessModel(result);
         },
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow
@@ -34,12 +35,16 @@ export default function ProcessModelShow() {
       )
   }, []);
 
-  if (item) {
+  if (processModel) {
     return (
       <main style={{ padding: "1rem 0" }}>
-      <h2>Process Model: {item.id}</h2>
+      <ProcessBreadcrumb
+        processGroupId={processModel.process_group_id}
+        processModelId={params.process_model_id}
+      />
+      <h2>Process Model: {processModel.id}</h2>
       <ul>
-      {item.files.map(file_bpmn => (
+      {processModel.files.map(file_bpmn => (
         <li key={file_bpmn.name}>
         <Link to={`/process-models/${params.process_model_id}/file/${file_bpmn.name}`}>{file_bpmn.name}</Link>
         </li>
@@ -48,9 +53,7 @@ export default function ProcessModelShow() {
       </main>
     );
   } else {
-    return (
-      <h2>None Found</h2>
-    )
+    return (<></>)
   }
 }
 

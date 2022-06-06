@@ -13,6 +13,7 @@ import "bpmn-js-properties-panel/dist/assets/properties-panel.css"
 import './bpmn-js-properties-panel.css';
 
 
+// https://codesandbox.io/s/quizzical-lake-szfyo?file=/src/App.js was a handy reference
 export default function ReactBpmnEditor(props) {
   const [diagramXML, setDiagramXML] = useState("");
   const [bpmnViewerState, setBpmnViewerState] = useState(null);
