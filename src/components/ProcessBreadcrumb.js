@@ -5,8 +5,13 @@ import 'bootstrap/dist/css/bootstrap.css';
 export default function ProcessBreadcrumb(props) {
   let processGroupBreadcrumb = ''
   let processModelBreadcrumb = ''
+
   if (props.processModelId) {
-    processModelBreadcrumb = <Breadcrumb.Item active={true}>Process Model: {props.processModelId}</Breadcrumb.Item>
+    if (props.linkProcessModel) {
+      processModelBreadcrumb = <Breadcrumb.Item linkAs={Link} linkProps={{ to: `/process-models/${props.processModelId}` }}>Process Model: {props.processModelId}</Breadcrumb.Item>
+    } else {
+      processModelBreadcrumb = <Breadcrumb.Item active={true}>Process Model: {props.processModelId}</Breadcrumb.Item>
+    }
     processGroupBreadcrumb = <Breadcrumb.Item linkAs={Link} linkProps={{ to: `/process-groups/${props.processGroupId}` }}>
       Process Group: {props.processGroupId}
     </Breadcrumb.Item>

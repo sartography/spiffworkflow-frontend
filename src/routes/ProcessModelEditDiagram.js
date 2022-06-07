@@ -46,6 +46,7 @@ export default function ProcessModelEditDiagram() {
       <ProcessBreadcrumb
         processGroupId={processModelFile.process_group_id}
         processModelId={processModelFile.process_model_id}
+        linkProcessModel="true"
       />
       <h2>Process Model File: {processModelFile.name}</h2>
       <div id="bpmn-js-container-thing"></div>

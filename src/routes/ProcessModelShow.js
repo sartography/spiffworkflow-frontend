@@ -71,6 +71,7 @@ export default function ProcessModelShow() {
         processModel={processModel}
       />
       <Button onClick={processModelRun} variant="primary">Run</Button>
+      <Link to={`/process-models/${processModel.id}/process-instances`}>Process Instances</Link>
       <ul>
       {processModel.files.map(file_bpmn => (
         <li key={file_bpmn.name}>
