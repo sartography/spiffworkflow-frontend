@@ -1,21 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { BACKEND_BASE_URL } from '../config';
 import { HOT_AUTH_TOKEN } from '../config';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb'
 import { slugifyString } from '../helpers'
 
-export default function ProcessGroupNew() {
+export default function ProcessModelNew(props) {
+  let params = useParams();
+
   const [error, setError] = useState(null);
   const [identifier, setIdentifier] = useState("");
   const [idHasBeenUpdatedByUser, setIdHasBeenUpdatedByUser] = useState(false);
   const [displayName, setDisplayName] = useState("");
   const navigate = useNavigate();
 
-  const addProcessGroup = ((event) => {
+  const addProcessModel = ((event) => {
     event.preventDefault()
 
-    fetch(`${BACKEND_BASE_URL}/process-groups`, {
+    fetch(`${BACKEND_BASE_URL}/process-models`, {
       headers: new Headers({
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${HOT_AUTH_TOKEN}`
@@ -24,12 +26,17 @@ export default function ProcessGroupNew() {
       body: JSON.stringify({
         id: identifier,
         display_name: displayName,
+        description: displayName,
+        process_group_id: params.process_group_id,
+        is_master_spec: false,
+        standalone: false,
+        library: false,
       }),
     })
       .then(res => res.json())
       .then(
         (result) => {
-          navigate(`/process-groups/${identifier}`)
+          navigate(`/process-models/${identifier}`)
         },
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow
@@ -52,8 +59,8 @@ export default function ProcessGroupNew() {
   return (
     <main style={{ padding: "1rem 0" }}>
       <ProcessBreadcrumb />
-      <h2>Add Process Group</h2>
-      <form onSubmit={addProcessGroup}>
+      <h2>Add Process Model</h2>
+      <form onSubmit={addProcessModel}>
         <label>ID:</label>
         <input
           name='id'

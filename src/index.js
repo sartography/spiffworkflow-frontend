@@ -14,6 +14,7 @@ import ProcessGroupNew from "./routes/ProcessGroupNew"
 import ProcessModelShow from "./routes/ProcessModelShow"
 import ProcessModelEditDiagram from "./routes/ProcessModelEditDiagram"
 import ProcessInstanceList from "./routes/ProcessInstanceList"
+import ProcessModelNew from "./routes/ProcessModelNew"
 
 import { Container } from 'react-bootstrap'
 
@@ -33,6 +34,7 @@ root.render(
         <Route path="process-models/:process_model_id" element={<ProcessModelShow />} />
         <Route path="process-models/:process_model_id/file/:file_name" element={<ProcessModelEditDiagram />} />
         <Route path="process-models/:process_model_id/process-instances" element={<ProcessInstanceList />} />
+        <Route path="process-models/:process_group_id/new" element={<ProcessModelNew />} />
       </Routes>
     </BrowserRouter>
     </Container>

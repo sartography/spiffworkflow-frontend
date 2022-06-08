@@ -59,7 +59,6 @@ export default function ProcessModelShow() {
   }
 
   if (processModel) {
-    console.log("processModel", processModel)
     let processInstanceListTag = "hello"
     processInstanceListTag = processModel.files.map(file_bpmn => {
       if (file_bpmn.name === processModel.primary_file_name) {

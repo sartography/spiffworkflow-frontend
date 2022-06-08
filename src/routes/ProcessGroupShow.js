@@ -4,6 +4,7 @@ import { BACKEND_BASE_URL } from '../config';
 import { HOT_AUTH_TOKEN } from '../config';
 import { useParams } from "react-router-dom";
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb'
+import Button from 'react-bootstrap/Button'
 
 export default function ProcessGroupShow() {
   let params = useParams();
@@ -37,6 +38,9 @@ export default function ProcessGroupShow() {
         <ProcessBreadcrumb processGroupId={processGroup.id} />
         <h2>Process Group: {processGroup.id}</h2>
         <ul>
+        <Button href={`/process-models/${processGroup.id}/new`}>Add a process model</Button>
+        <br />
+        <br />
         {processGroup.process_models.map(process_model => (
           <li key={process_model.id}>
           <Link to={`/process-models/${process_model.id}`}>{process_model.id}</Link>
