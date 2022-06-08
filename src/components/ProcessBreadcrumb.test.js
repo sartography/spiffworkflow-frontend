@@ -10,22 +10,21 @@ test('renders home link', () => {
   expect(homeElement).toBeInTheDocument();
 });
 
-test('renders process group link when processGroupId', () => {
-  const { container } = render(<BrowserRouter><ProcessBreadcrumb processGroupId='group-a'/></BrowserRouter>);
+test('renders process group when given processGroupId', async () => {
+  render(<BrowserRouter><ProcessBreadcrumb processGroupId='group-a'/></BrowserRouter>);
   const processGroupElement = screen.getByText(/group-a/);
   expect(processGroupElement).toBeInTheDocument();
-  const activeBreadcrumbElements = container.getElementsByClassName('breadcrumb-item active')
-  expect(activeBreadcrumbElements.length).toBe(1);
-  expect(activeBreadcrumbElements[0].innerHTML).toEqual("Process Group: group-a");
+  const processGroupBreadcrumbs = await screen.findAllByText(/Process Group: group-a/);
+  expect(processGroupBreadcrumbs[0]).toHaveClass('breadcrumb-item active');
 });
 
-test('renders processmodelgroup link when processModelId', () => {
-  const { container } = render(<BrowserRouter><ProcessBreadcrumb processGroupId='group-b' processModelId='model-c'/></BrowserRouter>);
+test('renders process model when given processModelId', async () => {
+  render(<BrowserRouter><ProcessBreadcrumb processGroupId='group-b' processModelId='model-c'/></BrowserRouter>);
   const processGroupElement = screen.getByText(/group-b/);
   expect(processGroupElement).toBeInTheDocument();
-  const activeBreadcrumbElements = container.getElementsByClassName('breadcrumb-item active')
-  expect(activeBreadcrumbElements.length).toBe(1);
-  expect(activeBreadcrumbElements[0].innerHTML).toEqual("Process Model: model-c");
-  const processModelElement = screen.getByText(/model-c/);
-  expect(processModelElement).toBeInTheDocument();
+  const processModelBreadcrumbs = await screen.findAllByText(/Process Model: model-c/);
+  expect(processModelBreadcrumbs[0]).toHaveClass('breadcrumb-item active');
+  const processGroupBreadcrumbs = await screen.findAllByText(/Process Group: group-b/);
+  expect(processGroupBreadcrumbs[0]).toBeInTheDocument();
+  // expect(processGroupBreadcrumbs[0]).toHaveClass('breadcrumb-item');
 });
