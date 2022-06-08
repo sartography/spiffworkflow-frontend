@@ -38,7 +38,7 @@ export default class FileInput extends React.Component {
     const config = {
       headers: {
         'content-type': 'multipart/form-data',
-      'Authorization': `Bearer ${HOT_AUTH_TOKEN}`,
+        'Authorization': `Bearer ${HOT_AUTH_TOKEN}`,
       },
     };
     axios.post(url, formData, config).then((response) => {
@@ -53,7 +53,6 @@ export default class FileInput extends React.Component {
           Upload file:
           <input type="file" ref={this.fileInput} />
         </label>
-        <br />
         <button type="submit">Submit</button>
       </form>
     );

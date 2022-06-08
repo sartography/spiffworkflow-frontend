@@ -44,7 +44,7 @@ export default function ProcessInstanceList() {
         if (row.end_in_seconds) {
           end_date = new Date(row.end_in_seconds * 1000);
         }
-        return <tr style={{backgroundColor: i%2 ? '#F0FFF2':'white'}} key={i}>
+        return <tr key={i}>
           <td>{row.id}</td>
           <td>{row.process_model_identifier}</td>
           <td>{row.process_group_id}</td>
@@ -54,7 +54,7 @@ export default function ProcessInstanceList() {
           </tr>
       })
     return(
-      <Table>
+      <Table striped bordered >
         <thead>
           <tr>
             <th>Process Instance Id</th>

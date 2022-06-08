@@ -7,9 +7,8 @@ import ProcessBreadcrumb from '../components/ProcessBreadcrumb'
 // Example process group json
 // {'admin': False, 'display_name': 'Test Workflows', 'display_order': 0, 'id': 'test_process_group'}
 export default function ProcessGroups() {
-  const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState(null);
-  const [items, setItems] = useState([]);
+  const [processGroups, setProcessGroups] = useState([]);
 
   useEffect(() => {
     fetch(`${BACKEND_BASE_URL}/process-groups`, {
@@ -20,31 +19,36 @@ export default function ProcessGroups() {
       .then(res => res.json())
       .then(
         (result) => {
-          setIsLoaded(true);
-          setItems(result);
+          setProcessGroups(result);
         },
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow
         // exceptions from actual bugs in components.
         (newError) => {
-          setIsLoaded(true);
           setError(newError);
         }
       )
   }, []);
 
-  return (
-    <main style={{ padding: "1rem 0" }}>
-      <ProcessBreadcrumb />
-    <h2>Process Groups</h2>
-      <ul>
-        {items.map(item => (
-          <li key={item.id}>
-            <Link to={`/process-groups/${item.id}`}>{item.id}</Link>
-          </li>
-        ))}
-      </ul>
-    </main>
-  );
+  if (processGroups) {
+    return (
+      <main style={{ padding: "1rem 0" }}>
+        <ProcessBreadcrumb />
+        <h2>Process Groups</h2>
+        <Link to={`/process-groups/new`}>Add a process group</Link>
+        <br />
+        <br />
+        <ul>
+          {processGroups.map(processGroup => (
+            <li key={processGroup.id}>
+              <Link to={`/process-groups/${processGroup.id}`}>{processGroup.id}</Link>
+            </li>
+          ))}
+        </ul>
+      </main>
+    );
+  } else {
+    return (<></>)
+  }
 }
 

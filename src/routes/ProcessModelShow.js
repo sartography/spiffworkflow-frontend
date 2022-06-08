@@ -59,6 +59,24 @@ export default function ProcessModelShow() {
   }
 
   if (processModel) {
+    console.log("processModel", processModel)
+    let processInstanceListTag = "hello"
+    processInstanceListTag = processModel.files.map(file_bpmn => {
+      if (file_bpmn.name === processModel.primary_file_name) {
+        return (
+          <li key={file_bpmn.name}>
+          <Link to={`/process-models/${processModel.id}/file/${file_bpmn.name}`}>{file_bpmn.name}</Link> - Primary File
+          </li>
+        )
+      } else {
+        return (
+          <li key={file_bpmn.name}>
+          <Link to={`/process-models/${processModel.id}/file/${file_bpmn.name}`}>{file_bpmn.name}</Link>
+          </li>
+        )
+      }
+    })
+
     return (
       <main style={{ padding: "1rem 0" }}>
       <ProcessBreadcrumb
@@ -67,19 +85,15 @@ export default function ProcessModelShow() {
       />
       <h2>Process Model: {processModel.id}</h2>
       {processInstanceResultTag}
-      <FileInput
-        processModel={processModel}
-      />
-      <Button onClick={processModelRun} variant="primary">Run</Button>
+      <FileInput processModel={processModel} />
+      <br />
+      <Button onClick={processModelRun} variant="primary">Run Primary</Button>
+      <br />
+      <br />
       <Link to={`/process-models/${processModel.id}/process-instances`}>Process Instances</Link>
-      <ul>
-      {processModel.files.map(file_bpmn => (
-        <li key={file_bpmn.name}>
-        <Link to={`/process-models/${processModel.id}/file/${file_bpmn.name}`}>{file_bpmn.name}</Link>
-        </li>
-      ))}
-      </ul>
-
+      <br />
+      <br />
+      <ul>{processInstanceListTag}</ul>
       </main>
     );
   } else {
