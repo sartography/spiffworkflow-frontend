@@ -61,20 +61,20 @@ export default function ProcessModelNew(props) {
       <ProcessBreadcrumb />
       <h2>Add Process Model</h2>
       <form onSubmit={addProcessModel}>
-        <label>ID:</label>
-        <input
-          name='id'
-          type='text'
-          value={identifier}
-          onChange={e => { setIdentifier(e.target.value); setIdHasBeenUpdatedByUser(true)} }
-        />
-        <br />
         <label>Display Name:</label>
         <input
           name='display_name'
           type='text'
           value={displayName}
           onChange={e => onDisplayNameChanged(e.target.value)}
+        />
+        <br />
+        <label>ID:</label>
+        <input
+          name='id'
+          type='text'
+          value={identifier}
+          onChange={e => { setIdentifier(e.target.value); setIdHasBeenUpdatedByUser(true)} }
         />
         <br />
         <button type="submit">Submit</button>

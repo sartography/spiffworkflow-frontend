@@ -54,20 +54,20 @@ export default function ProcessGroupNew() {
       <ProcessBreadcrumb />
       <h2>Add Process Group</h2>
       <form onSubmit={addProcessGroup}>
-        <label>ID:</label>
-        <input
-          name='id'
-          type='text'
-          value={identifier}
-          onChange={e => { setIdentifier(e.target.value); setIdHasBeenUpdatedByUser(true)} }
-        />
-        <br />
         <label>Display Name:</label>
         <input
           name='display_name'
           type='text'
           value={displayName}
           onChange={e => onDisplayNameChanged(e.target.value)}
+        />
+        <br />
+        <label>ID:</label>
+        <input
+          name='id'
+          type='text'
+          value={identifier}
+          onChange={e => { setIdentifier(e.target.value); setIdHasBeenUpdatedByUser(true)} }
         />
         <br />
         <button type="submit">Submit</button>

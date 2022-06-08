@@ -22,7 +22,7 @@ export default function ProcessBreadcrumb(props) {
   return (
     <main style={{ padding: "1rem 0" }}>
     <Breadcrumb>
-      <Breadcrumb.Item linkAs={Link} linkProps={{ to: '/process-groups' }}>Home</Breadcrumb.Item>
+      <Breadcrumb.Item linkAs={Link} linkProps={{ to: '/' }}>Home</Breadcrumb.Item>
       {processGroupBreadcrumb}
       {processModelBreadcrumb}
     </Breadcrumb>
