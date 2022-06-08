@@ -15,11 +15,13 @@ import ProcessModelShow from "./routes/ProcessModelShow"
 import ProcessModelEditDiagram from "./routes/ProcessModelEditDiagram"
 import ProcessInstanceList from "./routes/ProcessInstanceList"
 
+import { Container } from 'react-bootstrap'
 
-// <Route path="/" element={<App />} />
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
+    <Container>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<ProcessGroups />} />
@@ -33,6 +35,7 @@ root.render(
         <Route path="process-models/:process_model_id/process-instances" element={<ProcessInstanceList />} />
       </Routes>
     </BrowserRouter>
+    </Container>
   </React.StrictMode>
 );
 

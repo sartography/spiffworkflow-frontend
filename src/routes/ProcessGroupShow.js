@@ -8,7 +8,6 @@ import ProcessBreadcrumb from '../components/ProcessBreadcrumb'
 export default function ProcessGroupShow() {
   let params = useParams();
 
-  const [isLoaded, setIsLoaded] = useState(false);
   const [errro, setError] = useState(null);
   const [processGroup, setItem] = useState(null);
 
@@ -21,14 +20,12 @@ export default function ProcessGroupShow() {
       .then(res => res.json())
       .then(
         (result) => {
-          setIsLoaded(true);
           setItem(result);
         },
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow
         // exceptions from actual bugs in components.
         (error) => {
-          setIsLoaded(true);
           setError(error);
         }
       )
