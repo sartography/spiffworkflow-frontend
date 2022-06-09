@@ -8,7 +8,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^0.27.2",
     "bootstrap": "^5.2.0-beta1",
-    "bpmn-js": "^9.1.0",
+    "bpmn-js": "^9.2.2",
     "bpmn-js-properties-panel": "^1.1.1",
     "react": "^18.1.0",
     "react-bootstrap": "^2.4.0",
