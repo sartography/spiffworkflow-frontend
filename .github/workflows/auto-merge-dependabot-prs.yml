@@ -2,6 +2,7 @@ name: Dependabot auto-merge
 on:
   workflow_run:
     workflows: ["Tests"]
+    # completed does not mean success of Tests workflow. see below checking github.event.workflow_run.conclusion
     types:
       - completed
 
@@ -20,10 +21,10 @@ permissions:
 jobs:
   dependabot:
     runs-on: ubuntu-latest
-    # if: ${{ github.actor == 'dependabot[bot]' && github.event.workflow_run.conclusion == 'success' && github.event_name == 'pull_request' }}
-    # if: ${{ github.event_name == 'pull_request' }}
+    # FIXME: uncomment after logging confirms actor is dependabot
+    # if: ${{ github.actor == 'dependabot[bot]' && github.event.workflow_run.conclusion == 'success'
     steps:
-      - name: Log github metadata
+      - name: Log github metadata for debugging
         # if: ${{contains(steps.metadata.outputs.dependency-names, 'pytest') && steps.metadata.outputs.update-type == 'version-update:semver-patch'}}
         # if: ${{contains(steps.metadata.outputs.dependency-names, 'pytest')}}
         # ideally we auto-merge if all checks pass
@@ -38,16 +39,59 @@ jobs:
         env:
           PR_URL: ${{github.event.pull_request.html_url}}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+      # we saved the pr_number in tests.yml. fetch it so we can merge the correct PR.
+      # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_run
+      - name: 'Download artifact'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            let allArtifacts = await github.rest.actions.listWorkflowRunArtifacts({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: context.payload.workflow_run.id,
+          });
+          let matchArtifact = allArtifacts.data.artifacts.filter((artifact) => {
+            return artifact.name == "pr_number"
+          })[0];
+          let download = await github.rest.actions.downloadArtifact({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            artifact_id: matchArtifact.id,
+            archive_format: 'zip',
+          });
+          let fs = require('fs');
+          fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/pr_number.zip`, Buffer.from(download.data));
+
+      - name: 'Unzip artifact'
+        run: unzip pr_number.zip
+
+      - name: 'Comment on PR just for kicks delete me'
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            let fs = require('fs');
+            let issue_number = Number(fs.readFileSync('./pr_number'));
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue_number,
+              body: 'Thank you for the PR, fine contributor!'
+          });
+
       - name: Dependabot metadata
         id: metadata
         uses: dependabot/fetch-metadata@v1.3.1
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
-      - name: Enable auto-merge for Dependabot PRs
+
+      - name: actually merge it
         # if: ${{contains(steps.metadata.outputs.dependency-names, 'pytest') && steps.metadata.outputs.update-type == 'version-update:semver-patch'}}
         # if: ${{contains(steps.metadata.outputs.dependency-names, 'pytest')}}
         # ideally we auto-merge if all checks pass
-        run: gh pr merge --auto --merge "$PR_URL"
+        # run: gh pr merge --auto --merge "$PR_URL"
+        run: gh pr merge --auto --merge "$(cat pr_number)"
         env:
           PR_URL: ${{github.event.pull_request.html_url}}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
