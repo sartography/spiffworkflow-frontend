@@ -5,6 +5,15 @@ on:
     types:
       - completed
 
+# workflow_call is used to indicate that a workflow can be called by another workflow. When a workflow is triggered with the workflow_call event, the event payload in the called workflow is the same event payload from the calling workflow. For more information see, "Reusing workflows."
+
+# https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#pull_request
+# maybe hook into this instead of workflow_run:
+# on:
+#   pull_request:
+#   pull_request_target:
+#     types: [labeled]
+
 permissions:
   contents: write
 
@@ -19,11 +28,12 @@ jobs:
         # if: ${{contains(steps.metadata.outputs.dependency-names, 'pytest')}}
         # ideally we auto-merge if all checks pass
         run: |
-          echo about to log stuff
+          echo about to log stuff from webhook
           echo actor: ${{ github.actor }}
           echo conclusion: ${{ github.event.workflow_run.conclusion }}
           echo event_name: ${{ github.event_name }}
           echo pr_url: ${{ github.event.pull_request.html_url }}
+          echo workflow: ${{ github.workflow }}
           echo and going to next step where it should auto merge
         env:
           PR_URL: ${{github.event.pull_request.html_url}}
