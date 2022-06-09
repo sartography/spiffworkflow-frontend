@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BACKEND_BASE_URL } from '../config';
 import { HOT_AUTH_TOKEN } from '../config';
@@ -6,7 +6,6 @@ import ProcessBreadcrumb from '../components/ProcessBreadcrumb'
 import { slugifyString } from '../helpers'
 
 export default function ProcessGroupNew() {
-  const [error, setError] = useState(null);
   const [identifier, setIdentifier] = useState("");
   const [idHasBeenUpdatedByUser, setIdHasBeenUpdatedByUser] = useState(false);
   const [displayName, setDisplayName] = useState("");
@@ -36,7 +35,6 @@ export default function ProcessGroupNew() {
         // exceptions from actual bugs in components.
         (newError) => {
           console.log(newError);
-          setError(newError);
         }
       )
 

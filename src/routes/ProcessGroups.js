@@ -8,7 +8,6 @@ import Button from 'react-bootstrap/Button'
 // Example process group json
 // {'admin': False, 'display_name': 'Test Workflows', 'display_order': 0, 'id': 'test_process_group'}
 export default function ProcessGroups() {
-  const [error, setError] = useState(null);
   const [processGroups, setProcessGroups] = useState([]);
 
   useEffect(() => {
@@ -26,7 +25,7 @@ export default function ProcessGroups() {
         // instead of a catch() block so that we don't swallow
         // exceptions from actual bugs in components.
         (newError) => {
-          setError(newError);
+          console.log(newError);
         }
       )
   }, []);

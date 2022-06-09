@@ -8,14 +8,13 @@ import { Table, Dropdown, Stack }  from 'react-bootstrap'
 
 export default function ProcessInstanceList() {
   let params = useParams();
-  let [searchParams, setSearchParams] = useSearchParams();
+  let [searchParams] = useSearchParams();
 
 
   const DEFAULT_PER_PAGE = 50;
   const DEFAULT_PAGE = 1;
   const PER_PAGE_OPTIONS = [2, 10, 50, 100];
 
-  const [error, setError] = useState(null);
   const [processInstances, setProcessInstances] = useState(null);
   const [pagination, setPagination] = useState(null);
   const [processGroupId, setProcessGroupId] = useState(null);
@@ -41,7 +40,7 @@ export default function ProcessInstanceList() {
           // instead of a catch() block so that we don't swallow
           // exceptions from actual bugs in components.
           (error) => {
-            setError(error);
+            console.log(error);
           }
         )
     }

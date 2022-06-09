@@ -11,7 +11,6 @@ import 'bootstrap/dist/css/bootstrap.css';
 export default function ProcessModelShow() {
   let params = useParams();
 
-  const [error, setError] = useState(null);
   const [processModel, setProcessModel] = useState(null);
   const [processInstanceResult, setProcessInstanceResult] = useState(null);
 
@@ -30,10 +29,10 @@ export default function ProcessModelShow() {
         // instead of a catch() block so that we don't swallow
         // exceptions from actual bugs in components.
         (error) => {
-          setError(error);
+          console.log(error);
         }
       )
-  }, []);
+  }, [params]);
 
   const processModelRun = ((event) => {
     fetch(`${BACKEND_BASE_URL}/process-models/${processModel.id}`, {
@@ -48,7 +47,7 @@ export default function ProcessModelShow() {
           setProcessInstanceResult(result);
         },
         (error) => {
-          setError(error);
+          console.log(error);
         }
       )
   });

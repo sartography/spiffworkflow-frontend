@@ -9,7 +9,6 @@ import Button from 'react-bootstrap/Button'
 export default function ProcessGroupShow() {
   let params = useParams();
 
-  const [errro, setError] = useState(null);
   const [processGroup, setItem] = useState(null);
 
   useEffect(() => {
@@ -27,10 +26,10 @@ export default function ProcessGroupShow() {
         // instead of a catch() block so that we don't swallow
         // exceptions from actual bugs in components.
         (error) => {
-          setError(error);
+          console.log(error);
         }
       )
-  }, []);
+  }, [params]);
 
   if (processGroup) {
     return (

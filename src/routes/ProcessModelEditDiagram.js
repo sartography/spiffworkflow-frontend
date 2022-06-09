@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { BACKEND_BASE_URL } from '../config';
 import { HOT_AUTH_TOKEN } from '../config';
 import { useParams } from "react-router-dom";
@@ -10,8 +9,6 @@ import ProcessBreadcrumb from '../components/ProcessBreadcrumb'
 export default function ProcessModelEditDiagram() {
   let params = useParams();
 
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [errro, setError] = useState(null);
   const [processModelFile, setProcessModelFile] = useState(null);
 
   useEffect(() => {
@@ -23,18 +20,16 @@ export default function ProcessModelEditDiagram() {
       .then(res => res.json())
       .then(
         (result) => {
-          setIsLoaded(true);
           setProcessModelFile(result);
         },
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow
         // exceptions from actual bugs in components.
         (error) => {
-          setIsLoaded(true);
-          setError(error);
+          console.log(error);
         }
       )
-  }, []);
+  }, [params]);
 
   function onError(err) {
     console.log('ERROR:', err);

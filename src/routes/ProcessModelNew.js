@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { BACKEND_BASE_URL } from '../config';
 import { HOT_AUTH_TOKEN } from '../config';
@@ -8,7 +8,6 @@ import { slugifyString } from '../helpers'
 export default function ProcessModelNew(props) {
   let params = useParams();
 
-  const [error, setError] = useState(null);
   const [identifier, setIdentifier] = useState("");
   const [idHasBeenUpdatedByUser, setIdHasBeenUpdatedByUser] = useState(false);
   const [displayName, setDisplayName] = useState("");
@@ -43,7 +42,6 @@ export default function ProcessModelNew(props) {
         // exceptions from actual bugs in components.
         (newError) => {
           console.log(newError);
-          setError(newError);
         }
       )
 
