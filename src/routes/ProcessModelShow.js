@@ -35,7 +35,7 @@ export default function ProcessModelShow() {
   }, [params]);
 
   const processModelRun = ((event) => {
-    fetch(`${BACKEND_BASE_URL}/process-models/${processModel.id}`, {
+    fetch(`${BACKEND_BASE_URL}/process-models/${processModel.process_group_id}/${processModel.id}`, {
       headers: new Headers({
         'Authorization': `Bearer ${HOT_AUTH_TOKEN}`
       }),

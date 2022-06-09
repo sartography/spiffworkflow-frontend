@@ -24,7 +24,8 @@ export default function ProcessInstanceList() {
 
     function getProcessInstances() {
       const page = searchParams.get('page') || DEFAULT_PAGE;
-      fetch(`${BACKEND_BASE_URL}/process-models/${params.process_model_id}/process-instances?per_page=${getPerPage()}&page=${page}`, {
+      const perPage = parseInt(searchParams.get('per_page') || DEFAULT_PER_PAGE);
+      fetch(`${BACKEND_BASE_URL}/process-models/${params.process_model_id}/process-instances?per_page=${perPage}&page=${page}`, {
         headers: new Headers({
           'Authorization': `Bearer ${HOT_AUTH_TOKEN}`
         })
@@ -97,9 +98,9 @@ export default function ProcessInstanceList() {
   const buildPerPageDropdown = (() => {
     const perPageDropdownRows = PER_PAGE_OPTIONS.map(per_page_option => {
       if (per_page_option === getPerPage()) {
-          return <Dropdown.Item key={per_page_option} href={`/process-models/${params.process_model_id}/process-instances?page=1&per_page=${per_page_option}`} active>{per_page_option}</Dropdown.Item>
+          return <Dropdown.Item key={per_page_option} href={`/process-models/${params.process_group_id}/${params.process_model_id}/process-instances?page=1&per_page=${per_page_option}`} active>{per_page_option}</Dropdown.Item>
       } else {
-          return <Dropdown.Item key={per_page_option} href={`/process-models/${params.process_model_id}/process-instances?page=1&per_page=${per_page_option}`}>{per_page_option}</Dropdown.Item>
+          return <Dropdown.Item key={per_page_option} href={`/process-models/${params.process_group_id}/${params.process_model_id}/process-instances?page=1&per_page=${per_page_option}`}>{per_page_option}</Dropdown.Item>
       }
     });
     return (
@@ -126,7 +127,7 @@ export default function ProcessInstanceList() {
     } else {
       previousPageTag = (
         <li className="page-item" key="previous">
-          <Link className="page-link" style={{fontSize:"1.5em"}} to={`/process-models/${params.process_model_id}/process-instances?page=${getCurrentPage() - 1}&per_page=${getPerPage()}`}>&laquo;</Link>
+          <Link className="page-link" style={{fontSize:"1.5em"}} to={`/process-models/${params.process_group_id}/${params.process_model_id}/process-instances?page=${getCurrentPage() - 1}&per_page=${getPerPage()}`}>&laquo;</Link>
         </li>
       )
     }
@@ -139,7 +140,7 @@ export default function ProcessInstanceList() {
     } else {
       nextPageTag = (
         <li className="page-item" key="next">
-          <Link className="page-link" style={{fontSize:"1.5em"}} to={`/process-models/${params.process_model_id}/process-instances?page=${getCurrentPage() + 1}&per_page=${getPerPage()}`}>&raquo;</Link>
+          <Link className="page-link" style={{fontSize:"1.5em"}} to={`/process-models/${params.process_group_id}/${params.process_model_id}/process-instances?page=${getCurrentPage() + 1}&per_page=${getPerPage()}`}>&raquo;</Link>
         </li>
       )
     }

@@ -8,7 +8,7 @@ export default function ProcessBreadcrumb(props) {
 
   if (props.processModelId) {
     if (props.linkProcessModel) {
-      processModelBreadcrumb = <Breadcrumb.Item linkAs={Link} linkProps={{ to: `/process-models/${props.processModelId}` }}>Process Model: {props.processModelId}</Breadcrumb.Item>
+      processModelBreadcrumb = <Breadcrumb.Item linkAs={Link} linkProps={{ to: `/process-models/${props.processGroupId}/${props.processModelId}` }}>Process Model: {props.processModelId}</Breadcrumb.Item>
     } else {
       processModelBreadcrumb = <Breadcrumb.Item active={true}>Process Model: {props.processModelId}</Breadcrumb.Item>
     }
