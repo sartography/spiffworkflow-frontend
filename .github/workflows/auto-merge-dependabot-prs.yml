@@ -13,11 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     # if: ${{ github.actor == 'dependabot[bot]' && github.event.workflow_run.conclusion == 'success' && github.event_name == 'pull_request' }}
     steps:
-      - name: Dependabot metadata
-        id: metadata
-        uses: dependabot/fetch-metadata@v1.3.1
-        with:
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
       - name: Log github metadata
         # if: ${{contains(steps.metadata.outputs.dependency-names, 'pytest') && steps.metadata.outputs.update-type == 'version-update:semver-patch'}}
         # if: ${{contains(steps.metadata.outputs.dependency-names, 'pytest')}}
@@ -32,6 +27,11 @@ jobs:
         env:
           PR_URL: ${{github.event.pull_request.html_url}}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      - name: Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v1.3.1
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
       - name: Enable auto-merge for Dependabot PRs
         # if: ${{contains(steps.metadata.outputs.dependency-names, 'pytest') && steps.metadata.outputs.update-type == 'version-update:semver-patch'}}
         # if: ${{contains(steps.metadata.outputs.dependency-names, 'pytest')}}
