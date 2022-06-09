@@ -12,7 +12,7 @@ jobs:
   dependabot:
     runs-on: ubuntu-latest
     # if: ${{ github.actor == 'dependabot[bot]' && github.event.workflow_run.conclusion == 'success' && github.event_name == 'pull_request' }}
-    if: ${{ github.event_name == 'pull_request' }}
+    # if: ${{ github.event_name == 'pull_request' }}
     steps:
       - name: Log github metadata
         # if: ${{contains(steps.metadata.outputs.dependency-names, 'pytest') && steps.metadata.outputs.update-type == 'version-update:semver-patch'}}
