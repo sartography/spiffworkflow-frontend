@@ -5,7 +5,7 @@ import { HOT_AUTH_TOKEN } from '../config';
 import { useParams } from "react-router-dom";
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb'
 import FileInput from '../components/FileInput'
-import Button from 'react-bootstrap/Button'
+import { Button, Stack } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.css';
 
 export default function ProcessModelShow() {
@@ -16,7 +16,7 @@ export default function ProcessModelShow() {
   const [processInstanceResult, setProcessInstanceResult] = useState(null);
 
   useEffect(() => {
-    fetch(`${BACKEND_BASE_URL}/process-models/${params.process_model_id}`, {
+    fetch(`${BACKEND_BASE_URL}/process-models/${params.process_group_id}/${params.process_model_id}`, {
       headers: new Headers({
         'Authorization': `Bearer ${HOT_AUTH_TOKEN}`
       })
@@ -53,24 +53,28 @@ export default function ProcessModelShow() {
       )
   });
 
+  const deleteProcessModel = (() => {
+
+  });
+
   let processInstanceResultTag = ""
   if (processInstanceResult) {
     processInstanceResultTag = <pre>{processInstanceResult.status}: {JSON.stringify(processInstanceResult.data)}</pre>
   }
 
   if (processModel) {
-    let processInstanceListTag = "hello"
+    let processInstanceListTag = "";
     processInstanceListTag = processModel.files.map(file_bpmn => {
       if (file_bpmn.name === processModel.primary_file_name) {
         return (
           <li key={file_bpmn.name}>
-          <Link to={`/process-models/${processModel.id}/file/${file_bpmn.name}`}>{file_bpmn.name}</Link> - Primary File
+          <Link to={`/process-models/${processModel.process_group_id}/${processModel.id}/file/${file_bpmn.name}`}>{file_bpmn.name}</Link> - Primary File
           </li>
         )
       } else {
         return (
           <li key={file_bpmn.name}>
-          <Link to={`/process-models/${processModel.id}/file/${file_bpmn.name}`}>{file_bpmn.name}</Link>
+          <Link to={`/process-models/${processModel.process_group_id}/${processModel.id}/file/${file_bpmn.name}`}>{file_bpmn.name}</Link>
           </li>
         )
       }
@@ -86,10 +90,13 @@ export default function ProcessModelShow() {
       {processInstanceResultTag}
       <FileInput processModel={processModel} />
       <br />
-      <Button onClick={processModelRun} variant="primary">Run Primary</Button>
+      <Stack direction="horizontal" gap={3}>
+        <Button onClick={processModelRun} variant="primary">Run Primary</Button>
+        <Button onClick={deleteProcessModel} variant="danger">Delete Process Model</Button>
+      </Stack>
       <br />
       <br />
-      <Link to={`/process-models/${processModel.id}/process-instances`}>Process Instances</Link>
+      <Link to={`/process-models/${processModel.process_group_id}/${processModel.id}/process-instances`}>Process Instances</Link>
       <br />
       <br />
       <ul>{processInstanceListTag}</ul>

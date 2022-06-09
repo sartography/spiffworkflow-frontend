@@ -43,7 +43,7 @@ export default function ProcessGroupShow() {
         <br />
         {processGroup.process_models.map(process_model => (
           <li key={process_model.id}>
-          <Link to={`/process-models/${process_model.id}`}>{process_model.id}</Link>
+          <Link to={`/process-models/${processGroup.id}/${process_model.id}`}>{process_model.id}</Link>
           </li>
         ))}
         </ul>
