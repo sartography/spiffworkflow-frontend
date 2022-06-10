@@ -17,6 +17,7 @@ export default function ProcessModelEditDiagram() {
   const [processModelFile, setProcessModelFile] = useState(null);
   const [newFileName, setNewFileName] = useState("");
   const [newBpmnXml, setNewBpmnXml] = useState(null);
+  const [bpmnXmlForDiagramRendering, setBpmnXmlForDiagramRendering] = useState(null);
 
   useEffect(() => {
     if (params.file_name) {
@@ -29,6 +30,7 @@ export default function ProcessModelEditDiagram() {
         .then(
           (result) => {
             setProcessModelFile(result);
+            setBpmnXmlForDiagramRendering(result.file_contents);
           },
           // Note: it's important to handle errors here
           // instead of a catch() block so that we don't swallow
@@ -69,7 +71,7 @@ export default function ProcessModelEditDiagram() {
     }
 
 
-    let bpmnFile = new File([bpmnXML.xml], fileName);
+    let bpmnFile = new File([bpmnXML], fileName);
     const formData = new FormData();
     formData.append('file', bpmnFile);
     formData.append('fileName', bpmnFile.name);
@@ -83,7 +85,7 @@ export default function ProcessModelEditDiagram() {
       .then(res => res.json())
       .then(
         (result) => {
-          console.log(result);
+          setBpmnXmlForDiagramRendering(bpmnXML);
         },
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow
@@ -106,7 +108,7 @@ export default function ProcessModelEditDiagram() {
       <ReactBpmnEditor
         process_model_id={params.process_model_id}
         file_name={processModelFile.name}
-        diagramXML={processModelFile.file_contents}
+        diagramXML={bpmnXmlForDiagramRendering}
         onError={ onError }
         saveDiagram={ saveDiagram }
       />
