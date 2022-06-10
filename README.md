@@ -3,7 +3,7 @@
 This is the frontend part of an app that leverages
 [spiffworkflow](https://github.com/sartography/spiffworkflow).
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app). And junk
 
 ## Available Scripts
 
