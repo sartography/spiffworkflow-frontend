@@ -1,9 +1,10 @@
 # spiffworkflow-frontend
 
 This is the frontend part of an app that leverages
-[spiffworkflow](https://github.com/sartography/spiffworkflow).
+[spiffworkflow](https://github.com/sartography/spiffworkflow) for managing and
+running business processes.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app). And junk
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
 
