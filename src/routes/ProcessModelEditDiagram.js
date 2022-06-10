@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { BACKEND_BASE_URL } from '../config';
 import { HOT_AUTH_TOKEN } from '../config';
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import ReactBpmnEditor from "../react_bpmn_editor"
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb'
@@ -13,10 +13,10 @@ export default function ProcessModelEditDiagram() {
   const handleShow = () => setShow(true);
 
   let params = useParams();
+  const navigate = useNavigate();
 
   const [processModelFile, setProcessModelFile] = useState(null);
   const [newFileName, setNewFileName] = useState("");
-  const [newBpmnXml, setNewBpmnXml] = useState(null);
   const [bpmnXmlForDiagramRendering, setBpmnXmlForDiagramRendering] = useState(null);
 
   useEffect(() => {
@@ -32,9 +32,6 @@ export default function ProcessModelEditDiagram() {
             setProcessModelFile(result);
             setBpmnXmlForDiagramRendering(result.file_contents);
           },
-          // Note: it's important to handle errors here
-          // instead of a catch() block so that we don't swallow
-          // exceptions from actual bugs in components.
           (error) => {
             console.log(error);
           }
@@ -50,11 +47,11 @@ export default function ProcessModelEditDiagram() {
 
   const handleFileNameSave = (() => {
     setShow(false);
-    saveDiagram(newBpmnXml);
+    saveDiagram(bpmnXmlForDiagramRendering);
   });
 
   const saveDiagram = ((bpmnXML, fileName = params.file_name) => {
-    setNewBpmnXml(bpmnXML);
+    setBpmnXmlForDiagramRendering(bpmnXML);
 
     let url = `${BACKEND_BASE_URL}/process-models/${params.process_model_id}/file`;
     let httpMethod = 'PUT'
@@ -70,7 +67,6 @@ export default function ProcessModelEditDiagram() {
       return;
     }
 
-
     let bpmnFile = new File([bpmnXML], fileName);
     const formData = new FormData();
     formData.append('file', bpmnFile);
@@ -85,11 +81,10 @@ export default function ProcessModelEditDiagram() {
       .then(res => res.json())
       .then(
         (result) => {
-          setBpmnXmlForDiagramRendering(bpmnXML);
+          if (!params.file_name) {
+            navigate(`/process-models/${params.process_group_id}/${params.process_model_id}/file/${newFileName}`);
+          }
         },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
         (error) => {
           console.log(error);
         }
@@ -128,6 +123,7 @@ export default function ProcessModelEditDiagram() {
         process_model_id={params.process_model_id}
         onError={ onError }
         saveDiagram={ saveDiagram }
+        diagramXML={bpmnXmlForDiagramRendering}
       />
 
       <Modal show={show} onHide={handleFileNameCancel}>

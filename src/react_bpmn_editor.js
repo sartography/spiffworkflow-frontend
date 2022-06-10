@@ -121,7 +121,6 @@ export default function ReactBpmnEditor(props) {
     bpmnViewerState.saveXML({ format: true })
     .then(bpmnXmlObject => {
       props.saveDiagram(bpmnXmlObject.xml);
-      console.log("xml", bpmnXmlObject.xml)
     })
   }
 
