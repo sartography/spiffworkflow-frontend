@@ -91,39 +91,20 @@ export default function ProcessModelEditDiagram() {
       )
   });
 
-  if (processModelFile) {
-    return (
-      <main style={{ padding: "1rem 0" }}>
-      <ProcessBreadcrumb
-        processGroupId={processModelFile.process_group_id}
-        processModelId={processModelFile.process_model_id}
-        linkProcessModel="true"
-      />
-      <h2>Process Model File: {processModelFile.name}</h2>
-      <ReactBpmnEditor
-        process_model_id={params.process_model_id}
-        file_name={processModelFile.name}
-        diagramXML={bpmnXmlForDiagramRendering}
-        onError={ onError }
-        saveDiagram={ saveDiagram }
-      />
-      <div id="bpmn-js-container-thing"></div>
-      </main>
-    );
-  } else if (!params.file_name) {
-    return (
-      <main style={{ padding: "1rem 0" }}>
+  return (
+    <main style={{ padding: "1rem 0" }}>
       <ProcessBreadcrumb
         processGroupId={params.process_group_id}
         processModelId={params.process_model_id}
         linkProcessModel="true"
       />
-      <h2>Process Model File</h2>
+      <h2>Process Model File{processModelFile ? `: ${processModelFile.name}` : ""}</h2>
       <ReactBpmnEditor
         process_model_id={params.process_model_id}
         onError={ onError }
         saveDiagram={ saveDiagram }
         diagramXML={bpmnXmlForDiagramRendering}
+        fileName={processModelFile ? processModelFile.name : null}
       />
 
       <Modal show={show} onHide={handleFileNameCancel}>
@@ -147,13 +128,7 @@ export default function ProcessModelEditDiagram() {
         </Modal.Footer>
       </Modal>
 
-
       <div id="bpmn-js-container-thing"></div>
-      </main>
-    );
-  } else {
-    return (<></>)
-  }
+    </main>
+  );
 }
-
-

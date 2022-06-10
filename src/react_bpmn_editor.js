@@ -76,8 +76,8 @@ export default function ReactBpmnEditor(props) {
     if (!diagramXML) {
       if (props.url) {
         return fetchDiagramFromURL(props.url);
-      } else if (props.file_name) {
-        return fetchDiagramFromJsonAPI(props.process_model_id, props.file_name);
+      } else if (props.fileName) {
+        return fetchDiagramFromJsonAPI(props.process_model_id, props.fileName);
       } else {
         return fetchDiagramFromURL(process.env.PUBLIC_URL + '/new_bpmn_diagram.bpmn');
       }
@@ -94,8 +94,8 @@ export default function ReactBpmnEditor(props) {
         .catch(err => handleError(err));
     }
 
-    function fetchDiagramFromJsonAPI(process_model_id, file_name) {
-      fetch(`${BACKEND_BASE_URL}/process-models/${process_model_id}/file/${file_name}`, {
+    function fetchDiagramFromJsonAPI(processModelId, fileName) {
+      fetch(`${BACKEND_BASE_URL}/process-models/${processModelId}/file/${fileName}`, {
         headers: new Headers({
           'Authorization': `Bearer ${HOT_AUTH_TOKEN}`
         })
