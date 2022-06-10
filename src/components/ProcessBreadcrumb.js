@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import Breadcrumb from 'react-bootstrap/Breadcrumb'
-import 'bootstrap/dist/css/bootstrap.css';
 
 export default function ProcessBreadcrumb(props) {
   let processGroupBreadcrumb = ''

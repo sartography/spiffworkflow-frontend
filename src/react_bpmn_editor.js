@@ -13,6 +13,7 @@ import "bpmn-js/dist/assets/diagram-js.css";
 import "bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css";
 import "bpmn-js-properties-panel/dist/assets/properties-panel.css"
 import './bpmn-js-properties-panel.css';
+import "bpmn-js/dist/assets/bpmn-js.css";
 
 
 // https://codesandbox.io/s/quizzical-lake-szfyo?file=/src/App.js was a handy reference

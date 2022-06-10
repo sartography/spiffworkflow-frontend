@@ -11,3 +11,10 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+span.bjs-crumb {
+  color: #0000ff;
+}
+.bjs-breadcrumbs li:last-of-type span.bjs-crumb a {
+  color: black;
+}

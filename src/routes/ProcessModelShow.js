@@ -6,7 +6,6 @@ import { useParams } from "react-router-dom";
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb'
 import FileInput from '../components/FileInput'
 import { Button, Stack } from 'react-bootstrap'
-import 'bootstrap/dist/css/bootstrap.css';
 
 export default function ProcessModelShow() {
   let params = useParams();
