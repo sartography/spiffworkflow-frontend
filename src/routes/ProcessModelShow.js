@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { BACKEND_BASE_URL } from '../config';
 import { HOT_AUTH_TOKEN } from '../config';
 import { useParams } from "react-router-dom";
@@ -10,6 +10,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 
 export default function ProcessModelShow() {
   let params = useParams();
+  const navigate = useNavigate();
 
   const [processModel, setProcessModel] = useState(null);
   const [processInstanceResult, setProcessInstanceResult] = useState(null);
@@ -53,7 +54,21 @@ export default function ProcessModelShow() {
   });
 
   const deleteProcessModel = (() => {
-
+    fetch(`${BACKEND_BASE_URL}/process-models/${processModel.process_group_id}/${processModel.id}`, {
+      headers: new Headers({
+        'Authorization': `Bearer ${HOT_AUTH_TOKEN}`
+      }),
+      method: 'DELETE',
+    })
+      .then(res => res.json())
+      .then(
+        (result) => {
+          navigate(`/process-groups/${params.process_group_id}`);
+        },
+        (error) => {
+          console.log(error);
+        }
+      )
   });
 
   let processInstanceResultTag = ""

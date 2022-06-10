@@ -35,7 +35,7 @@ export default function ProcessModelNew(props) {
       .then(res => res.json())
       .then(
         (result) => {
-          navigate(`/process-models/${identifier}`)
+          navigate(`/process-models/${params.process_group_id}/${identifier}`);
         },
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow
