@@ -6,6 +6,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { BACKEND_BASE_URL } from './config';
 import { HOT_AUTH_TOKEN } from './config';
+import spiffworkflow from 'bpmn-js-spiffworkflow/app/spiffworkflow';
 
 import Button from 'react-bootstrap/Button';
 
@@ -46,7 +47,8 @@ export default function ReactBpmnEditor(props) {
       },
       additionalModules: [
         BpmnPropertiesPanelModule,
-        BpmnPropertiesProviderModule
+        BpmnPropertiesProviderModule,
+        spiffworkflow,
       ]
     });
     setBpmnViewerState(bpmnViewer)

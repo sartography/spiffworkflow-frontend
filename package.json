@@ -10,6 +10,7 @@
     "bootstrap": "^5.2.0-beta1",
     "bpmn-js": "^9.1.0",
     "bpmn-js-properties-panel": "^1.1.1",
+    "bpmn-js-spiffworkflow": "^0.0.1",
     "react": "^18.1.0",
     "react-bootstrap": "^2.4.0",
     "react-dom": "^18.1.0",
