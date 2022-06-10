@@ -33,6 +33,8 @@ jobs:
     # FIXME: uncomment after logging confirms actor is dependabot
     # if: ${{ github.actor == 'dependabot[bot]' && github.event.workflow_run.conclusion == 'success' }}
     steps:
+      - name: Development Code
+        uses: actions/checkout@v3
       - name: Log github metadata for debugging
         # if: ${{contains(steps.metadata.outputs.dependency-names, 'pytest') && steps.metadata.outputs.update-type == 'version-update:semver-patch'}}
         # if: ${{contains(steps.metadata.outputs.dependency-names, 'pytest')}}
@@ -49,6 +51,7 @@ jobs:
           PR_URL: ${{github.event.pull_request.html_url}}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
+      ###### GET PR NUMBER
       # we saved the pr_number in tests.yml. fetch it so we can merge the correct PR.
       # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_run
       - name: 'Download artifact'
@@ -80,7 +83,10 @@ jobs:
       #   uses: dependabot/fetch-metadata@v1.3.1
       #   with:
       #     github-token: "${{ secrets.GITHUB_TOKEN }}"
+      ###########
 
+      - name: print pr number
+        run: cat pr_number
       - name: actually merge it
         # if: ${{contains(steps.metadata.outputs.dependency-names, 'pytest') && steps.metadata.outputs.update-type == 'version-update:semver-patch'}}
         # if: ${{contains(steps.metadata.outputs.dependency-names, 'pytest')}}
