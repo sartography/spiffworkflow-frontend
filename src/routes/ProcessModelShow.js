@@ -107,6 +107,7 @@ export default function ProcessModelShow() {
       <Stack direction="horizontal" gap={3}>
         <Button onClick={processModelRun} variant="primary">Run Primary</Button>
         <Button onClick={deleteProcessModel} variant="danger">Delete Process Model</Button>
+        <Button href={`/process-models/${processModel.process_group_id}/${processModel.id}/file`} variant="warning">Add New Process Model File</Button>
       </Stack>
       <br />
       <br />

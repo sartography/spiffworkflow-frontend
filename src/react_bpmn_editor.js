@@ -7,6 +7,8 @@ import React, { useEffect, useState } from "react";
 import { BACKEND_BASE_URL } from './config';
 import { HOT_AUTH_TOKEN } from './config';
 
+import Button from 'react-bootstrap/Button';
+
 import "bpmn-js/dist/assets/diagram-js.css";
 import "bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css";
 import "bpmn-js-properties-panel/dist/assets/properties-panel.css"
@@ -74,8 +76,10 @@ export default function ReactBpmnEditor(props) {
     if (!diagramXML) {
       if (props.url) {
         return fetchDiagramFromURL(props.url);
-      } else {
+      } else if (props.file_name) {
         return fetchDiagramFromJsonAPI(props.process_model_id, props.file_name);
+      } else {
+        return fetchDiagramFromURL(process.env.PUBLIC_URL + '/new_bpmn_diagram.bpmn');
       }
     }
 
@@ -113,7 +117,14 @@ export default function ReactBpmnEditor(props) {
     }
   }, [props, diagramXML, bpmnViewerState]);
 
+  function handleSave() {
+    bpmnViewerState.saveXML({ format: true })
+    .then(xml => props.saveDiagram(xml))
+  }
+
   return (
-    <div></div>
+    <div>
+      <Button onClick={handleSave} variant="danger">Save</Button>
+    </div>
   );
 }

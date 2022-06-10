@@ -33,6 +33,7 @@ root.render(
 
         <Route path="process-models/:process_group_id/new" element={<ProcessModelNew />} />
         <Route path="process-models/:process_group_id/:process_model_id" element={<ProcessModelShow />} />
+        <Route path="process-models/:process_group_id/:process_model_id/file" element={<ProcessModelEditDiagram />} />
         <Route path="process-models/:process_group_id/:process_model_id/file/:file_name" element={<ProcessModelEditDiagram />} />
         <Route path="process-models/:process_group_id/:process_model_id/process-instances" element={<ProcessInstanceList />} />
       </Routes>
