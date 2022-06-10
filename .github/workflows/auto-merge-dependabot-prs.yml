@@ -19,6 +19,15 @@ permissions:
   contents: write
 
 jobs:
+  printJob:
+    name: Print event
+    runs-on: ubuntu-latest
+    steps:
+    - name: Dump GitHub context
+      env:
+        GITHUB_CONTEXT: ${{ toJson(github) }}
+      run: |
+        echo "$GITHUB_CONTEXT"
   dependabot:
     runs-on: ubuntu-latest
     # FIXME: uncomment after logging confirms actor is dependabot
@@ -65,20 +74,6 @@ jobs:
 
       - name: 'Unzip artifact'
         run: unzip pr_number.zip
-
-      - name: 'Comment on PR just for kicks delete me'
-        uses: actions/github-script@v6
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            let fs = require('fs');
-            let issue_number = Number(fs.readFileSync('./pr_number'));
-            await github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: issue_number,
-              body: 'Thank you for the PR, fine contributor!'
-            });
 
       - name: Dependabot metadata
         id: metadata
