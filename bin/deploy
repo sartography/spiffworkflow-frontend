@@ -7,5 +7,6 @@ function error_handler() {
 trap 'error_handler ${LINENO} $?' ERR
 set -o errtrace -o errexit -o nounset -o pipefail
 
+git pull
 docker compose stop
 ./bin/build_and_run_with_docker_compose
