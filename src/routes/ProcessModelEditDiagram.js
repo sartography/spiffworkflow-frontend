@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { BACKEND_BASE_URL } from '../config';
 import { HOT_AUTH_TOKEN } from '../config';
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 import ReactBpmnEditor from "../react_bpmn_editor"
 import ReactDmnEditor from "../react_dmn_editor"
@@ -13,8 +13,9 @@ export default function ProcessModelEditDiagram() {
   const [show, setShow] = useState(false);
   const handleShow = () => setShow(true);
 
-  let params = useParams();
+  const params = useParams();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const [processModelFile, setProcessModelFile] = useState(null);
   const [newFileName, setNewFileName] = useState("");
@@ -55,20 +56,21 @@ export default function ProcessModelEditDiagram() {
     setBpmnXmlForDiagramRendering(bpmnXML);
 
     let url = `${BACKEND_BASE_URL}/process-models/${params.process_model_id}/file`;
-    let httpMethod = 'PUT'
+    let httpMethod = 'PUT';
+    let fileNameWithExtension = fileName;
 
     if (newFileName) {
-      fileName = newFileName;
+      fileNameWithExtension = `${newFileName}.${searchParams.get('file_type')}`;
       httpMethod = 'POST'
     } else {
-      url += `/${fileName}`;
+      url += `/${fileNameWithExtension}`;
     }
-    if (!fileName) {
+    if (!fileNameWithExtension) {
       handleShow();
       return;
     }
 
-    let bpmnFile = new File([bpmnXML], fileName);
+    let bpmnFile = new File([bpmnXML], fileNameWithExtension);
     const formData = new FormData();
     formData.append('file', bpmnFile);
     formData.append('fileName', bpmnFile.name);
@@ -83,7 +85,7 @@ export default function ProcessModelEditDiagram() {
       .then(
         (result) => {
           if (!params.file_name) {
-            navigate(`/process-models/${params.process_group_id}/${params.process_model_id}/file/${newFileName}`);
+            navigate(`/process-models/${params.process_group_id}/${params.process_model_id}/file/${fileNameWithExtension}`);
           }
         },
         (error) => {
@@ -92,40 +94,23 @@ export default function ProcessModelEditDiagram() {
       )
   });
 
-      // <ReactBpmnEditor
-      //   process_model_id={params.process_model_id}
-      //   onError={ onError }
-      //   saveDiagram={ saveDiagram }
-      //   diagramXML={bpmnXmlForDiagramRendering}
-      //   fileName={processModelFile ? processModelFile.name : null}
-      // />
-  return (
-    <main style={{ padding: "1rem 0" }}>
-      <ProcessBreadcrumb
-        processGroupId={params.process_group_id}
-        processModelId={params.process_model_id}
-        linkProcessModel="true"
-      />
-      <h2>Process Model File{processModelFile ? `: ${processModelFile.name}` : ""}</h2>
-      <ReactDmnEditor
-        process_model_id={params.process_model_id}
-        onError={ onError }
-        saveDiagram={ saveDiagram }
-        diagramXML={bpmnXmlForDiagramRendering}
-        fileName={processModelFile ? processModelFile.name : null}
-      />
-
+  const newFileNameBox = (() => {
+    let fileExtension = `.${searchParams.get('file_type')}`;
+    return (
       <Modal show={show} onHide={handleFileNameCancel}>
         <Modal.Header closeButton>
           <Modal.Title>Process Model File Name</Modal.Title>
         </Modal.Header>
         <label>File Name:</label>
-        <input
-          name='file_name'
-          type='text'
-          value={newFileName}
-          onChange={e => setNewFileName(e.target.value)}
-        />
+        <span>
+          <input
+            name='file_name'
+            type='text'
+            value={newFileName}
+            onChange={e => setNewFileName(e.target.value)}
+          />
+          {fileExtension}
+        </span>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleFileNameCancel}>
             Close
@@ -135,6 +120,50 @@ export default function ProcessModelEditDiagram() {
           </Button>
         </Modal.Footer>
       </Modal>
+    )
+  });
+
+  const isDmn = (() => {
+    const file_name = params.file_name || "";
+    if (searchParams.get('file_type') === "dmn" || file_name.endsWith(".dmn") ) {
+      return true;
+    }
+    return false;
+  });
+
+  const appropriateEditor = (() => {
+    if (isDmn()) {
+      return (
+        <ReactDmnEditor
+          process_model_id={params.process_model_id}
+          onError={ onError }
+          saveDiagram={ saveDiagram }
+          diagramXML={bpmnXmlForDiagramRendering}
+          fileName={processModelFile ? processModelFile.name : null}
+        />
+      )
+    }
+    return (
+      <ReactBpmnEditor
+        process_model_id={params.process_model_id}
+        onError={ onError }
+        saveDiagram={ saveDiagram }
+        diagramXML={bpmnXmlForDiagramRendering}
+        fileName={processModelFile ? processModelFile.name : null}
+      />
+    )
+  });
+
+  return (
+    <main style={{ padding: "1rem 0" }}>
+      <ProcessBreadcrumb
+        processGroupId={params.process_group_id}
+        processModelId={params.process_model_id}
+        linkProcessModel="true"
+      />
+      <h2>Process Model File{processModelFile ? `: ${processModelFile.name}` : ""}</h2>
+      {appropriateEditor()}
+      {newFileNameBox()}
 
       <div id="diagram-container"></div>
     </main>

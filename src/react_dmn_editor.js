@@ -1,13 +1,9 @@
 import DmnModeler from 'dmn-js/lib/Modeler';
-import propertiesPanelModule from 'dmn-js-properties-panel';
 
 import {
   DmnPropertiesPanelModule,
   DmnPropertiesProviderModule,
 } from 'dmn-js-properties-panel';
-
-// import drdAdapterModule from 'dmn-js-properties-panel/lib/adapter/drd';
-// import propertiesProviderModule from 'dmn-js-properties-panel/lib/provider/camunda';
 
 import React, { useEffect, useState } from "react";
 import { BACKEND_BASE_URL } from './config';
@@ -16,28 +12,15 @@ import { HOT_AUTH_TOKEN } from './config';
 import Button from 'react-bootstrap/Button';
 
 import "dmn-js/dist/assets/diagram-js.css";
+import "dmn-js/dist/assets/dmn-js-decision-table-controls.css";
+import "dmn-js/dist/assets/dmn-js-decision-table.css";
+import "dmn-js/dist/assets/dmn-js-drd.css";
+import "dmn-js/dist/assets/dmn-js-literal-expression.css";
+import "dmn-js/dist/assets/dmn-js-shared.css";
 import "dmn-js/dist/assets/dmn-font/css/dmn-embedded.css";
 import "dmn-js-properties-panel/dist/assets/properties-panel.css"
-// import './dmn-js-properties-panel.css';
-import "dmn-js/dist/assets/dmn-js-shared.css";
-
-// import * as camundaModdleDescriptor from 'camunda-dmn-moddle/resources/camunda.json';
-// import {ModelerConfig} from '../_interfaces/modeler-config';
-//
-// export const dmnModelerConfig: ModelerConfig = {
-//   additionalModules: [
-//     propertiesProviderModule,
-//     propertiesPanelModule,
-//     drdAdapterModule,
-//   ],
-//   moddleExtensions: {
-//     camunda: camundaModdleDescriptor
-//   }
-// };
 
 
-
-// https://codesandbox.io/s/quizzical-lake-szfyo?file=/src/App.js was a handy reference
 export default function ReactDmnEditor(props) {
   const [diagramXML, setDiagramXML] = useState("");
   const [dmnViewerState, setDmnViewerState] = useState(null);
@@ -69,9 +52,6 @@ export default function ReactDmnEditor(props) {
         additionalModules: [
           DmnPropertiesPanelModule,
           DmnPropertiesProviderModule,
-          // propertiesProviderModule,
-          // propertiesPanelModule,
-          // drdAdapterModule,
         ]
       }
     });

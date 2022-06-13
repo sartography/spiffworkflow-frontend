@@ -13,7 +13,7 @@
   <dmndi:DMNDI>
     <dmndi:DMNDiagram id="DMNDiagram_1cykosu">
       <dmndi:DMNShape id="DMNShape_1dhfq2s" dmnElementRef="Decision_6981fef">
-        <dc:Bounds height="80" width="180" x="157" y="81" />
+        <dc:Bounds height="80" width="180" x="157" y="151" />
       </dmndi:DMNShape>
     </dmndi:DMNDiagram>
   </dmndi:DMNDI>

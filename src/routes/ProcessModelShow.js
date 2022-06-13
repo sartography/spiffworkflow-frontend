@@ -76,8 +76,8 @@ export default function ProcessModelShow() {
   }
 
   if (processModel) {
-    let processInstanceListTag = "";
-    processInstanceListTag = processModel.files.map(file_bpmn => {
+    let processModelFilesTag = "";
+    processModelFilesTag = processModel.files.map(file_bpmn => {
       if (file_bpmn.name === processModel.primary_file_name) {
         return (
           <li key={file_bpmn.name}>
@@ -106,14 +106,16 @@ export default function ProcessModelShow() {
       <Stack direction="horizontal" gap={3}>
         <Button onClick={processModelRun} variant="primary">Run Primary</Button>
         <Button onClick={deleteProcessModel} variant="danger">Delete Process Model</Button>
-        <Button href={`/process-models/${processModel.process_group_id}/${processModel.id}/file`} variant="warning">Add New Process Model File</Button>
+        <Button href={`/process-models/${processModel.process_group_id}/${processModel.id}/file?file_type=bpmn`} variant="warning">Add New BPMN File</Button>
+        <Button href={`/process-models/${processModel.process_group_id}/${processModel.id}/file?file_type=dmn`} variant="success">Add New DMN File</Button>
       </Stack>
       <br />
       <br />
       <Link to={`/process-models/${processModel.process_group_id}/${processModel.id}/process-instances`}>Process Instances</Link>
       <br />
       <br />
-      <ul>{processInstanceListTag}</ul>
+      <h3>Files</h3>
+      <ul>{processModelFilesTag}</ul>
       </main>
     );
   } else {
