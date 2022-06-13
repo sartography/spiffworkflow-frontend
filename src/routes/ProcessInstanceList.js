@@ -10,7 +10,6 @@ export default function ProcessInstanceList() {
   let params = useParams();
   let [searchParams] = useSearchParams();
 
-
   const DEFAULT_PER_PAGE = 50;
   const DEFAULT_PAGE = 1;
   const PER_PAGE_OPTIONS = [2, 10, 50, 100];

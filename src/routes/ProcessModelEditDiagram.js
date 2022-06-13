@@ -4,6 +4,7 @@ import { HOT_AUTH_TOKEN } from '../config';
 import { useNavigate, useParams } from "react-router-dom";
 
 import ReactBpmnEditor from "../react_bpmn_editor"
+import ReactDmnEditor from "../react_dmn_editor"
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb'
 
 import { Button, Modal } from 'react-bootstrap';
@@ -91,6 +92,13 @@ export default function ProcessModelEditDiagram() {
       )
   });
 
+      // <ReactBpmnEditor
+      //   process_model_id={params.process_model_id}
+      //   onError={ onError }
+      //   saveDiagram={ saveDiagram }
+      //   diagramXML={bpmnXmlForDiagramRendering}
+      //   fileName={processModelFile ? processModelFile.name : null}
+      // />
   return (
     <main style={{ padding: "1rem 0" }}>
       <ProcessBreadcrumb
@@ -99,7 +107,7 @@ export default function ProcessModelEditDiagram() {
         linkProcessModel="true"
       />
       <h2>Process Model File{processModelFile ? `: ${processModelFile.name}` : ""}</h2>
-      <ReactBpmnEditor
+      <ReactDmnEditor
         process_model_id={params.process_model_id}
         onError={ onError }
         saveDiagram={ saveDiagram }
@@ -128,7 +136,7 @@ export default function ProcessModelEditDiagram() {
         </Modal.Footer>
       </Modal>
 
-      <div id="bpmn-js-container-thing"></div>
+      <div id="diagram-container"></div>
     </main>
   );
 }

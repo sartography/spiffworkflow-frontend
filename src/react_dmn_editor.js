@@ -1,26 +1,46 @@
-import BpmnModeler from 'bpmn-js/lib/Modeler';
+import DmnModeler from 'dmn-js/lib/Modeler';
+import propertiesPanelModule from 'dmn-js-properties-panel';
+
 import {
-  BpmnPropertiesPanelModule,
-  BpmnPropertiesProviderModule,
-} from 'bpmn-js-properties-panel';
+  DmnPropertiesPanelModule,
+  DmnPropertiesProviderModule,
+} from 'dmn-js-properties-panel';
+
+// import drdAdapterModule from 'dmn-js-properties-panel/lib/adapter/drd';
+// import propertiesProviderModule from 'dmn-js-properties-panel/lib/provider/camunda';
+
 import React, { useEffect, useState } from "react";
 import { BACKEND_BASE_URL } from './config';
 import { HOT_AUTH_TOKEN } from './config';
-import spiffworkflow from 'bpmn-js-spiffworkflow/app/spiffworkflow';
 
 import Button from 'react-bootstrap/Button';
 
-import "bpmn-js/dist/assets/diagram-js.css";
-import "bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css";
-import "bpmn-js-properties-panel/dist/assets/properties-panel.css"
-import './bpmn-js-properties-panel.css';
-import "bpmn-js/dist/assets/bpmn-js.css";
+import "dmn-js/dist/assets/diagram-js.css";
+import "dmn-js/dist/assets/dmn-font/css/dmn-embedded.css";
+import "dmn-js-properties-panel/dist/assets/properties-panel.css"
+// import './dmn-js-properties-panel.css';
+import "dmn-js/dist/assets/dmn-js-shared.css";
+
+// import * as camundaModdleDescriptor from 'camunda-dmn-moddle/resources/camunda.json';
+// import {ModelerConfig} from '../_interfaces/modeler-config';
+//
+// export const dmnModelerConfig: ModelerConfig = {
+//   additionalModules: [
+//     propertiesProviderModule,
+//     propertiesPanelModule,
+//     drdAdapterModule,
+//   ],
+//   moddleExtensions: {
+//     camunda: camundaModdleDescriptor
+//   }
+// };
+
 
 
 // https://codesandbox.io/s/quizzical-lake-szfyo?file=/src/App.js was a handy reference
-export default function ReactBpmnEditor(props) {
+export default function ReactDmnEditor(props) {
   const [diagramXML, setDiagramXML] = useState("");
-  const [bpmnViewerState, setBpmnViewerState] = useState(null);
+  const [dmnViewerState, setDmnViewerState] = useState(null);
 
   useEffect(() => {
     document.getElementById("diagram-container").innerHTML = "";
@@ -37,29 +57,33 @@ export default function ReactBpmnEditor(props) {
     var frag = temp.content;
     document.getElementById("diagram-container").appendChild(frag);
 
-    const bpmnViewer = new BpmnModeler({
+    const dmnViewer = new DmnModeler({
       container: "#canvas",
       keyboard: {
         bindTo: document
       },
-      propertiesPanel: {
-        parent: '#js-properties-panel'
-      },
-      additionalModules: [
-        BpmnPropertiesPanelModule,
-        BpmnPropertiesProviderModule,
-        spiffworkflow,
-      ]
+      drd: {
+        propertiesPanel: {
+          parent: '#js-properties-panel'
+        },
+        additionalModules: [
+          DmnPropertiesPanelModule,
+          DmnPropertiesProviderModule,
+          // propertiesProviderModule,
+          // propertiesPanelModule,
+          // drdAdapterModule,
+        ]
+      }
     });
-    setBpmnViewerState(bpmnViewer)
+    setDmnViewerState(dmnViewer)
   }, [])
 
   useEffect(() => {
-    if (!bpmnViewerState) {
+    if (!dmnViewerState) {
       return;
     }
 
-    bpmnViewerState.on('import.done', (event) => {
+    dmnViewerState.on('import.done', (event) => {
       const {
         error,
       } = event;
@@ -68,12 +92,12 @@ export default function ReactBpmnEditor(props) {
         return handleError(error);
       }
 
-      bpmnViewerState.get('canvas').zoom('fit-viewport');
+      dmnViewerState.getActiveViewer().get('canvas').zoom('fit-viewport');
     });
 
     var diagramXMLToUse = props.diagramXML || diagramXML
     if (diagramXMLToUse) {
-      return displayDiagram(bpmnViewerState, diagramXMLToUse);
+      return displayDiagram(dmnViewerState, diagramXMLToUse);
     }
 
     if (!diagramXML) {
@@ -82,12 +106,12 @@ export default function ReactBpmnEditor(props) {
       } else if (props.fileName) {
         return fetchDiagramFromJsonAPI(props.process_model_id, props.fileName);
       } else {
-        return fetchDiagramFromURL(process.env.PUBLIC_URL + '/new_bpmn_diagram.bpmn');
+        return fetchDiagramFromURL(process.env.PUBLIC_URL + '/new_dmn_diagram.dmn');
       }
     }
 
     return () => {
-      bpmnViewerState.destroy();
+      dmnViewerState.destroy();
     }
 
     function fetchDiagramFromURL(url) {
@@ -115,15 +139,15 @@ export default function ReactBpmnEditor(props) {
       }
     }
 
-    function displayDiagram(bpmnViewerToUse, diagramXMLToDisplay) {
-      bpmnViewerToUse.importXML(diagramXMLToDisplay);
+    function displayDiagram(dmnViewerToUse, diagramXMLToDisplay) {
+      dmnViewerToUse.importXML(diagramXMLToDisplay);
     }
-  }, [props, diagramXML, bpmnViewerState]);
+  }, [props, diagramXML, dmnViewerState]);
 
   function handleSave() {
-    bpmnViewerState.saveXML({ format: true })
-    .then(bpmnXmlObject => {
-      props.saveDiagram(bpmnXmlObject.xml);
+    dmnViewerState.saveXML({ format: true })
+    .then(dmnXmlObject => {
+      props.saveDiagram(dmnXmlObject.xml);
     })
   }
 
