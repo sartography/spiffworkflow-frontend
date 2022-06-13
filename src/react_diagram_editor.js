@@ -59,7 +59,6 @@ export default function ReactDiagramEditor(props) {
 
     let diagramModeler = null;
 
-
     if (props.diagramType === "bpmn") {
       diagramModeler = new BpmnModeler({
         container: "#canvas",
@@ -92,8 +91,45 @@ export default function ReactDiagramEditor(props) {
         }
       });
     }
-    setDiagramModelerState(diagramModeler)
+    setDiagramModelerState(diagramModeler);
+
+    console.log("WE LADED");
+    diagramModeler.on('selection.changed', (event) => {
+      const {
+        error,
+      } = event;
+
+      // if (error) {
+      //   return handleError(error);
+      // }
+      // console.log("WE DO GET EENT");
+      // console.log("event", event)
+      console.log("event.newSelection", event.newSelection)
+      // let element = diagramModelerState.get('selection').get()[0];
+      // if (element) {
+    });
+
+    // modeler.get('modeling').updateProperties(modeler.get('elementRegistry').find(function (el) { return el.id === "Activity_0pxf6g1" }), {"name": "bye"})
+    // diagramModeler.get('modeling').updateProperties(selectedElement,{"camunda:decisionRef": value});
+    // window.modeler = diagramModeler;
+    // diagramModeler.get('modeling').updateProperties(diagramModeler.get('elementRegistry').find(function (el) { return el.id === "Activity_0pxf6g1" }), {"name": "bye"})
+    // diagramModeler.saveXML({ format: true })
+
+
   }, [props, diagramModelerState])
+
+  // function changeNameID() {
+  //   const elementRegistry = bpmnJS.get('elementRegistry'),
+  //     modeling = bpmnJS.get('modeling');
+  //
+  //   const process = elementRegistry.get('Process_0sckl64');
+  //
+  //   modeling.updateProperties(process, {
+  //     id: 'myProcessId',
+  //     name: 'whatAGreatProcess'
+  //   });
+  //
+  // }
 
   useEffect(() => {
     if (!diagramModelerState) {
@@ -117,8 +153,32 @@ export default function ReactDiagramEditor(props) {
       modeler.get('canvas').zoom('fit-viewport');
     });
 
+    diagramModelerState.on('import.done', (event) => {
+      const {
+        error,
+      } = event;
+
+      if (error) {
+        return handleError(error);
+      }
+
+      let modeler = diagramModelerState;
+      if (props.diagramType === "dmn" ) {
+        modeler = diagramModelerState.getActiveViewer();
+      }
+
+      modeler.get('canvas').zoom('fit-viewport');
+    });
+
     var diagramXMLToUse = props.diagramXML || diagramXML
     if (diagramXMLToUse) {
+      // let element = diagramModelerState.get('elementRegistry').get("ActScript");
+      // if (element) {
+      //   console.log("WE DO STUFF")
+      //   console.log("element", element)
+      //   // diagramModelerState.get('modeling').updateProperties(element, {scriptFormat: "python", script: "x=1", name: "bye"})
+      //   diagramModelerState.get('modeling').updateProperties(element, {name: "HELLO_ID"})
+      // }
       return displayDiagram(diagramModelerState, diagramXMLToUse);
     }
 
@@ -171,15 +231,29 @@ export default function ReactDiagramEditor(props) {
   }, [props, diagramXML, diagramModelerState]);
 
   function handleSave() {
+    console.log("WE SAVE XML");
     diagramModelerState.saveXML({ format: true })
     .then(xmlObject => {
+      console.log("xmlObject.xml", xmlObject.xml)
       props.saveDiagram(xmlObject.xml);
     })
+  }
+
+  function handleTest() {
+    // let element = diagramModelerState.get('elementRegistry').get("ActScript");
+    let element = diagramModelerState.get('selection').get()[0];
+    if (element) {
+      console.log("WE DO STUFF")
+      console.log("element", element)
+      // diagramModelerState.get('modeling').updateProperties(element, {scriptFormat: "python", script: "x=1", name: "bye"})
+      diagramModelerState.get('modeling').updateProperties(element, {name: "HELLO_ID2"})
+    }
   }
 
   return (
     <div>
       <Button onClick={handleSave} variant="danger">Save</Button>
+      <Button onClick={handleTest} variant="danger">Test</Button>
     </div>
   );
 }

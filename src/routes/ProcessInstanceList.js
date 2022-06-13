@@ -1,18 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams, useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 
 import { BACKEND_BASE_URL } from '../config';
 import { HOT_AUTH_TOKEN } from '../config';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb'
-import { Table, Dropdown, Stack }  from 'react-bootstrap'
+import { Table }  from 'react-bootstrap'
+
+import PaginationForTable, { DEFAULT_PER_PAGE, DEFAULT_PAGE } from '../components/PaginationForTable'
 
 export default function ProcessInstanceList() {
   let params = useParams();
   let [searchParams] = useSearchParams();
-
-  const DEFAULT_PER_PAGE = 50;
-  const DEFAULT_PAGE = 1;
-  const PER_PAGE_OPTIONS = [2, 10, 50, 100];
 
   const [processInstances, setProcessInstances] = useState(null);
   const [pagination, setPagination] = useState(null);
@@ -45,10 +43,6 @@ export default function ProcessInstanceList() {
         )
     }
   }, [searchParams, params]);
-
-  const getPerPage = (() => {
-    return parseInt(searchParams.get('per_page') || DEFAULT_PER_PAGE);
-  });
 
   const buildTable = (() => {
       const rows = processInstances.map((row,i) => {
@@ -90,82 +84,9 @@ export default function ProcessInstanceList() {
     )
   });
 
-  const getCurrentPage = (() => {
-    return parseInt(searchParams.get('page') || DEFAULT_PAGE);
-  });
-
-  const buildPerPageDropdown = (() => {
-    const perPageDropdownRows = PER_PAGE_OPTIONS.map(per_page_option => {
-      if (per_page_option === getPerPage()) {
-          return <Dropdown.Item key={per_page_option} href={`/process-models/${params.process_group_id}/${params.process_model_id}/process-instances?page=1&per_page=${per_page_option}`} active>{per_page_option}</Dropdown.Item>
-      } else {
-          return <Dropdown.Item key={per_page_option} href={`/process-models/${params.process_group_id}/${params.process_model_id}/process-instances?page=1&per_page=${per_page_option}`}>{per_page_option}</Dropdown.Item>
-      }
-    });
-    return (
-      <Stack direction="horizontal" gap={3}>
-      <Dropdown className="ms-auto">
-        <Dropdown.Toggle id="process-instances-per-page" variant="light border">
-          Process Instances to Show: {getPerPage()}
-        </Dropdown.Toggle>
-
-        <Dropdown.Menu variant="light">
-          {perPageDropdownRows}
-        </Dropdown.Menu>
-      </Dropdown>
-      </Stack>
-    )
-  });
-
-  const buildPaginationNav = (() => {
-    let previousPageTag = "";
-    if (getCurrentPage() === 1) {
-      previousPageTag = (
-        <li className="page-item disabled" key="previous"><span style={{fontSize:"1.5em"}} className="page-link">&laquo;</span></li>
-      )
-    } else {
-      previousPageTag = (
-        <li className="page-item" key="previous">
-          <Link className="page-link" style={{fontSize:"1.5em"}} to={`/process-models/${params.process_group_id}/${params.process_model_id}/process-instances?page=${getCurrentPage() - 1}&per_page=${getPerPage()}`}>&laquo;</Link>
-        </li>
-      )
-    }
-
-    let nextPageTag = "";
-    if (getCurrentPage() === pagination.pages) {
-      nextPageTag = (
-        <li className="page-item disabled" key="next"><span style={{fontSize:"1.5em"}} className="page-link">&raquo;</span></li>
-      )
-    } else {
-      nextPageTag = (
-        <li className="page-item" key="next">
-          <Link className="page-link" style={{fontSize:"1.5em"}} to={`/process-models/${params.process_group_id}/${params.process_model_id}/process-instances?page=${getCurrentPage() + 1}&per_page=${getPerPage()}`}>&raquo;</Link>
-        </li>
-      )
-    }
-
-    let startingNumber = ((getCurrentPage() - 1) * getPerPage()) + 1
-    let endingNumber = ((getCurrentPage()) * getPerPage())
-    if (endingNumber > pagination.total) {
-      endingNumber = pagination.total
-    }
-
-    return (
-      <Stack direction="horizontal" gap={3}>
-        <p className="ms-auto">{startingNumber}-{endingNumber} of {pagination.total}</p>
-        <nav aria-label="Page navigation">
-        <div>
-        <ul className="pagination">
-          {previousPageTag}
-          {nextPageTag}
-        </ul>
-      </div>
-        </nav>
-      </Stack>
-    )
-  });
-
   if (processInstances) {
+    const perPage = parseInt(searchParams.get('per_page') || DEFAULT_PER_PAGE);
+    const page = parseInt(searchParams.get('page') || DEFAULT_PAGE);
     return(
       <main>
       <ProcessBreadcrumb
@@ -174,9 +95,13 @@ export default function ProcessInstanceList() {
         linkProcessModel="true"
       />
       <h2>Process Instances for {params.process_model_id}</h2>
-      {buildPaginationNav()}
-     	{buildTable()}
-      {buildPerPageDropdown()}
+      <PaginationForTable
+        page={page}
+        perPage={perPage}
+        pagination={pagination}
+        tableToDisplay={buildTable()}
+        path={`/process-models/${params.process_group_id}/${params.process_model_id}/process-instances`}
+      />
    	  </main>
     )
   } else {
