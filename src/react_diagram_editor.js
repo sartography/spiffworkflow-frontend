@@ -39,6 +39,10 @@ export default function ReactDiagramEditor(props) {
   const [diagramModelerState, setDiagramModelerState] = useState(null);
 
   useEffect(() => {
+    if (diagramModelerState) {
+      return;
+    }
+
     document.getElementById("diagram-container").innerHTML = "";
     var temp = document.createElement('template');
 
@@ -54,6 +58,7 @@ export default function ReactDiagramEditor(props) {
     document.getElementById("diagram-container").appendChild(frag);
 
     let diagramModeler = null;
+
 
     if (props.diagramType === "bpmn") {
       diagramModeler = new BpmnModeler({
@@ -88,7 +93,7 @@ export default function ReactDiagramEditor(props) {
       });
     }
     setDiagramModelerState(diagramModeler)
-  }, [props])
+  }, [props, diagramModelerState])
 
   useEffect(() => {
     if (!diagramModelerState) {

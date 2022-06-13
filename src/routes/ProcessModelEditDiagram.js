@@ -3,7 +3,7 @@ import { BACKEND_BASE_URL } from '../config';
 import { HOT_AUTH_TOKEN } from '../config';
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
-import ReactDiagramEditor from "../react_bpmn_editor"
+import ReactDiagramEditor from "../react_diagram_editor"
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb'
 
 import { Button, Modal } from 'react-bootstrap';
@@ -44,9 +44,13 @@ export default function ProcessModelEditDiagram() {
     console.log('ERROR:', err);
   }
 
-  const handleFileNameCancel = () => setShow(false);
+  const handleFileNameCancel = (() => {
+    setShow(false);
+    setNewFileName("");
+  });
 
-  const handleFileNameSave = (() => {
+  const handleFileNameSave = ((event) => {
+    event.preventDefault();
     setShow(false);
     saveDiagram(bpmnXmlForDiagramRendering);
   });
@@ -100,24 +104,27 @@ export default function ProcessModelEditDiagram() {
         <Modal.Header closeButton>
           <Modal.Title>Process Model File Name</Modal.Title>
         </Modal.Header>
-        <label>File Name:</label>
-        <span>
-          <input
-            name='file_name'
-            type='text'
-            value={newFileName}
-            onChange={e => setNewFileName(e.target.value)}
-          />
-          {fileExtension}
-        </span>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleFileNameCancel}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleFileNameSave}>
-            Save Changes
-          </Button>
-        </Modal.Footer>
+        <form onSubmit={handleFileNameSave}>
+          <label>File Name:</label>
+          <span>
+            <input
+              name='file_name'
+              type='text'
+              value={newFileName}
+              onChange={e => setNewFileName(e.target.value)}
+              autoFocus={true}
+            />
+            {fileExtension}
+          </span>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleFileNameCancel}>
+              Cancel
+            </Button>
+            <Button variant="primary" type="submit">
+              Save Changes
+            </Button>
+          </Modal.Footer>
+        </form>
       </Modal>
     )
   });
