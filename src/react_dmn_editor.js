@@ -23,7 +23,7 @@ import "dmn-js-properties-panel/dist/assets/properties-panel.css"
 
 export default function ReactDmnEditor(props) {
   const [diagramXML, setDiagramXML] = useState("");
-  const [dmnViewerState, setDmnViewerState] = useState(null);
+  const [diagramModelerState, setDiagramModelerState] = useState(null);
 
   useEffect(() => {
     document.getElementById("diagram-container").innerHTML = "";
@@ -40,7 +40,7 @@ export default function ReactDmnEditor(props) {
     var frag = temp.content;
     document.getElementById("diagram-container").appendChild(frag);
 
-    const dmnViewer = new DmnModeler({
+    const diagramModeler = new DmnModeler({
       container: "#canvas",
       keyboard: {
         bindTo: document
@@ -55,15 +55,15 @@ export default function ReactDmnEditor(props) {
         ]
       }
     });
-    setDmnViewerState(dmnViewer)
+    setDiagramModelerState(diagramModeler)
   }, [])
 
   useEffect(() => {
-    if (!dmnViewerState) {
+    if (!diagramModelerState) {
       return;
     }
 
-    dmnViewerState.on('import.done', (event) => {
+    diagramModelerState.on('import.done', (event) => {
       const {
         error,
       } = event;
@@ -72,12 +72,12 @@ export default function ReactDmnEditor(props) {
         return handleError(error);
       }
 
-      dmnViewerState.getActiveViewer().get('canvas').zoom('fit-viewport');
+      diagramModelerState.getActiveViewer().get('canvas').zoom('fit-viewport');
     });
 
     var diagramXMLToUse = props.diagramXML || diagramXML
     if (diagramXMLToUse) {
-      return displayDiagram(dmnViewerState, diagramXMLToUse);
+      return displayDiagram(diagramModelerState, diagramXMLToUse);
     }
 
     if (!diagramXML) {
@@ -91,7 +91,7 @@ export default function ReactDmnEditor(props) {
     }
 
     return () => {
-      dmnViewerState.destroy();
+      diagramModelerState.destroy();
     }
 
     function fetchDiagramFromURL(url) {
@@ -119,15 +119,15 @@ export default function ReactDmnEditor(props) {
       }
     }
 
-    function displayDiagram(dmnViewerToUse, diagramXMLToDisplay) {
-      dmnViewerToUse.importXML(diagramXMLToDisplay);
+    function displayDiagram(diagramModelerToUse, diagramXMLToDisplay) {
+      diagramModelerToUse.importXML(diagramXMLToDisplay);
     }
-  }, [props, diagramXML, dmnViewerState]);
+  }, [props, diagramXML, diagramModelerState]);
 
   function handleSave() {
-    dmnViewerState.saveXML({ format: true })
-    .then(dmnXmlObject => {
-      props.saveDiagram(dmnXmlObject.xml);
+    diagramModelerState.saveXML({ format: true })
+    .then(xmlObject => {
+      props.saveDiagram(xmlObject.xml);
     })
   }
 
