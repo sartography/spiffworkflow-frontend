@@ -8,6 +8,8 @@ import ProcessBreadcrumb from '../components/ProcessBreadcrumb'
 
 import { Button, Modal } from 'react-bootstrap';
 
+import Editor from "@monaco-editor/react";
+
 export default function ProcessModelEditDiagram() {
   const [show, setShow] = useState(false);
   const handleShow = () => setShow(true);
@@ -172,6 +174,11 @@ export default function ProcessModelEditDiagram() {
       <h2>Process Model File{processModelFile ? `: ${processModelFile.name}` : ""}</h2>
       {appropriateEditor()}
       {newFileNameBox()}
+      <Editor
+        height="90vh"
+        defaultLanguage="python"
+        defaultValue="# write code here"
+      />
 
       <div id="diagram-container"></div>
     </main>
