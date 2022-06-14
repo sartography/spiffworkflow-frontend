@@ -1,5 +1,7 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+// import ReactDOM from 'react-dom/client';
+import * as ReactDOMClient from 'react-dom/client';
+
 
 import 'bootstrap/dist/css/bootstrap.css';
 import './index.css';
@@ -22,7 +24,7 @@ import ProcessModelNew from "./routes/ProcessModelNew"
 import { Container } from 'react-bootstrap'
 
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOMClient.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <Container>

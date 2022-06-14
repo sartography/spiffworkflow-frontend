@@ -33,6 +33,9 @@ import "dmn-js/dist/assets/dmn-font/css/dmn-embedded.css";
 import "dmn-js-properties-panel/dist/assets/properties-panel.css"
 
 
+import magicPropertiesProviderModule from './magic';
+import magicModdleDescriptor from './magic/magic';
+
 // https://codesandbox.io/s/quizzical-lake-szfyo?file=/src/App.js was a handy reference
 export default function ReactDiagramEditor(props) {
   const [diagramXML, setDiagramXML] = useState("");
@@ -71,8 +74,12 @@ export default function ReactDiagramEditor(props) {
         additionalModules: [
           BpmnPropertiesPanelModule,
           BpmnPropertiesProviderModule,
+          magicPropertiesProviderModule,
           spiffworkflow,
-        ]
+        ],
+        moddleExtensions: {
+          magic: magicModdleDescriptor
+        }
       });
     } else if (props.diagramType === "dmn") {
       diagramModeler = new DmnModeler({
@@ -93,7 +100,6 @@ export default function ReactDiagramEditor(props) {
     }
     setDiagramModelerState(diagramModeler);
 
-    console.log("WE LADED");
     diagramModeler.on('selection.changed', (event) => {
       const {
         error,
@@ -104,7 +110,7 @@ export default function ReactDiagramEditor(props) {
       // }
       // console.log("WE DO GET EENT");
       // console.log("event", event)
-      console.log("event.newSelection", event.newSelection)
+      // console.log("event.newSelection", event.newSelection)
       // let element = diagramModelerState.get('selection').get()[0];
       // if (element) {
     });
@@ -246,7 +252,7 @@ export default function ReactDiagramEditor(props) {
       console.log("WE DO STUFF")
       console.log("element", element)
       // diagramModelerState.get('modeling').updateProperties(element, {scriptFormat: "python", script: "x=1", name: "bye"})
-      diagramModelerState.get('modeling').updateProperties(element, {name: "HELLO_ID2"})
+      diagramModelerState.get('modeling').updateProperties(element, {newKey: "newValue", script: "this be script", name: "hi", scriptFormat: "python"})
     }
   }
 
