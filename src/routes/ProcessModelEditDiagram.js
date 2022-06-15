@@ -14,6 +14,12 @@ export default function ProcessModelEditDiagram() {
   const [showFileNameEditor, setShowFileNameEditor] = useState(false);
   const handleShowFileNameEditor = () => setShowFileNameEditor(true);
 
+  const [scriptText, setScriptText] = useState("");
+  const [modeling, setModeling] = useState(null);
+  const [scriptElement, setElement] = useState(null);
+  const [showScriptEditor, setShowScriptEditor] = useState(false);
+  const handleShowScriptEditor = () => setShowScriptEditor(true);
+
   const params = useParams();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -99,11 +105,6 @@ export default function ProcessModelEditDiagram() {
       )
   });
 
-  const handleScriptEditorClose = (() => {
-    // setShow(false);
-    // setNewFileName("");
-  });
-
   const newFileNameBox = (() => {
     let fileExtension = `.${searchParams.get('file_type')}`;
     return (
@@ -136,45 +137,48 @@ export default function ProcessModelEditDiagram() {
     )
   });
 
+  const onLaunchScriptEditor = ((element, modeling) => {
+    setScriptText((element.businessObject.script || ''));
+    setModeling(modeling);
+    setElement(element);
+    handleShowScriptEditor();
+  });
+  const handleScriptEditorClose = (() => {
+    setShowScriptEditor(false);
+  });
+  const handleEditorChange = ((value, event) => {
+    setScriptText(value);
+  });
+  const handleScriptEditorSave = ((value, event) => {
+    modeling.updateProperties(scriptElement, {
+      scriptFormat: "python",
+      script: scriptText
+    });
+    setShowScriptEditor(false);
+  });
   const scriptEditor = (() => {
     return (
-      <Modal show={showFileNameEditor} onHide={handleScriptEditorClose}>
+      <Modal size="lg" show={showScriptEditor} onHide={handleScriptEditorClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Script</Modal.Title>
+        </Modal.Header>
         <Editor
-          height="90vh"
+          height="70vh"
+          width="70vw"
           defaultLanguage="python"
-          defaultValue="# write code here"
+          defaultValue={scriptText}
+          onChange={handleEditorChange}
         />
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleScriptEditorClose}>
+            Cancel
+          </Button>
+          <Button variant="secondary" onClick={handleScriptEditorSave}>
+            Save
+          </Button>
+        </Modal.Footer>
       </Modal>
     );
-    // let fileExtension = `.${searchParams.get('file_type')}`;
-    // return (
-    //   <Modal show={showFileNameEditor} onHide={handleFileNameCancel}>
-    //     <Modal.Header closeButton>
-    //       <Modal.Title>Process Model File Name</Modal.Title>
-    //     </Modal.Header>
-    //     <form onSubmit={handleFileNameSave}>
-    //       <label>File Name:</label>
-    //       <span>
-    //         <input
-    //           name='file_name'
-    //           type='text'
-    //           value={newFileName}
-    //           onChange={e => setNewFileName(e.target.value)}
-    //           autoFocus={true}
-    //         />
-    //         {fileExtension}
-    //       </span>
-    //       <Modal.Footer>
-    //         <Button variant="secondary" onClick={handleFileNameCancel}>
-    //           Cancel
-    //         </Button>
-    //         <Button variant="primary" type="submit">
-    //           Save Changes
-    //         </Button>
-    //       </Modal.Footer>
-    //     </form>
-    //   </Modal>
-    // )
   });
 
   const isDmn = (() => {
@@ -206,11 +210,11 @@ export default function ProcessModelEditDiagram() {
         diagramXML={bpmnXmlForDiagramRendering}
         fileName={processModelFile ? processModelFile.name : null}
         diagramType='bpmn'
+        onLaunchScriptEditor={onLaunchScriptEditor}
       />
     )
   });
 
-      // {scriptEditor()}
   return (
     <main style={{ padding: "1rem 0" }}>
       <ProcessBreadcrumb
@@ -221,6 +225,7 @@ export default function ProcessModelEditDiagram() {
       <h2>Process Model File{processModelFile ? `: ${processModelFile.name}` : ""}</h2>
       {appropriateEditor()}
       {newFileNameBox()}
+      {scriptEditor()}
 
       <div id="diagram-container"></div>
     </main>

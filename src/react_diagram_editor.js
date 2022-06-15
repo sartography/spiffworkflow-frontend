@@ -37,6 +37,7 @@ import "dmn-js-properties-panel/dist/assets/properties-panel.css"
 export default function ReactDiagramEditor(props) {
   const [diagramXML, setDiagramXML] = useState("");
   const [diagramModelerState, setDiagramModelerState] = useState(null);
+  const [performingXmlUpdates, setPerformingXmlUpdates] = useState(false);
 
   useEffect(() => {
     if (diagramModelerState) {
@@ -93,29 +94,36 @@ export default function ReactDiagramEditor(props) {
       });
     }
     setDiagramModelerState(diagramModeler);
+
+    diagramModeler.on('launch.script.editor', (event) => {
+      const {
+        error,
+        element,
+      } = event;
+      if (error) {
+        console.log(error);
+      }
+      handleLaunchScriptEditor(element);
+    });
+
+    function handleLaunchScriptEditor(element) {
+      const { onLaunchScriptEditor } = props;
+      if (onLaunchScriptEditor) {
+        setPerformingXmlUpdates(true);
+        const modeling = diagramModeler.get('modeling');
+        onLaunchScriptEditor(element, modeling);
+      }
+    }
+
   }, [props, diagramModelerState])
 
   useEffect(() => {
     if (!diagramModelerState) {
       return;
     }
-
-    diagramModelerState.on('import.done', (event) => {
-      const {
-        error,
-      } = event;
-
-      if (error) {
-        return handleError(error);
-      }
-
-      let modeler = diagramModelerState;
-      if (props.diagramType === "dmn" ) {
-        modeler = diagramModelerState.getActiveViewer();
-      }
-
-      modeler.get('canvas').zoom('fit-viewport');
-    });
+    if (performingXmlUpdates) {
+      return;
+    }
 
     diagramModelerState.on('import.done', (event) => {
       const {
