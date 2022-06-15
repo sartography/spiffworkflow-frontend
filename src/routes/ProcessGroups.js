@@ -19,7 +19,7 @@ export default function ProcessGroups() {
       .then(res => res.json())
       .then(
         (result) => {
-          setProcessGroups(result);
+          setProcessGroups(result.results);
         },
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow

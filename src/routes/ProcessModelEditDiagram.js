@@ -11,8 +11,8 @@ import { Button, Modal } from 'react-bootstrap';
 import Editor from "@monaco-editor/react";
 
 export default function ProcessModelEditDiagram() {
-  const [show, setShow] = useState(false);
-  const handleShow = () => setShow(true);
+  const [showFileNameEditor, setShowFileNameEditor] = useState(false);
+  const handleShowFileNameEditor = () => setShowFileNameEditor(true);
 
   const params = useParams();
   const navigate = useNavigate();
@@ -47,13 +47,13 @@ export default function ProcessModelEditDiagram() {
   }
 
   const handleFileNameCancel = (() => {
-    setShow(false);
+    setShowFileNameEditor(false);
     setNewFileName("");
   });
 
   const handleFileNameSave = ((event) => {
     event.preventDefault();
-    setShow(false);
+    setShowFileNameEditor(false);
     saveDiagram(bpmnXmlForDiagramRendering);
   });
 
@@ -71,7 +71,7 @@ export default function ProcessModelEditDiagram() {
       url += `/${fileNameWithExtension}`;
     }
     if (!fileNameWithExtension) {
-      handleShow();
+      handleShowFileNameEditor();
       return;
     }
 
@@ -99,10 +99,15 @@ export default function ProcessModelEditDiagram() {
       )
   });
 
+  const handleScriptEditorClose = (() => {
+    // setShow(false);
+    // setNewFileName("");
+  });
+
   const newFileNameBox = (() => {
     let fileExtension = `.${searchParams.get('file_type')}`;
     return (
-      <Modal show={show} onHide={handleFileNameCancel}>
+      <Modal show={showFileNameEditor} onHide={handleFileNameCancel}>
         <Modal.Header closeButton>
           <Modal.Title>Process Model File Name</Modal.Title>
         </Modal.Header>
@@ -129,6 +134,47 @@ export default function ProcessModelEditDiagram() {
         </form>
       </Modal>
     )
+  });
+
+  const scriptEditor = (() => {
+    return (
+      <Modal show={showFileNameEditor} onHide={handleScriptEditorClose}>
+        <Editor
+          height="90vh"
+          defaultLanguage="python"
+          defaultValue="# write code here"
+        />
+      </Modal>
+    );
+    // let fileExtension = `.${searchParams.get('file_type')}`;
+    // return (
+    //   <Modal show={showFileNameEditor} onHide={handleFileNameCancel}>
+    //     <Modal.Header closeButton>
+    //       <Modal.Title>Process Model File Name</Modal.Title>
+    //     </Modal.Header>
+    //     <form onSubmit={handleFileNameSave}>
+    //       <label>File Name:</label>
+    //       <span>
+    //         <input
+    //           name='file_name'
+    //           type='text'
+    //           value={newFileName}
+    //           onChange={e => setNewFileName(e.target.value)}
+    //           autoFocus={true}
+    //         />
+    //         {fileExtension}
+    //       </span>
+    //       <Modal.Footer>
+    //         <Button variant="secondary" onClick={handleFileNameCancel}>
+    //           Cancel
+    //         </Button>
+    //         <Button variant="primary" type="submit">
+    //           Save Changes
+    //         </Button>
+    //       </Modal.Footer>
+    //     </form>
+    //   </Modal>
+    // )
   });
 
   const isDmn = (() => {
@@ -164,6 +210,7 @@ export default function ProcessModelEditDiagram() {
     )
   });
 
+      // {scriptEditor()}
   return (
     <main style={{ padding: "1rem 0" }}>
       <ProcessBreadcrumb
@@ -174,11 +221,6 @@ export default function ProcessModelEditDiagram() {
       <h2>Process Model File{processModelFile ? `: ${processModelFile.name}` : ""}</h2>
       {appropriateEditor()}
       {newFileNameBox()}
-      <Editor
-        height="90vh"
-        defaultLanguage="python"
-        defaultValue="# write code here"
-      />
 
       <div id="diagram-container"></div>
     </main>

@@ -13,7 +13,9 @@ import {
 import React, { useEffect, useState } from "react";
 import { BACKEND_BASE_URL } from './config';
 import { HOT_AUTH_TOKEN } from './config';
-import spiffworkflow from 'bpmn-js-spiffworkflow/app/spiffworkflow';
+import spiffworkflowIO from 'bpmn-js-spiffworkflow/app/spiffworkflow/InputOutput';
+import spiffworkflowPanel from 'bpmn-js-spiffworkflow/app/spiffworkflow/PropertiesPanel';
+import spiffworkflowDescriptor from 'bpmn-js-spiffworkflow/app/spiffworkflow/PropertiesPanel/descriptors/spiff';
 
 import Button from 'react-bootstrap/Button';
 
@@ -31,10 +33,6 @@ import "dmn-js/dist/assets/dmn-js-literal-expression.css";
 import "dmn-js/dist/assets/dmn-js-shared.css";
 import "dmn-js/dist/assets/dmn-font/css/dmn-embedded.css";
 import "dmn-js-properties-panel/dist/assets/properties-panel.css"
-
-
-import magicPropertiesProviderModule from './magic';
-import magicModdleDescriptor from './magic/magic';
 
 // https://codesandbox.io/s/quizzical-lake-szfyo?file=/src/App.js was a handy reference
 export default function ReactDiagramEditor(props) {
@@ -74,11 +72,11 @@ export default function ReactDiagramEditor(props) {
         additionalModules: [
           BpmnPropertiesPanelModule,
           BpmnPropertiesProviderModule,
-          magicPropertiesProviderModule,
-          spiffworkflow,
+          spiffworkflowIO,
+          spiffworkflowPanel
         ],
         moddleExtensions: {
-          magic: magicModdleDescriptor
+          magic: spiffworkflowDescriptor
         }
       });
     } else if (props.diagramType === "dmn") {
@@ -245,21 +243,23 @@ export default function ReactDiagramEditor(props) {
     })
   }
 
-  function handleTest() {
-    // let element = diagramModelerState.get('elementRegistry').get("ActScript");
-    let element = diagramModelerState.get('selection').get()[0];
-    if (element) {
-      console.log("WE DO STUFF")
-      console.log("element", element)
-      // diagramModelerState.get('modeling').updateProperties(element, {scriptFormat: "python", script: "x=1", name: "bye"})
-      diagramModelerState.get('modeling').updateProperties(element, {newKey: "newValue", script: "this be script", name: "hi", scriptFormat: "python"})
-    }
+  function HandleTest() {
+    // const modeler = useService("modeling");
+    // console.log("modeler", modeler)
+    // // let element = diagramModelerState.get('elementRegistry').get("ActScript");
+    // let element = diagramModelerState.get('selection').get()[0];
+    // if (element) {
+    //   console.log("WE DO STUFF")
+    //   console.log("element", element)
+    //   // diagramModelerState.get('modeling').updateProperties(element, {scriptFormat: "python", script: "x=1", name: "bye"})
+    //   diagramModelerState.get('modeling').updateProperties(element, {newKey: "newValue", script: "this be script", name: "hi", scriptFormat: "python"})
+    // }
   }
 
   return (
     <div>
       <Button onClick={handleSave} variant="danger">Save</Button>
-      <Button onClick={handleTest} variant="danger">Test</Button>
+      <Button onClick={HandleTest} variant="danger">Test</Button>
     </div>
   );
 }
