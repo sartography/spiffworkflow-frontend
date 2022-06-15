@@ -148,33 +148,27 @@ export default function ProcessModelEditDiagram() {
   });
   const handleEditorChange = ((value, event) => {
     setScriptText(value);
-  });
-  const handleScriptEditorSave = ((value, event) => {
     modeling.updateProperties(scriptElement, {
       scriptFormat: "python",
-      script: scriptText
+      script: value
     });
-    setShowScriptEditor(false);
   });
   const scriptEditor = (() => {
     return (
-      <Modal size="lg" show={showScriptEditor} onHide={handleScriptEditorClose}>
+      <Modal size="xl" show={showScriptEditor} onHide={handleScriptEditorClose}>
         <Modal.Header closeButton>
           <Modal.Title>Script</Modal.Title>
         </Modal.Header>
         <Editor
-          height="70vh"
-          width="70vw"
+          height={600}
+          width="auto"
           defaultLanguage="python"
           defaultValue={scriptText}
           onChange={handleEditorChange}
         />
         <Modal.Footer>
           <Button variant="secondary" onClick={handleScriptEditorClose}>
-            Cancel
-          </Button>
-          <Button variant="secondary" onClick={handleScriptEditorSave}>
-            Save
+            Close
           </Button>
         </Modal.Footer>
       </Modal>
