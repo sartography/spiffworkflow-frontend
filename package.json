@@ -10,7 +10,7 @@
     "bootstrap": "^5.2.0-beta1",
     "bpmn-js": "^9.1.0",
     "bpmn-js-properties-panel": "^1.1.1",
-    "bpmn-js-spiffworkflow": "^0.0.1",
+    "bpmn-js-spiffworkflow": "^0.0.2",
     "dmn-js": "^12.1.1",
     "dmn-js-properties-panel": "^1.0.0",
     "dmn-js-shared": "^12.1.1",
