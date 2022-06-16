@@ -30,7 +30,7 @@ export default function ProcessGroups() {
       )
   }, []);
 
-  if (processGroups) {
+  if (processGroups.results) {
     return (
       <main style={{ padding: "1rem 0" }}>
         <ProcessBreadcrumb />
@@ -39,7 +39,7 @@ export default function ProcessGroups() {
         <br />
         <br />
         <ul>
-          {processGroups.map(processGroup => (
+          {processGroups.results.map(processGroup => (
             <li key={processGroup.id}>
               <Link to={`/process-groups/${processGroup.id}`}>{processGroup.id}</Link>
             </li>
