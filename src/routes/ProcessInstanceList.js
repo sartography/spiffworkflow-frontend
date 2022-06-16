@@ -12,7 +12,7 @@ export default function ProcessInstanceList() {
   let params = useParams();
   let [searchParams] = useSearchParams();
 
-  const [processInstances, setProcessInstances] = useState(null);
+  const [processInstances, setProcessInstances] = useState([]);
   const [pagination, setPagination] = useState(null);
   const [processGroupId, setProcessGroupId] = useState(null);
 
@@ -30,13 +30,13 @@ export default function ProcessInstanceList() {
         .then(res => res.json())
         .then(
           (result) => {
-            setProcessInstances(result.results);
+            const processInstancesFromApi = result.results;
+            setProcessInstances(processInstancesFromApi);
             setPagination(result.pagination);
-            setProcessGroupId(result.results[0].process_group_id)
+            if (processInstancesFromApi[0]) {
+              setProcessGroupId(processInstancesFromApi[0].process_group_id)
+            }
           },
-          // Note: it's important to handle errors here
-          // instead of a catch() block so that we don't swallow
-          // exceptions from actual bugs in components.
           (error) => {
             console.log(error);
           }
@@ -84,7 +84,7 @@ export default function ProcessInstanceList() {
     )
   });
 
-  if (processInstances) {
+  if (pagination) {
     const perPage = parseInt(searchParams.get('per_page') || DEFAULT_PER_PAGE);
     const page = parseInt(searchParams.get('page') || DEFAULT_PAGE);
     return(

@@ -28,9 +28,6 @@ export default function ProcessGroups() {
           setProcessGroups(result.results);
           setPagination(result.pagination);
         },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
         (newError) => {
           console.log(newError);
         }

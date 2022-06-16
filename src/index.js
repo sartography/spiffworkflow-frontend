@@ -20,6 +20,7 @@ import ProcessModelShow from "./routes/ProcessModelShow"
 import ProcessModelEditDiagram from "./routes/ProcessModelEditDiagram"
 import ProcessInstanceList from "./routes/ProcessInstanceList"
 import ProcessModelNew from "./routes/ProcessModelNew"
+import ErrorBoundary from "./components/ErrorBoundary"
 
 import { Container } from 'react-bootstrap'
 
@@ -28,21 +29,23 @@ const root = ReactDOMClient.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <Container>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<ProcessGroups />} />
+      <ErrorBoundary>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<ProcessGroups />} />
 
-        <Route path="process-groups" element={<ProcessGroups />} />
-        <Route path="process-groups/:process_group_id" element={<ProcessGroupShow />} />
-        <Route path="process-groups/new" element={<ProcessGroupNew />} />
+            <Route path="process-groups" element={<ProcessGroups />} />
+            <Route path="process-groups/:process_group_id" element={<ProcessGroupShow />} />
+            <Route path="process-groups/new" element={<ProcessGroupNew />} />
 
-        <Route path="process-models/:process_group_id/new" element={<ProcessModelNew />} />
-        <Route path="process-models/:process_group_id/:process_model_id" element={<ProcessModelShow />} />
-        <Route path="process-models/:process_group_id/:process_model_id/file" element={<ProcessModelEditDiagram />} />
-        <Route path="process-models/:process_group_id/:process_model_id/file/:file_name" element={<ProcessModelEditDiagram />} />
-        <Route path="process-models/:process_group_id/:process_model_id/process-instances" element={<ProcessInstanceList />} />
-      </Routes>
-    </BrowserRouter>
+            <Route path="process-models/:process_group_id/new" element={<ProcessModelNew />} />
+            <Route path="process-models/:process_group_id/:process_model_id" element={<ProcessModelShow />} />
+            <Route path="process-models/:process_group_id/:process_model_id/file" element={<ProcessModelEditDiagram />} />
+            <Route path="process-models/:process_group_id/:process_model_id/file/:file_name" element={<ProcessModelEditDiagram />} />
+            <Route path="process-models/:process_group_id/:process_model_id/process-instances" element={<ProcessInstanceList />} />
+          </Routes>
+        </BrowserRouter>
+      </ErrorBoundary>
     </Container>
   </React.StrictMode>
 );

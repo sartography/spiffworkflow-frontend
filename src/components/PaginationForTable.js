@@ -19,7 +19,7 @@ export default function PaginationForTable(props) {
     });
     return (
       <Stack direction="horizontal" gap={3}>
-      <Dropdown className="ms-auto">
+      <Dropdown className="ms-auto" id="pagination-page-dropdown">
         <Dropdown.Toggle id="process-instances-per-page" variant="light border">
           Process Instances to Show: {props.perPage}
         </Dropdown.Toggle>
@@ -41,20 +41,20 @@ export default function PaginationForTable(props) {
     } else {
       previousPageTag = (
         <li className="page-item" key="previous">
-          <Link className="page-link" style={{fontSize:"1.5em"}} to={`${props.path}?page=${props.page - 1}&per_page=${props.perPage}`}>&laquo;</Link>
+          <Link data-qa="pagination-previous-button" className="page-link" style={{fontSize:"1.5em"}} to={`${props.path}?page=${props.page - 1}&per_page=${props.perPage}`}>&laquo;</Link>
         </li>
       )
     }
 
     let nextPageTag = "";
-    if (props.page === props.pagination.pages) {
+    if (props.page >= props.pagination.pages) {
       nextPageTag = (
         <li className="page-item disabled" key="next"><span style={{fontSize:"1.5em"}} className="page-link">&raquo;</span></li>
       )
     } else {
       nextPageTag = (
         <li className="page-item" key="next">
-          <Link className="page-link" style={{fontSize:"1.5em"}} to={`${props.path}?page=${props.page + 1}&per_page=${props.perPage}`}>&raquo;</Link>
+          <Link data-qa="pagination-next-button" className="page-link" style={{fontSize:"1.5em"}} to={`${props.path}?page=${props.page + 1}&per_page=${props.perPage}`}>&raquo;</Link>
         </li>
       )
     }
@@ -63,6 +63,9 @@ export default function PaginationForTable(props) {
     let endingNumber = ((props.page) * props.perPage)
     if (endingNumber > props.pagination.total) {
       endingNumber = props.pagination.total
+    }
+    if (startingNumber > props.pagination.total) {
+      startingNumber = props.pagination.total
     }
 
     return (
