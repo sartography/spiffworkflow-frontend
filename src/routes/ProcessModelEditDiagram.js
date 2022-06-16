@@ -15,8 +15,8 @@ export default function ProcessModelEditDiagram() {
   const handleShowFileNameEditor = () => setShowFileNameEditor(true);
 
   const [scriptText, setScriptText] = useState("");
-  const [modeling, setModeling] = useState(null);
-  const [scriptElement, setElement] = useState(null);
+  const [scriptModeling, setScriptModeling] = useState(null);
+  const [scriptElement, setScriptElement] = useState(null);
   const [showScriptEditor, setShowScriptEditor] = useState(false);
   const handleShowScriptEditor = () => setShowScriptEditor(true);
 
@@ -139,8 +139,8 @@ export default function ProcessModelEditDiagram() {
 
   const onLaunchScriptEditor = ((element, modeling) => {
     setScriptText((element.businessObject.script || ''));
-    setModeling(modeling);
-    setElement(element);
+    setScriptModeling(modeling);
+    setScriptElement(element);
     handleShowScriptEditor();
   });
   const handleScriptEditorClose = (() => {
@@ -148,16 +148,20 @@ export default function ProcessModelEditDiagram() {
   });
   const handleEditorChange = ((value, event) => {
     setScriptText(value);
-    modeling.updateProperties(scriptElement, {
+    scriptModeling.updateProperties(scriptElement, {
       scriptFormat: "python",
       script: value
     });
   });
   const scriptEditor = (() => {
+    let scriptName = "";
+    if (scriptElement) {
+      scriptName = scriptElement.di.bpmnElement.name
+    }
     return (
       <Modal size="xl" show={showScriptEditor} onHide={handleScriptEditorClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Script</Modal.Title>
+          <Modal.Title>Editing Script: {scriptName}</Modal.Title>
         </Modal.Header>
         <Editor
           height={600}

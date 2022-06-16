@@ -33,6 +33,8 @@ import "dmn-js/dist/assets/dmn-js-shared.css";
 import "dmn-js/dist/assets/dmn-font/css/dmn-embedded.css";
 import "dmn-js-properties-panel/dist/assets/properties-panel.css"
 
+import "bpmn-js-spiffworkflow/app/css/app.css"
+
 // https://codesandbox.io/s/quizzical-lake-szfyo?file=/src/App.js was a handy reference
 export default function ReactDiagramEditor(props) {
   const [diagramXML, setDiagramXML] = useState("");
