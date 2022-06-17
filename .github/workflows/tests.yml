@@ -61,15 +61,24 @@ jobs:
         uses: cypress-io/github-action@v4
         with:
           working-directory: ./spiffworkflow-frontend
+          browser: chrome
+          record: true
+        env:
+          # pass the Dashboard record key as an environment variable
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          # pass GitHub token to allow accurately detecting a build vs a re-run build
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       #  https://github.com/cypress-io/github-action#artifacts
-      - uses: actions/upload-artifact@v2
+      - name: upload_screenshots
+        uses: actions/upload-artifact@v2
         if: failure()
         with:
           name: cypress-screenshots
           path: ./spiffworkflow-frontend/cypress/screenshots
       # Test run video was always captured, so this action uses "always()" condition
-      - uses: actions/upload-artifact@v2
+      - name: upload_videos
+        uses: actions/upload-artifact@v2
         if: always()
         with:
           name: cypress-videos

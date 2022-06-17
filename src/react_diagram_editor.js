@@ -195,7 +195,7 @@ export default function ReactDiagramEditor(props) {
     function displayDiagram(diagramModelerToUse, diagramXMLToDisplay) {
       diagramModelerToUse.importXML(diagramXMLToDisplay);
     }
-  }, [props, diagramXML, diagramModelerState]);
+  }, [props, diagramXML, diagramModelerState, performingXmlUpdates]);
 
   function handleSave() {
     diagramModelerState.saveXML({ format: true })
