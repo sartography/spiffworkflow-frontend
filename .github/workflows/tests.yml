@@ -37,12 +37,14 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-        path: spiffworkflow-frontend
+        uses: actions/checkout@v3
+        with:
+          path: spiffworkflow-frontend
       - name: Checkout
-        uses: actions/checkout@v2
-        with: sartography/spiffworkflow-backend
-        path: spiffworkflow-backend
+        uses: actions/checkout@v3
+        with:
+          repository: sartography/spiffworkflow-backend
+          path: spiffworkflow-backend
       - name: start_backend
         working-directory: ./spiffworkflow-backend
         run: ./bin/build_and_run_with_docker_compose
