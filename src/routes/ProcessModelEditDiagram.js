@@ -213,19 +213,23 @@ export default function ProcessModelEditDiagram() {
     )
   });
 
-  return (
-    <main style={{ padding: "1rem 0" }}>
-      <ProcessBreadcrumb
-        processGroupId={params.process_group_id}
-        processModelId={params.process_model_id}
-        linkProcessModel="true"
-      />
-      <h2>Process Model File{processModelFile ? `: ${processModelFile.name}` : ""}</h2>
-      {appropriateEditor()}
-      {newFileNameBox()}
-      {scriptEditor()}
+  if (bpmnXmlForDiagramRendering) {
+    return (
+      <main style={{ padding: "1rem 0" }}>
+        <ProcessBreadcrumb
+          processGroupId={params.process_group_id}
+          processModelId={params.process_model_id}
+          linkProcessModel="true"
+        />
+        <h2>Process Model File{processModelFile ? `: ${processModelFile.name}` : ""}</h2>
+        {appropriateEditor()}
+        {newFileNameBox()}
+        {scriptEditor()}
 
-      <div id="diagram-container"></div>
-    </main>
-  );
+        <div id="diagram-container"></div>
+      </main>
+    );
+  } else {
+    return (<></>)
+  }
 }

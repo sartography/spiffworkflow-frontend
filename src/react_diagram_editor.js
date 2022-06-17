@@ -10,7 +10,7 @@ import {
   DmnPropertiesProviderModule,
 } from 'dmn-js-properties-panel';
 
-import React, { useEffect, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { BACKEND_BASE_URL } from './config';
 import { HOT_AUTH_TOKEN } from './config';
 import spiffworkflowIO from 'bpmn-js-spiffworkflow/app/spiffworkflow/InputOutput';
@@ -40,6 +40,8 @@ export default function ReactDiagramEditor(props) {
   const [diagramXML, setDiagramXML] = useState("");
   const [diagramModelerState, setDiagramModelerState] = useState(null);
   const [performingXmlUpdates, setPerformingXmlUpdates] = useState(false);
+
+  const alreadyImportedXmlRef = useRef(false);
 
   useEffect(() => {
     if (diagramModelerState) {
@@ -151,6 +153,9 @@ export default function ReactDiagramEditor(props) {
 
     var diagramXMLToUse = props.diagramXML || diagramXML
     if (diagramXMLToUse) {
+      if (!diagramXML) {
+        setDiagramXML(diagramXMLToUse);
+      }
       return displayDiagram(diagramModelerState, diagramXMLToUse);
     }
 
@@ -198,7 +203,11 @@ export default function ReactDiagramEditor(props) {
     }
 
     function displayDiagram(diagramModelerToUse, diagramXMLToDisplay) {
+      if (alreadyImportedXmlRef.current) {
+        return;
+      }
       diagramModelerToUse.importXML(diagramXMLToDisplay);
+      alreadyImportedXmlRef.current = true
     }
   }, [props, diagramXML, diagramModelerState, performingXmlUpdates]);
 
