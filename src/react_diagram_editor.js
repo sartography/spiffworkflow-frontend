@@ -137,11 +137,16 @@ export default function ReactDiagramEditor(props) {
       }
 
       let modeler = diagramModelerState;
-      if (props.diagramType === "dmn" ) {
+      if (props.diagramType === "dmn") {
         modeler = diagramModelerState.getActiveViewer();
       }
 
-      modeler.get('canvas').zoom('fit-viewport');
+      // only get the canvas if the dmn active viewer is actually
+      // a Modeler and not an Editor which is what it will when we are
+      // actively editing a decision table
+      if (modeler.constructor.name === "Modeler") {
+        modeler.get('canvas').zoom('fit-viewport');
+      }
     });
 
     var diagramXMLToUse = props.diagramXML || diagramXML

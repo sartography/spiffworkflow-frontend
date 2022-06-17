@@ -28,14 +28,28 @@ Cypress.Commands.add('getBySel', (selector, ...args) => {
   return cy.get(`[data-qa=${selector}]`, ...args)
 })
 
-Cypress.Commands.add('createGroup', (displayName, groupId) => {
+Cypress.Commands.add('createGroup', (groupId, groupDisplayName) => {
   cy.contains(groupId).should('not.exist');
   cy.contains('Add a process group').click();
-  cy.get('input[name=display_name]').type(displayName);
-  cy.get('input[name=display_name]').should('have.value', displayName);
+  cy.get('input[name=display_name]').type(groupDisplayName);
+  cy.get('input[name=display_name]').should('have.value', groupDisplayName);
   cy.get('input[name=id]').should('have.value', groupId);
   cy.contains('Submit').click();
 
   cy.url().should('include', `process-groups/${groupId}`);
   cy.contains(`Process Group: ${groupId}`);
+});
+
+Cypress.Commands.add('createModel', (groupId, groupDisplayName, modelId, modelDisplayName) => {
+  cy.createGroup(groupId, groupDisplayName);
+  cy.contains(modelId).should('not.exist');
+
+  cy.contains('Add a process model').click();
+  cy.get('input[name=display_name]').type(modelDisplayName);
+  cy.get('input[name=display_name]').should('have.value', modelDisplayName);
+  cy.get('input[name=id]').should('have.value', modelId);
+  cy.contains('Submit').click();
+
+  cy.url().should('include', `process-models/${groupId}/${modelId}`);
+  cy.contains(`Process Model: ${modelId}`);
 });

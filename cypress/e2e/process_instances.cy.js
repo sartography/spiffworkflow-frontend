@@ -1,0 +1,69 @@
+describe('process-instances', () => {
+  beforeEach(() => {
+    cy.visit('/');
+  });
+
+  it('can create a new instance and can modify', () => {
+    const originalDmnText = "Very wonderful";
+    const newDmnText = "The new wonderful";
+    const dmnFile = "awesome_decision.dmn";
+    const bpmnFile = "process_model_one.bpmn";
+
+    cy.contains('acceptance-tests-group-one').click();
+    cy.contains('acceptance-tests-model-1').click();
+
+    cy.contains(originalDmnText).should('not.exist');;
+    cy.contains('Run Primary').click();
+    cy.contains(originalDmnText);
+
+    // // Change dmn
+    // cy.contains(dmnFile).click();
+    // cy.contains(`Process Model File: ${dmnFile}`);
+    // updateDmnText(originalDmnText, newDmnText);
+    //
+    // cy.contains('acceptance-tests-model-1').click();
+    // cy.contains('Run Primary').click();
+    // cy.contains(newDmnText);
+    //
+    // cy.contains(dmnFile).click();
+    // cy.contains(`Process Model File: ${dmnFile}`);
+    // updateDmnText(newDmnText, originalDmnText);
+    // cy.contains('acceptance-tests-model-1').click();
+    // cy.contains('Run Primary').click();
+    // cy.contains(originalDmnText);
+
+    // Change bpmn
+    cy.contains(bpmnFile).click();
+    cy.contains(`Process Model File: ${bpmnFile}`);
+
+    let elementId = "process_script"
+    cy.get(`g[data-element-id=${elementId}]`).click();
+    cy.get('#bio-properties-panel-pythonScript').click();
+  });
+
+  // it('can paginate items', () => {
+  //   cy.contains('acceptance-tests-group-one').click();
+  //   cy.get("#pagination-page-dropdown")
+  //     .type("typing_to_open_dropdown_box....FIXME")
+  //     .find('.dropdown-item')
+  //     .contains(/^2$/)
+  //     .click();
+  //
+  //   cy.contains(/^1-2 of \d+$/);
+  //   cy.getBySel("pagination-next-button").click();
+  //   cy.contains(/^3-4 of \d+$/);
+  //   cy.getBySel("pagination-previous-button").click();
+  //   cy.contains(/^1-2 of \d+$/);
+  // })
+})
+
+function updateDmnText(oldText, newText, elementId="wonderful_process", dmnFile="awesome_decision.dmn") {
+  // this will break if there are more elements added to the drd
+  cy.get(`g[data-element-id=${elementId}]`).click();
+  cy.get('.dmn-icon-decision-table').click();
+  cy.contains(oldText).clear().type(`"${newText}"`);
+
+  // we have to click on something in order to set the new dmn xml
+  cy.contains(`Process Model File: ${dmnFile}`).click();
+  cy.contains('Save').click();
+}
