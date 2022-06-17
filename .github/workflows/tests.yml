@@ -36,15 +36,20 @@ jobs:
   cypress-run:
     runs-on: ubuntu-20.04
     steps:
-      - name: Checkout
+      - name: Checkout Frontend
         uses: actions/checkout@v3
         with:
           path: spiffworkflow-frontend
-      - name: Checkout
+      - name: Checkout Backend
         uses: actions/checkout@v3
         with:
           repository: sartography/spiffworkflow-backend
           path: spiffworkflow-backend
+      - name: Checkout Samples
+        uses: actions/checkout@v3
+        with:
+          repository: sartography/sample-process-models
+          path: sample-process-models
       - name: start_backend
         working-directory: ./spiffworkflow-backend
         run: ./bin/build_and_run_with_docker_compose
