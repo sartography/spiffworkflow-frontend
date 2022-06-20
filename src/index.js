@@ -19,6 +19,7 @@ import ProcessGroupNew from "./routes/ProcessGroupNew"
 import ProcessModelShow from "./routes/ProcessModelShow"
 import ProcessModelEditDiagram from "./routes/ProcessModelEditDiagram"
 import ProcessInstanceList from "./routes/ProcessInstanceList"
+import ProcessInstanceReport from "./routes/ProcessInstanceReport"
 import ProcessModelNew from "./routes/ProcessModelNew"
 import ErrorBoundary from "./components/ErrorBoundary"
 
@@ -43,6 +44,7 @@ root.render(
             <Route path="process-models/:process_group_id/:process_model_id/file" element={<ProcessModelEditDiagram />} />
             <Route path="process-models/:process_group_id/:process_model_id/file/:file_name" element={<ProcessModelEditDiagram />} />
             <Route path="process-models/:process_group_id/:process_model_id/process-instances" element={<ProcessInstanceList />} />
+            <Route path="process-models/:process_group_id/:process_model_id/process-instances/report" element={<ProcessInstanceReport />} />
           </Routes>
         </BrowserRouter>
       </ErrorBoundary>
