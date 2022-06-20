@@ -78,6 +78,9 @@ function updateDmnText(oldText, newText, elementId="wonderful_process", dmnFile=
   // we have to click on something in order to set the new dmn xml
   cy.contains(`Process Model File: ${dmnFile}`).click();
   cy.contains('Save').click();
+
+  // just to see if we are cancelling this save request by navigating away from this page using the breadcrumb
+  cy.wait(100);
 }
 
 function updateBpmnPythonScript(pythonScript, bpmnFile, elementId="process_script") {
@@ -86,4 +89,5 @@ function updateBpmnPythonScript(pythonScript, bpmnFile, elementId="process_scrip
   cy.get('#bio-properties-panel-pythonScript').clear().type(pythonScript);
   cy.contains(`Process Model File: ${bpmnFile}`).click();
   cy.contains('Save').click();
+  cy.wait(100);
 }
