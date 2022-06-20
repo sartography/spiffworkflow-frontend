@@ -87,6 +87,39 @@ describe('process-models', () => {
     cy.contains(modelId).should('not.exist');
   });
 
+  it('can upload and run a bpmn file', () => {
+    const uuid = () => Cypress._.random(0, 1e6)
+    const id = uuid()
+    const groupId = 'acceptance-tests-group-one';
+    const modelDisplayName = `Test Model 2 ${id}`;
+    const newModelDisplayName = `${modelDisplayName} edited`;
+    const modelId = `test-model-2-${id}`;
+    cy.contains(groupId).click();
+    cy.createModel(groupId, modelId, modelDisplayName);
+    cy.contains(`Process Group: ${groupId}`).click();
+    cy.contains(modelId);
+
+    cy.contains(modelId).click()
+    cy.url().should('include', `process-models/${groupId}/${modelId}`);
+    cy.contains(`Process Model: ${modelId}`);
+
+    cy.get('input[type=file]').selectFile('cypress/fixtures/test_bpmn_file_upload.bpmn')
+    cy.contains('Submit').click();
+    cy.runPrimaryBpmnFile('champion');
+
+    cy.contains('Process Instances').click();
+    cy.getBySel('process-instance-show-link').click();
+    cy.contains('Delete process instance').click();
+    cy.contains(`Process Instances for ${modelId}`);
+    cy.contains(`Process Model: ${modelId}`);
+    cy.contains(modelId).click();
+
+    cy.contains('Edit process model').click();
+    cy.contains('Delete process model').click();
+    cy.url().should('include', `process-groups/${groupId}`);
+    cy.contains(modelId).should('not.exist');
+  });
+
   it('can paginate items', () => {
     cy.contains('acceptance-tests-group-one').click();
     cy.basicPaginationTest();

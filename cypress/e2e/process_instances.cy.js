@@ -17,7 +17,7 @@ describe('process-instances', () => {
     const bpmnFile = "process_model_one.bpmn";
 
     cy.contains(originalDmnOutputForKevin).should('not.exist');;
-    runPrimaryBpmnFile(originalDmnOutputForKevin);
+    cy.runPrimaryBpmnFile(originalDmnOutputForKevin);
 
     // Change dmn
     cy.contains(dmnFile).click();
@@ -25,26 +25,26 @@ describe('process-instances', () => {
     updateDmnText(originalDmnOutputForKevin, newDmnOutputForKevin);
 
     cy.contains('acceptance-tests-model-1').click();
-    runPrimaryBpmnFile(newDmnOutputForKevin);
+    cy.runPrimaryBpmnFile(newDmnOutputForKevin);
 
     cy.contains(dmnFile).click();
     cy.contains(`Process Model File: ${dmnFile}`);
     updateDmnText(newDmnOutputForKevin, originalDmnOutputForKevin);
     cy.contains('acceptance-tests-model-1').click();
-    runPrimaryBpmnFile(originalDmnOutputForKevin);
+    cy.runPrimaryBpmnFile(originalDmnOutputForKevin);
 
     // Change bpmn
     cy.contains(bpmnFile).click();
     cy.contains(`Process Model File: ${bpmnFile}`);
     updateBpmnPythonScript(newPythonScript, bpmnFile);
     cy.contains('acceptance-tests-model-1').click();
-    runPrimaryBpmnFile(dmnOutputForDan);
+    cy.runPrimaryBpmnFile(dmnOutputForDan);
 
     cy.contains(bpmnFile).click();
     cy.contains(`Process Model File: ${bpmnFile}`);
     updateBpmnPythonScript(originalPythonScript, bpmnFile);
     cy.contains('acceptance-tests-model-1').click();
-    runPrimaryBpmnFile(originalDmnOutputForKevin);
+    cy.runPrimaryBpmnFile(originalDmnOutputForKevin);
   });
 
   it('can create a new instance and can modify with monaco text editor', () => {
@@ -59,22 +59,22 @@ describe('process-instances', () => {
     cy.contains(`Process Model File: ${bpmnFile}`);
     updateBpmnPythonScriptWithMonaco(newPythonScript, bpmnFile);
     cy.contains('acceptance-tests-model-1').click();
-    runPrimaryBpmnFile(dmnOutputForMike);
+    cy.runPrimaryBpmnFile(dmnOutputForMike);
 
     cy.contains(bpmnFile).click();
     cy.contains(`Process Model File: ${bpmnFile}`);
     updateBpmnPythonScriptWithMonaco(originalPythonScript, bpmnFile);
     cy.contains('acceptance-tests-model-1').click();
-    runPrimaryBpmnFile(dmnOutputForKevin);
+    cy.runPrimaryBpmnFile(dmnOutputForKevin);
   });
 
   it('can paginate items', () => {
     // make sure we have some process instances
-    runPrimaryBpmnFile('Very wonderful');
-    runPrimaryBpmnFile('Very wonderful');
-    runPrimaryBpmnFile('Very wonderful');
-    runPrimaryBpmnFile('Very wonderful');
-    runPrimaryBpmnFile('Very wonderful');
+    cy.runPrimaryBpmnFile('Very wonderful');
+    cy.runPrimaryBpmnFile('Very wonderful');
+    cy.runPrimaryBpmnFile('Very wonderful');
+    cy.runPrimaryBpmnFile('Very wonderful');
+    cy.runPrimaryBpmnFile('Very wonderful');
 
     cy.contains('Process Instances').click();
     cy.basicPaginationTest();
@@ -118,9 +118,4 @@ function updateBpmnPythonScriptWithMonaco(pythonScript, bpmnFile, elementId="pro
   // wait for a little bit for the xml to get set before saving
   cy.wait(500);
   cy.contains('Save').click();
-}
-
-function runPrimaryBpmnFile(expectedText) {
-  cy.contains('Run Primary').click();
-  cy.contains(expectedText);
 }

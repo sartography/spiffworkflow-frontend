@@ -53,6 +53,10 @@ Cypress.Commands.add('createModel', (groupId, modelId, modelDisplayName) => {
   cy.contains(`Process Model: ${modelId}`);
 });
 
+Cypress.Commands.add('runPrimaryBpmnFile', (expectedText) => {
+  cy.contains('Run Primary').click();
+  cy.contains(expectedText);
+});
 
 Cypress.Commands.add('basicPaginationTest', () => {
   cy.get("#pagination-page-dropdown")

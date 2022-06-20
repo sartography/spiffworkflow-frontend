@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useSearchParams, useNavigate } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { BACKEND_BASE_URL } from '../config';
 import { HOT_AUTH_TOKEN } from '../config';
 import { useParams } from "react-router-dom";
@@ -10,7 +10,6 @@ import PaginationForTable, { DEFAULT_PER_PAGE, DEFAULT_PAGE } from '../component
 export default function ProcessGroupShow() {
   const params = useParams();
   const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
 
   const [processGroup, setProcessGroup] = useState(null);
   const [processModels, setProcessModels] = useState([]);

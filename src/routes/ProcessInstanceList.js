@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 
 import { BACKEND_BASE_URL } from '../config';
 import { HOT_AUTH_TOKEN } from '../config';
@@ -14,7 +14,6 @@ export default function ProcessInstanceList() {
 
   const [processInstances, setProcessInstances] = useState([]);
   const [pagination, setPagination] = useState(null);
-  const [processGroupId, setProcessGroupId] = useState(null);
 
   useEffect(() => {
     getProcessInstances();
@@ -33,9 +32,6 @@ export default function ProcessInstanceList() {
             const processInstancesFromApi = result.results;
             setProcessInstances(processInstancesFromApi);
             setPagination(result.pagination);
-            if (processInstancesFromApi[0]) {
-              setProcessGroupId(processInstancesFromApi[0].process_group_id)
-            }
           },
           (error) => {
             console.log(error);
@@ -56,7 +52,9 @@ export default function ProcessInstanceList() {
         }
         return (
           <tr key={i}>
-          <td>{row.id}</td>
+          <td>
+            <Link data-qa="process-instance-show-link" to={`/process-models/${params.process_group_id}/${params.process_model_id}/process-instances/${row.id}`}>{row.id}</Link>
+          </td>
           <td>{row.process_model_identifier}</td>
           <td>{row.process_group_id}</td>
           <td>{start_date.toString()}</td>
@@ -91,7 +89,7 @@ export default function ProcessInstanceList() {
       <main>
       <ProcessBreadcrumb
         processModelId={params.process_model_id}
-        processGroupId={processGroupId}
+        processGroupId={params.process_group_id}
         linkProcessModel="true"
       />
       <h2>Process Instances for {params.process_model_id}</h2>

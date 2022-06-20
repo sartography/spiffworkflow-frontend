@@ -13,7 +13,7 @@ export default class FileInput extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault()
-    const url = `${BACKEND_BASE_URL}/process-models/${this.props.processModel.id}/file`;
+    const url = `${BACKEND_BASE_URL}/process-models/${this.props.processModel.process_group_id}/${this.props.processModel.id}/file`;
     const formData = new FormData();
     formData.append('file', this.fileInput.current.files[0]);
     formData.append('fileName', this.fileInput.current.files[0].name);

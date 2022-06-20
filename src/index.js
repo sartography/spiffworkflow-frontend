@@ -23,6 +23,7 @@ import ProcessInstanceList from "./routes/ProcessInstanceList"
 import ProcessInstanceReport from "./routes/ProcessInstanceReport"
 import ProcessModelNew from "./routes/ProcessModelNew"
 import ProcessModelEdit from "./routes/ProcessModelEdit"
+import ProcessInstanceShow from "./routes/ProcessInstanceShow"
 import ErrorBoundary from "./components/ErrorBoundary"
 
 import { Container } from 'react-bootstrap'
@@ -49,6 +50,7 @@ root.render(
             <Route path="process-models/:process_group_id/:process_model_id/process-instances" element={<ProcessInstanceList />} />
             <Route path="process-models/:process_group_id/:process_model_id/process-instances/report" element={<ProcessInstanceReport />} />
             <Route path="process-models/:process_group_id/:process_model_id/edit" element={<ProcessModelEdit />} />
+            <Route path="process-models/:process_group_id/:process_model_id/process-instances/:process_instance_id" element={<ProcessInstanceShow />} />
           </Routes>
         </BrowserRouter>
       </ErrorBoundary>
