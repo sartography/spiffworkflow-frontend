@@ -49,24 +49,6 @@ export default function ProcessGroupShow() {
       )
   }, [params, searchParams]);
 
-  const deleteProcessGroup = (() => {
-    fetch(`${BACKEND_BASE_URL}/process-groups/${processGroup.id}`, {
-      headers: new Headers({
-        'Authorization': `Bearer ${HOT_AUTH_TOKEN}`
-      }),
-      method: 'DELETE',
-    })
-      .then(res => res.json())
-      .then(
-        (result) => {
-          navigate(`/process-groups`);
-        },
-        (error) => {
-          console.log(error);
-        }
-      )
-  });
-
   const buildTable = (() => {
     const rows = processModels.map((row,index) => {
       return (
@@ -104,7 +86,6 @@ export default function ProcessGroupShow() {
         <Stack direction="horizontal" gap={3}>
           <Button href={`/process-models/${processGroup.id}/new`}>Add a process model</Button>
           <Button href={`/process-groups/${processGroup.id}/edit`} variant="secondary">Edit process group</Button>
-          <Button onClick={deleteProcessGroup} variant="danger">Delete Process Group</Button>
         </Stack>
         <br />
         <br />

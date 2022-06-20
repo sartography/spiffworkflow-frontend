@@ -62,6 +62,24 @@ export default function ProcessModelEdit() {
 
   });
 
+  const deleteProcessModel = (() => {
+    fetch(`${BACKEND_BASE_URL}/process-models/${processModel.process_group_id}/${processModel.id}`, {
+      headers: new Headers({
+        'Authorization': `Bearer ${HOT_AUTH_TOKEN}`
+      }),
+      method: 'DELETE',
+    })
+      .then(res => res.json())
+      .then(
+        (result) => {
+          navigate(`/process-groups/${params.process_group_id}`);
+        },
+        (error) => {
+          console.log(error);
+        }
+      )
+  });
+
   const onDisplayNameChanged = ((newDisplayName) => {
     setDisplayName(newDisplayName);
   });
@@ -84,6 +102,7 @@ export default function ProcessModelEdit() {
           <Stack direction="horizontal" gap={3}>
             <Button type="submit">Submit</Button>
             <Button variant="secondary" href={`/${processModelPath}`}>Cancel</Button>
+            <Button onClick={deleteProcessModel} variant="danger">Delete process model</Button>
           </Stack>
         </form>
       </main>

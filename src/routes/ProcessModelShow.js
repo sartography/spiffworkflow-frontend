@@ -49,24 +49,6 @@ export default function ProcessModelShow() {
       )
   });
 
-  const deleteProcessModel = (() => {
-    fetch(`${BACKEND_BASE_URL}/process-models/${processModel.process_group_id}/${processModel.id}`, {
-      headers: new Headers({
-        'Authorization': `Bearer ${HOT_AUTH_TOKEN}`
-      }),
-      method: 'DELETE',
-    })
-      .then(res => res.json())
-      .then(
-        (result) => {
-          navigate(`/process-groups/${params.process_group_id}`);
-        },
-        (error) => {
-          console.log(error);
-        }
-      )
-  });
-
   let processInstanceResultTag = ""
   if (processInstanceResult) {
     processInstanceResultTag = <pre>{processInstanceResult.status}: {JSON.stringify(processInstanceResult.data)}</pre>
@@ -103,7 +85,6 @@ export default function ProcessModelShow() {
       <Stack direction="horizontal" gap={3}>
         <Button onClick={processModelRun} variant="primary">Run Primary</Button>
         <Button href={`/process-models/${processModel.process_group_id}/${processModel.id}/edit`} variant="secondary">Edit process model</Button>
-        <Button onClick={deleteProcessModel} variant="danger">Delete process model</Button>
         <Button href={`/process-models/${processModel.process_group_id}/${processModel.id}/file?file_type=bpmn`} variant="warning">Add New BPMN File</Button>
         <Button href={`/process-models/${processModel.process_group_id}/${processModel.id}/file?file_type=dmn`} variant="success">Add New DMN File</Button>
       </Stack>

@@ -54,6 +54,24 @@ export default function ProcessGroupEdit() {
 
   });
 
+  const deleteProcessGroup = (() => {
+    fetch(`${BACKEND_BASE_URL}/process-groups/${processGroup.id}`, {
+      headers: new Headers({
+        'Authorization': `Bearer ${HOT_AUTH_TOKEN}`
+      }),
+      method: 'DELETE',
+    })
+      .then(res => res.json())
+      .then(
+        (result) => {
+          navigate(`/process-groups`);
+        },
+        (error) => {
+          console.log(error);
+        }
+      )
+  });
+
   const onDisplayNameChanged = ((newDisplayName) => {
     setDisplayName(newDisplayName);
   });
@@ -76,6 +94,7 @@ export default function ProcessGroupEdit() {
           <Stack direction="horizontal" gap={3}>
             <Button type="submit">Submit</Button>
             <Button variant="secondary" href={`/process-groups/${processGroup.id}`}>Cancel</Button>
+            <Button onClick={deleteProcessGroup} variant="danger">Delete Process Group</Button>
           </Stack>
         </form>
       </main>

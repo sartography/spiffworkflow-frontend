@@ -8,6 +8,7 @@ describe('process-models', () => {
     const id = uuid()
     const groupId = 'acceptance-tests-group-one';
     const modelDisplayName = `Test Model 2 ${id}`;
+    const newModelDisplayName = `${modelDisplayName} edited`;
     const modelId = `test-model-2-${id}`;
     cy.contains(groupId).click();
     cy.createModel(groupId, modelId, modelDisplayName);
@@ -17,6 +18,14 @@ describe('process-models', () => {
     cy.contains(modelId).click()
     cy.url().should('include', `process-models/${groupId}/${modelId}`);
     cy.contains(`Process Model: ${modelId}`);
+
+    cy.contains('Edit process model').click();
+    cy.get('input[name=display_name]').clear().type(newModelDisplayName);
+    cy.contains('Submit').click();
+    cy.contains(`Process Model: ${modelId}`);
+
+    cy.contains('Edit process model').click();
+    cy.get('input[name=display_name]').should('have.value', newModelDisplayName)
 
     cy.contains('Delete process model').click();
     cy.url().should('include', `process-groups/${groupId}`);
@@ -72,6 +81,7 @@ describe('process-models', () => {
     cy.contains(`Process Model: ${modelId}`);
     cy.contains(dmnFileName + '.dmn').should('exist');
 
+    cy.contains('Edit process model').click();
     cy.contains('Delete process model').click();
     cy.url().should('include', `process-groups/${groupId}`);
     cy.contains(modelId).should('not.exist');
