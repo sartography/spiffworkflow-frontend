@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import { BACKEND_BASE_URL } from '../config';
 import { HOT_AUTH_TOKEN } from '../config';
 import { useParams } from "react-router-dom";
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb'
-import { Button, Table } from 'react-bootstrap'
+import { Button, Table, Stack } from 'react-bootstrap'
 import PaginationForTable, { DEFAULT_PER_PAGE, DEFAULT_PAGE } from '../components/PaginationForTable'
 
 export default function ProcessGroupShow() {
-  let params = useParams();
+  const params = useParams();
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   const [processGroup, setProcessGroup] = useState(null);
   const [processModels, setProcessModels] = useState([]);
@@ -48,6 +49,24 @@ export default function ProcessGroupShow() {
       )
   }, [params, searchParams]);
 
+  const deleteProcessGroup = (() => {
+    fetch(`${BACKEND_BASE_URL}/process-groups/${processGroup.id}`, {
+      headers: new Headers({
+        'Authorization': `Bearer ${HOT_AUTH_TOKEN}`
+      }),
+      method: 'DELETE',
+    })
+      .then(res => res.json())
+      .then(
+        (result) => {
+          navigate(`/process-groups`);
+        },
+        (error) => {
+          console.log(error);
+        }
+      )
+  });
+
   const buildTable = (() => {
     const rows = processModels.map((row,index) => {
       return (
@@ -82,7 +101,11 @@ export default function ProcessGroupShow() {
         <ProcessBreadcrumb processGroupId={processGroup.id} />
         <h2>Process Group: {processGroup.id}</h2>
         <ul>
-        <Button href={`/process-models/${processGroup.id}/new`}>Add a process model</Button>
+        <Stack direction="horizontal" gap={3}>
+          <Button href={`/process-models/${processGroup.id}/new`}>Add a process model</Button>
+          <Button href={`/process-groups/${processGroup.id}/edit`} variant="secondary">Edit process group</Button>
+          <Button onClick={deleteProcessGroup} variant="danger">Delete Process Group</Button>
+        </Stack>
         <br />
         <br />
         <PaginationForTable

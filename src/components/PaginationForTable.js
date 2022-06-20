@@ -36,7 +36,7 @@ export default function PaginationForTable(props) {
     let previousPageTag = "";
     if (props.page === 1) {
       previousPageTag = (
-        <li className="page-item disabled" key="previous"><span style={{fontSize:"1.5em"}} className="page-link">&laquo;</span></li>
+        <li data-qa="pagination-previous-button-inactive" className="page-item disabled" key="previous"><span style={{fontSize:"1.5em"}} className="page-link">&laquo;</span></li>
       )
     } else {
       previousPageTag = (
@@ -49,7 +49,7 @@ export default function PaginationForTable(props) {
     let nextPageTag = "";
     if (props.page >= props.pagination.pages) {
       nextPageTag = (
-        <li className="page-item disabled" key="next"><span style={{fontSize:"1.5em"}} className="page-link">&raquo;</span></li>
+        <li data-qa="pagination-next-button-inactive" className="page-item disabled" key="next"><span style={{fontSize:"1.5em"}} className="page-link">&raquo;</span></li>
       )
     } else {
       nextPageTag = (

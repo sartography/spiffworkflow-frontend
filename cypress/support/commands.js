@@ -40,8 +40,7 @@ Cypress.Commands.add('createGroup', (groupId, groupDisplayName) => {
   cy.contains(`Process Group: ${groupId}`);
 });
 
-Cypress.Commands.add('createModel', (groupId, groupDisplayName, modelId, modelDisplayName) => {
-  cy.createGroup(groupId, groupDisplayName);
+Cypress.Commands.add('createModel', (groupId, modelId, modelDisplayName) => {
   cy.contains(modelId).should('not.exist');
 
   cy.contains('Add a process model').click();
@@ -52,4 +51,20 @@ Cypress.Commands.add('createModel', (groupId, groupDisplayName, modelId, modelDi
 
   cy.url().should('include', `process-models/${groupId}/${modelId}`);
   cy.contains(`Process Model: ${modelId}`);
+});
+
+
+Cypress.Commands.add('basicPaginationTest', () => {
+  cy.get("#pagination-page-dropdown")
+    .type("typing_to_open_dropdown_box....FIXME")
+    .find('.dropdown-item')
+    .contains(/^2$/)
+    .click();
+
+  cy.contains(/^1-2 of \d+$/);
+  cy.getBySel("pagination-previous-button-inactive");
+  cy.getBySel("pagination-next-button").click();
+  cy.contains(/^3-4 of \d+$/);
+  cy.getBySel("pagination-previous-button").click();
+  cy.contains(/^1-2 of \d+$/);
 });

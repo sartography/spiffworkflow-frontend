@@ -215,7 +215,8 @@ export default function ProcessModelEditDiagram() {
     )
   });
 
-  if (bpmnXmlForDiagramRendering) {
+  // if a file name is not given then this is a new model and the ReactDiagramEditor component will handle it
+  if (bpmnXmlForDiagramRendering || !params.file_name) {
     return (
       <main style={{ padding: "1rem 0" }}>
         <ProcessBreadcrumb
