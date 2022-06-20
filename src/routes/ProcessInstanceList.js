@@ -22,7 +22,7 @@ export default function ProcessInstanceList() {
     function getProcessInstances() {
       const page = searchParams.get('page') || DEFAULT_PAGE;
       const perPage = parseInt(searchParams.get('per_page') || DEFAULT_PER_PAGE);
-      fetch(`${BACKEND_BASE_URL}/process-models/${params.process_model_id}/process-instances?per_page=${perPage}&page=${page}`, {
+      fetch(`${BACKEND_BASE_URL}/process-models/${params.process_group_id}/${params.process_model_id}/process-instances?per_page=${perPage}&page=${page}`, {
         headers: new Headers({
           'Authorization': `Bearer ${HOT_AUTH_TOKEN}`
         })

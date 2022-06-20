@@ -30,7 +30,7 @@ export default function ProcessModelEditDiagram() {
 
   useEffect(() => {
     if (params.file_name) {
-      fetch(`${BACKEND_BASE_URL}/process-models/${params.process_model_id}/file/${params.file_name}`, {
+      fetch(`${BACKEND_BASE_URL}/process-models/${params.process_group_id}/${params.process_model_id}/file/${params.file_name}`, {
         headers: new Headers({
           'Authorization': `Bearer ${HOT_AUTH_TOKEN}`
         })
@@ -66,7 +66,7 @@ export default function ProcessModelEditDiagram() {
   const saveDiagram = ((bpmnXML, fileName = params.file_name) => {
     setBpmnXmlForDiagramRendering(bpmnXML);
 
-    let url = `${BACKEND_BASE_URL}/process-models/${params.process_model_id}/file`;
+    let url = `${BACKEND_BASE_URL}/process-models/${params.process_group_id}/${params.process_model_id}/file`;
     let httpMethod = 'PUT';
     let fileNameWithExtension = fileName;
 
@@ -192,6 +192,7 @@ export default function ProcessModelEditDiagram() {
       return (
         <ReactDiagramEditor
           process_model_id={params.process_model_id}
+          process_group_id={params.process_group_id}
           onError={ onError }
           saveDiagram={ saveDiagram }
           diagramXML={bpmnXmlForDiagramRendering}
@@ -203,6 +204,7 @@ export default function ProcessModelEditDiagram() {
     return (
       <ReactDiagramEditor
         process_model_id={params.process_model_id}
+          process_group_id={params.process_group_id}
         onError={ onError }
         saveDiagram={ saveDiagram }
         diagramXML={bpmnXmlForDiagramRendering}

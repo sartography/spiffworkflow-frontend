@@ -75,19 +75,18 @@ function updateDmnText(oldText, newText, elementId="wonderful_process", dmnFile=
   cy.get('.dmn-icon-decision-table').click();
   cy.contains(oldText).clear().type(`"${newText}"`);
 
-  // we have to click on something in order to set the new dmn xml
-  cy.contains(`Process Model File: ${dmnFile}`).click();
+  // wait for a little bit for the xml to get set before saving
+  cy.wait(500);
   cy.contains('Save').click();
 
-  // just to see if we are cancelling this save request by navigating away from this page using the breadcrumb
-  cy.wait(100);
 }
 
 function updateBpmnPythonScript(pythonScript, bpmnFile, elementId="process_script") {
   cy.get(`g[data-element-id=${elementId}]`).click().should('exist');
   cy.contains('SpiffWorkflow Properties').click();
   cy.get('#bio-properties-panel-pythonScript').clear().type(pythonScript);
-  cy.contains(`Process Model File: ${bpmnFile}`).click();
+
+  // wait for a little bit for the xml to get set before saving
+  cy.wait(500);
   cy.contains('Save').click();
-  cy.wait(100);
 }

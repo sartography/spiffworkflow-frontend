@@ -163,7 +163,7 @@ export default function ReactDiagramEditor(props) {
       if (props.url) {
         return fetchDiagramFromURL(props.url);
       } else if (props.fileName) {
-        return fetchDiagramFromJsonAPI(props.process_model_id, props.fileName);
+        return fetchDiagramFromJsonAPI(props.process_group_id, props.process_model_id, props.fileName);
       } else {
         let newDiagramFileName = 'new_bpmn_diagram.bpmn';
         if (props.diagramType === "dmn" ) {
@@ -184,8 +184,8 @@ export default function ReactDiagramEditor(props) {
         .catch(err => handleError(err));
     }
 
-    function fetchDiagramFromJsonAPI(processModelId, fileName) {
-      fetch(`${BACKEND_BASE_URL}/process-models/${processModelId}/file/${fileName}`, {
+    function fetchDiagramFromJsonAPI(processGroupId, processModelId, fileName) {
+      fetch(`${BACKEND_BASE_URL}/process-models/${processGroupId}/${processModelId}/file/${fileName}`, {
         headers: new Headers({
           'Authorization': `Bearer ${HOT_AUTH_TOKEN}`
         })
