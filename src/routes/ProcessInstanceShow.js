@@ -5,7 +5,6 @@ import { Button } from 'react-bootstrap'
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb'
 
 export default function ProcessInstanceShow(props) {
-  const [error, setError] = useState(null);
   const navigate = useNavigate();
   const params = useParams();
 

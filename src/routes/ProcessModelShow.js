@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { BACKEND_BASE_URL } from '../config';
 import { HOT_AUTH_TOKEN } from '../config';
 import { useParams } from "react-router-dom";
@@ -9,7 +9,6 @@ import { Button, Stack } from 'react-bootstrap'
 
 export default function ProcessModelShow() {
   let params = useParams();
-  const navigate = useNavigate();
 
   const [processModel, setProcessModel] = useState(null);
   const [processInstanceResult, setProcessInstanceResult] = useState(null);

@@ -3,7 +3,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import { BACKEND_BASE_URL } from '../config';
 import { HOT_AUTH_TOKEN, STANDARD_HEADERS } from '../config';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb'
-import { slugifyString } from '../helpers'
 import { Button, Stack } from 'react-bootstrap'
 
 export default function ProcessModelEdit() {
