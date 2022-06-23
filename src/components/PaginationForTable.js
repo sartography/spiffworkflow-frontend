@@ -10,11 +10,11 @@ export default function PaginationForTable(props) {
   const PER_PAGE_OPTIONS = [2, 10, 50, 100];
 
   const buildPerPageDropdown = (() => {
-    const perPageDropdownRows = PER_PAGE_OPTIONS.map(per_page_option => {
-      if (per_page_option === props.perPage) {
-          return <Dropdown.Item key={per_page_option} href={`${props.path}?page=1&per_page=${per_page_option}`} active>{per_page_option}</Dropdown.Item>
+    const perPageDropdownRows = PER_PAGE_OPTIONS.map(perPageOption => {
+      if (perPageOption === props.perPage) {
+          return <Dropdown.Item key={perPageOption} href={`${props.path}?page=1&per_page=${perPageOption}`} active>{perPageOption}</Dropdown.Item>
       } else {
-          return <Dropdown.Item key={per_page_option} href={`${props.path}?page=1&per_page=${per_page_option}`}>{per_page_option}</Dropdown.Item>
+          return <Dropdown.Item key={perPageOption} href={`${props.path}?page=1&per_page=${perPageOption}`}>{perPageOption}</Dropdown.Item>
       }
     });
     return (

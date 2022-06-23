@@ -23,6 +23,7 @@ module.exports = {
     configure: {
       "resolve": {
         "alias": {
+          "inferno": (process.env.NODE_ENV !== "production") ? "inferno/dist/index.dev.esm.js" : "inferno/dist/index.esm.js",
           "react": "preact/compat",
           "react-dom/test-utils": "preact/test-utils",
           "react-dom": "preact/compat",     // Must be below test-utils

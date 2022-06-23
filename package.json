@@ -21,10 +21,12 @@
     "dmn-js-shared": "^12.1.1",
     "react": "^18.2.0",
     "react-bootstrap": "^2.4.0",
+    "react-datepicker": "^4.8.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.3.0",
     "react-scripts": "^5.0.1",
     "serve": "^13.0.2",
+    "timepicker": "^1.13.18",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

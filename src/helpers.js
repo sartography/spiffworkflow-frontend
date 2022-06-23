@@ -7,3 +7,12 @@ export const slugifyString = ((str) => {
     .replace(/[\s_-]+/g, '-')
     .replace(/^-+|-+$/g, '');
 });
+
+export const convertDateToSeconds = ((date, onChangeFunction) => {
+  const dateInSeconds = Math.floor(date.getTime() / 1000);
+  if (onChangeFunction) {
+    onChangeFunction(dateInSeconds);
+  } else {
+    return dateInSeconds;
+  }
+});

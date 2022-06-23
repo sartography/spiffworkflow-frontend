@@ -1,19 +1,39 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 import { BACKEND_BASE_URL } from '../config';
 import { HOT_AUTH_TOKEN } from '../config';
-import ProcessBreadcrumb from '../components/ProcessBreadcrumb'
-import { Table }  from 'react-bootstrap'
+import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
+import { Button, Table, Stack, Dropdown }  from 'react-bootstrap';
+import DatePicker from "react-datepicker";
+import { convertDateToSeconds } from "../helpers";
 
 import PaginationForTable, { DEFAULT_PER_PAGE, DEFAULT_PAGE } from '../components/PaginationForTable'
+import "react-datepicker/dist/react-datepicker.css";
 
 export default function ProcessInstanceList() {
-  let params = useParams();
-  let [searchParams] = useSearchParams();
+  const params = useParams();
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   const [processInstances, setProcessInstances] = useState([]);
   const [pagination, setPagination] = useState(null);
+
+  const [startFrom, setStartFrom] = useState(convertDateToSeconds(new Date()));
+  const [startTill, setStartTill] = useState(convertDateToSeconds(new Date()) + 3600);
+  const [endFrom, setEndFrom] = useState(convertDateToSeconds(new Date()));
+  const [endTill, setEndTill] = useState(convertDateToSeconds(new Date()) + 3600);
+
+  const PROCESS_STATUSES = [
+    "all",
+    "not_started",
+    "user_input_required",
+    "waiting",
+    "complete",
+    "erroring",
+  ]
+  const [processStatus, setProcessStatus] = useState(PROCESS_STATUSES[0]);
+
 
   useEffect(() => {
     getProcessInstances();
@@ -21,7 +41,30 @@ export default function ProcessInstanceList() {
     function getProcessInstances() {
       const page = searchParams.get('page') || DEFAULT_PAGE;
       const perPage = parseInt(searchParams.get('per_page') || DEFAULT_PER_PAGE);
-      fetch(`${BACKEND_BASE_URL}/process-models/${params.process_group_id}/${params.process_model_id}/process-instances?per_page=${perPage}&page=${page}`, {
+      let queryParamString = `per_page=${perPage}&page=${page}`;
+
+      if (searchParams.get('start_from')) {
+        queryParamString += `&start_from=${searchParams.get('start_from')}`;
+        setStartFrom(searchParams.get('start_from'));
+      }
+      if (searchParams.get('start_till')) {
+        queryParamString += `&start_till=${searchParams.get('start_till')}`;
+        setStartTill(searchParams.get('start_till'));
+      }
+      if (searchParams.get('end_from')) {
+        queryParamString += `&end_from=${searchParams.get('end_from')}`;
+        setEndFrom(searchParams.get('end_from'));
+      }
+      if (searchParams.get('end_till')) {
+        queryParamString += `&end_till=${searchParams.get('end_till')}`;
+        setEndTill(searchParams.get('end_till'));
+      }
+      if (searchParams.get('process_status')) {
+        queryParamString += `&process_status=${searchParams.get('process_status')}`;
+        setProcessStatus(searchParams.get('process_status'));
+      }
+
+      fetch(`${BACKEND_BASE_URL}/process-models/${params.process_group_id}/${params.process_model_id}/process-instances?${queryParamString}`, {
         headers: new Headers({
           'Authorization': `Bearer ${HOT_AUTH_TOKEN}`
         })
@@ -82,6 +125,89 @@ export default function ProcessInstanceList() {
     )
   });
 
+  const handleFilter = ((event) => {
+    event.preventDefault();
+    const page = searchParams.get('page') || DEFAULT_PAGE;
+    const perPage = parseInt(searchParams.get('per_page') || DEFAULT_PER_PAGE);
+    let queryParamString = `per_page=${perPage}&page=${page}`;
+
+    if (startFrom) {
+      queryParamString += `&start_from=${startFrom}`;
+    }
+    if (startTill) {
+      queryParamString += `&start_till=${startTill}`;
+    }
+    if (endFrom) {
+      queryParamString += `&end_from=${endFrom}`;
+    }
+    if (endTill) {
+      queryParamString += `&end_till=${endTill}`;
+    }
+    if (processStatus && processStatus !== "all") {
+      queryParamString += `&process_status=${processStatus}`;
+    }
+
+    navigate(`/process-models/${params.process_group_id}/${params.process_model_id}/process-instances?${queryParamString}`)
+  });
+
+  const dateComponent = ((labelString, initialDate, onChangeFunction) => {
+    return (
+      <Stack className="ms-auto" direction="horizontal" gap={3}>
+        <label className="text-nowrap">{labelString}</label>
+        <DatePicker
+          selected={new Date(initialDate * 1000)}
+          onChange={(date) => convertDateToSeconds(date, onChangeFunction)}
+          showTimeSelect
+          dateFormat="MMMM d, yyyy h:mm aa"
+        />
+      </Stack>
+    )
+  });
+
+  const filterOptions = (() => {
+    const processStatusesRows = PROCESS_STATUSES.map(processStatusOption => {
+      if (processStatusOption === processStatus) {
+        return <Dropdown.Item key={processStatusOption} active>{processStatusOption}</Dropdown.Item>
+      } else {
+        return <Dropdown.Item key={processStatusOption} onClick={(e) => setProcessStatus(processStatusOption)}>{processStatusOption}</Dropdown.Item>
+      }
+    });
+    return (
+      <div class="container">
+        <div class="row">
+          <div class="col">
+            <form onSubmit={handleFilter}>
+              <Stack direction="horizontal" gap={3}>
+                {dateComponent("Start Range: ", startFrom, setStartFrom)}
+                {dateComponent("-", startTill, setStartTill)}
+              </Stack>
+              <br />
+              <Stack direction="horizontal" gap={3}>
+                {dateComponent("End Range: ", endFrom, setEndFrom)}
+                {dateComponent("-", endTill, setEndTill)}
+              </Stack>
+              <br />
+              <Stack direction="horizontal" gap={3}>
+                <Dropdown id="process-status-dropdown">
+                  <Dropdown.Toggle id="process-status" variant="light border">
+                    Process Statuses: {processStatus}
+                  </Dropdown.Toggle>
+
+                  <Dropdown.Menu variant="light">
+                    {processStatusesRows}
+                  </Dropdown.Menu>
+                </Dropdown>
+                <Button className="ms-auto" variant="secondary" type="submit">Filter</Button>
+              </Stack>
+            </form>
+          </div>
+          <div class="col">
+          </div>
+        </div>
+      </div>
+    );
+  });
+
   if (pagination) {
     const perPage = parseInt(searchParams.get('per_page') || DEFAULT_PER_PAGE);
     const page = parseInt(searchParams.get('page') || DEFAULT_PAGE);
@@ -93,6 +219,7 @@ export default function ProcessInstanceList() {
         linkProcessModel="true"
       />
       <h2>Process Instances for {params.process_model_id}</h2>
+      {filterOptions()}
       <PaginationForTable
         page={page}
         perPage={perPage}
