@@ -56,6 +56,8 @@ Cypress.Commands.add('createModel', (groupId, modelId, modelDisplayName) => {
 Cypress.Commands.add('runPrimaryBpmnFile', (expectedText) => {
   cy.contains('Run Primary').click();
   cy.contains(expectedText);
+  cy.reload(true)
+  cy.contains(expectedText).should('not.exist');
 });
 
 Cypress.Commands.add('basicPaginationTest', () => {

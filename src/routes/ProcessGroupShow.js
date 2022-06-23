@@ -60,10 +60,12 @@ export default function ProcessGroupShow() {
       )
     })
     return(
+      <div>
+      <h3>Process Models</h3>
       <Table striped bordered >
         <thead>
           <tr>
-            <th>Process Group Id</th>
+            <th>Process Model Id</th>
             <th>Display Name</th>
           </tr>
         </thead>
@@ -71,6 +73,7 @@ export default function ProcessGroupShow() {
           {rows}
         </tbody>
       </Table>
+      </div>
     )
   });
 
