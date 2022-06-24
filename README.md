@@ -9,7 +9,7 @@ running business processes.
 This project was bootstrapped with [Create React
 App](https://github.com/facebook/create-react-app), and the balance of this
 README contains information about how to use apps that are bootstrapped with
-that project.
+that project
 
 ## Available Scripts
 
