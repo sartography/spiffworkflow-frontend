@@ -9,3 +9,15 @@ export const STANDARD_HEADERS = {
   'Authorization': `Bearer ${HOT_AUTH_TOKEN}`
   })
 }
+
+export const PROCESS_STATUSES = [
+  "all",
+  "not_started",
+  "user_input_required",
+  "waiting",
+  "complete",
+  "faulted",
+  "suspended",
+]
+
+export const DATE_FORMAT = "yyyy-MM-dd HH:mm:ss"

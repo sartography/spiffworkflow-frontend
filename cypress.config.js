@@ -4,7 +4,7 @@ module.exports = defineConfig({
   projectId: "crax1q",
   e2e: {
     baseUrl: "http://localhost:7001",
-    setupNodeEvents(on, config) {
+    setupNodeEvents(_on, _config) {
       // implement node event listeners here
     },
   },

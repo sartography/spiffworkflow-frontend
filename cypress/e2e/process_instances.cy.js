@@ -1,3 +1,6 @@
+import { DATE_FORMAT, PROCESS_STATUSES } from '../../src/config';
+import { format } from 'date-fns';
+
 describe('process-instances', () => {
   beforeEach(() => {
     cy.visit('/');
@@ -83,20 +86,56 @@ describe('process-instances', () => {
   it.only('can filter', () => {
     cy.contains('Process Instances').click();
     assertAtLeastOneItemInPaginatedResults();
+
+    for (const processStatus of PROCESS_STATUSES) {
+      if (processStatus === "all"){
+        continue;
+      }
+      cy.getBySel("process-status-dropdown")
+        .type("typing_to_open_dropdown_box....FIXME")
+        .find('.dropdown-item')
+        .contains(new RegExp(`^${processStatus}$`))
+        .click();
+      cy.contains('Filter').click();
+      assertAtLeastOneItemInPaginatedResults();
+      cy.getBySel("process-instance-status").first().contains(processStatus);
+    }
     cy.getBySel("process-status-dropdown")
       .type("typing_to_open_dropdown_box....FIXME")
       .find('.dropdown-item')
-      .contains(/^waiting$/)
+      .contains("all")
       .click();
-    cy.contains('Filter').click();
+
+    let date = new Date();
+    date.setHours(date.getHours() - 1);
+    filterByDate(date);
+    assertAtLeastOneItemInPaginatedResults();
+    cy.getBySel("process-instance-status").contains("not_started");
+
+    date.setHours(date.getHours() + 2);
+    filterByDate(date);
+    assertNoItemInPaginatedResults();
+    cy.getBySel("process-instance-status").should('not.exist');
   });
 })
 
+const filterByDate = ((fromDate) => {
+  cy.get("#date-picker-start-from").clear().type(format(fromDate, DATE_FORMAT));
+  cy.contains('Start Range').click();
+  cy.get("#date-picker-end-from").clear().type(format(fromDate, DATE_FORMAT));
+  cy.contains('Start Range').click();
+  cy.contains('Filter').click();
+});
+
 const assertAtLeastOneItemInPaginatedResults = (() => {
-  cy.get('[data-qa="total-paginated-items"')
+  cy.getBySel('total-paginated-items')
     .invoke('text')
     .then(parseFloat)
     .should('be.gt', 0)
+});
+
+const assertNoItemInPaginatedResults = (() => {
+  cy.getBySel('total-paginated-items').contains('0')
 });
 
 const updateDmnText = ((oldText, newText, elementId="wonderful_process") => {

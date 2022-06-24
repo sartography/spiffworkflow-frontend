@@ -16,6 +16,7 @@
     "bpmn-js-properties-panel": "^1.1.1",
     "bpmn-js-spiffworkflow": "^0.0.3",
     "craco": "^0.0.3",
+    "date-fns": "^2.28.0",
     "dmn-js": "^12.1.1",
     "dmn-js-properties-panel": "^1.0.0",
     "dmn-js-shared": "^12.1.1",

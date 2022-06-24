@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 
-import { BACKEND_BASE_URL } from '../config';
+import { BACKEND_BASE_URL, PROCESS_STATUSES, DATE_FORMAT } from '../config';
 import { HOT_AUTH_TOKEN } from '../config';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 import { Button, Table, Stack, Dropdown }  from 'react-bootstrap';
@@ -10,6 +10,7 @@ import { convertDateToSeconds } from "../helpers";
 
 import PaginationForTable, { DEFAULT_PER_PAGE, DEFAULT_PAGE } from '../components/PaginationForTable'
 import "react-datepicker/dist/react-datepicker.css";
+import { format } from "date-fns";
 
 export default function ProcessInstanceList() {
   const params = useParams();
@@ -26,14 +27,6 @@ export default function ProcessInstanceList() {
   const [endFrom, setEndFrom] = useState(convertDateToSeconds(new Date()) - oneMonthInSeconds);
   const [endTill, setEndTill] = useState(convertDateToSeconds(new Date()) + oneHourInSeconds);
 
-  const PROCESS_STATUSES = [
-    "all",
-    "not_started",
-    "user_input_required",
-    "waiting",
-    "complete",
-    "erroring",
-  ]
   const [processStatus, setProcessStatus] = useState(PROCESS_STATUSES[0]);
   const parametersToAlwaysFilterBy = useMemo(() => {
     return {
@@ -117,15 +110,16 @@ export default function ProcessInstanceList() {
     navigate(`/process-models/${params.process_group_id}/${params.process_model_id}/process-instances?${queryParamString}`)
   });
 
-  const dateComponent = ((labelString, initialDate, onChangeFunction) => {
+  const dateComponent = ((labelString, name, initialDate, onChangeFunction) => {
     return (
       <Stack className="ms-auto" direction="horizontal" gap={3}>
         <label className="text-nowrap">{labelString}</label>
         <DatePicker
+          id={`date-picker-${name}`}
           selected={new Date(initialDate * 1000)}
           onChange={(date) => convertDateToSeconds(date, onChangeFunction)}
           showTimeSelect
-          dateFormat="MMMM d, yyyy h:mm aa"
+          dateFormat={DATE_FORMAT}
         />
       </Stack>
     )
@@ -157,13 +151,13 @@ export default function ProcessInstanceList() {
           <div className="col">
             <form onSubmit={handleFilter}>
               <Stack direction="horizontal" gap={3}>
-                {dateComponent("Start Range: ", startFrom, setStartFrom)}
-                {dateComponent("-", startTill, setStartTill)}
+                {dateComponent("Start Range: ", "start-from", startFrom, setStartFrom)}
+                {dateComponent("-", "start-till", startTill, setStartTill)}
               </Stack>
               <br />
               <Stack direction="horizontal" gap={3}>
-                {dateComponent("End Range: ", endFrom, setEndFrom)}
-                {dateComponent("-", endTill, setEndTill)}
+                {dateComponent("End Range: ", "end-from", endFrom, setEndFrom)}
+                {dateComponent("-", "end-till", endTill, setEndTill)}
               </Stack>
               <br />
               <Stack direction="horizontal" gap={3}>
@@ -204,8 +198,8 @@ export default function ProcessInstanceList() {
           </td>
           <td>{row.process_model_identifier}</td>
           <td>{row.process_group_id}</td>
-          <td>{start_date.toString()}</td>
-          <td>{end_date.toString()}</td>
+          <td>{format(start_date, DATE_FORMAT)}</td>
+          <td>{format(end_date, DATE_FORMAT)}</td>
           <td data-qa="process-instance-status">{row.status}</td>
           </tr>
         )
