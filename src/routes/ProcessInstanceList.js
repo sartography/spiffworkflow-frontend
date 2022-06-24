@@ -35,14 +35,14 @@ export default function ProcessInstanceList() {
     "erroring",
   ]
   const [processStatus, setProcessStatus] = useState(PROCESS_STATUSES[0]);
+  const parametersToAlwaysFilterBy = {
+    'start_from': setStartFrom,
+    'start_till': setStartTill,
+    'end_from': setEndFrom, //, convertDateToSeconds(new Date()) - oneMonthInSeconds],
+    'end_till': setEndTill, //, convertDateToSeconds(new Date()) + oneHourInSeconds],
+  }
 
   useEffect(() => {
-    const parametersToAlwaysFilterBy = {
-      'start_from': [setStartFrom, convertDateToSeconds(new Date()) - oneMonthInSeconds],
-      'start_till': [setStartTill, convertDateToSeconds(new Date()) + oneHourInSeconds],
-      'end_from': [setEndFrom, convertDateToSeconds(new Date()) - oneMonthInSeconds],
-      'end_till': [setEndTill, convertDateToSeconds(new Date()) + oneHourInSeconds],
-    }
     getProcessInstances();
 
     function getProcessInstances() {
@@ -51,9 +51,13 @@ export default function ProcessInstanceList() {
       let queryParamString = `per_page=${perPage}&page=${page}`;
 
       for (const paramName in parametersToAlwaysFilterBy) {
-        const configs = parametersToAlwaysFilterBy[paramName]
-        let functionToCall = configs[0];
-        let defaultValue = configs[1];
+        const functionToCall = parametersToAlwaysFilterBy[paramName]
+        let defaultValue = null;
+        if (paramName.endsWith("_from")) {
+          defaultValue = convertDateToSeconds(new Date()) - oneMonthInSeconds;
+        } else if (paramName.endsWith("_till")) {
+          defaultValue = convertDateToSeconds(new Date()) + oneHourInSeconds;
+        }
         let searchParamValue = searchParams.get(paramName);
         if (searchParamValue) {
           queryParamString += `&${paramName}=${searchParamValue}`;
@@ -167,6 +171,16 @@ export default function ProcessInstanceList() {
     )
   });
 
+  const getSearchParamsAsQueryString = (() => {
+    let queryParamString = "";
+    for (const paramName in parametersToAlwaysFilterBy) {
+      let searchParamValue = searchParams.get(paramName);
+      if (searchParamValue) {
+        queryParamString += `&${paramName}=${searchParamValue}`;
+      }
+    }
+    return queryParamString;
+  });
 
   const filterOptions = (() => {
     const processStatusesRows = PROCESS_STATUSES.map(processStatusOption => {
@@ -211,18 +225,6 @@ export default function ProcessInstanceList() {
         </div>
       </div>
     )
-  });
-
-  const getSearchParamsAsQueryString = (() => {
-    const properties = ["start_from", "start_till", "end_from", "end_till"];
-    let queryParamString = "";
-    for (const paramName of properties) {
-      let searchParamValue = searchParams.get(paramName);
-      if (searchParamValue) {
-        queryParamString += `&${paramName}=${searchParamValue}`;
-      }
-    }
-    return queryParamString;
   });
 
   if (pagination) {
