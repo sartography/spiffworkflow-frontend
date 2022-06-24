@@ -18,15 +18,13 @@ export default function ProcessInstanceList() {
 
   const [processInstances, setProcessInstances] = useState([]);
   const [pagination, setPagination] = useState(null);
-  const executedRef = useRef(false);
 
-  const currentDate = new Date();
-  const oneMonthAgo = convertDateToSeconds(currentDate.setMonth(currentDate.getMonth() - 1));
-  const oneHourFromNow = convertDateToSeconds(new Date()) + 3600;
-  const [startFrom, setStartFrom] = useState(oneMonthAgo);
-  const [startTill, setStartTill] = useState(oneHourFromNow);
-  const [endFrom, setEndFrom] = useState(oneMonthAgo);
-  const [endTill, setEndTill] = useState(oneHourFromNow);
+  const oneHourInSeconds = 3600;
+  const oneMonthInSeconds = oneHourInSeconds * 24 * 30;
+  const [startFrom, setStartFrom] = useState(convertDateToSeconds(new Date()) - oneMonthInSeconds);
+  const [startTill, setStartTill] = useState(convertDateToSeconds(new Date()) + oneHourInSeconds);
+  const [endFrom, setEndFrom] = useState(convertDateToSeconds(new Date()) - oneMonthInSeconds);
+  const [endTill, setEndTill] = useState(convertDateToSeconds(new Date()) + oneHourInSeconds);
 
   const PROCESS_STATUSES = [
     "all",
@@ -38,17 +36,12 @@ export default function ProcessInstanceList() {
   ]
   const [processStatus, setProcessStatus] = useState(PROCESS_STATUSES[0]);
 
-
   useEffect(() => {
-    if (executedRef.current) {
-      return;
-    }
-
     const parametersToAlwaysFilterBy = {
-      'start_from': [setStartFrom, startFrom],
-      'start_till': [setStartTill, startTill],
-      'end_from': [setEndFrom, endFrom],
-      'end_till': [setEndTill, endTill],
+      'start_from': [setStartFrom, convertDateToSeconds(new Date()) - oneMonthInSeconds],
+      'start_till': [setStartTill, convertDateToSeconds(new Date()) + oneHourInSeconds],
+      'end_from': [setEndFrom, convertDateToSeconds(new Date()) - oneMonthInSeconds],
+      'end_till': [setEndTill, convertDateToSeconds(new Date()) + oneHourInSeconds],
     }
     getProcessInstances();
 
@@ -57,16 +50,16 @@ export default function ProcessInstanceList() {
       const perPage = parseInt(searchParams.get('per_page') || DEFAULT_PER_PAGE);
       let queryParamString = `per_page=${perPage}&page=${page}`;
 
-      for (const paramProperty in parametersToAlwaysFilterBy) {
-        const configs = parametersToAlwaysFilterBy[paramProperty]
+      for (const paramName in parametersToAlwaysFilterBy) {
+        const configs = parametersToAlwaysFilterBy[paramName]
         let functionToCall = configs[0];
         let defaultValue = configs[1];
-        let searchParamValue = searchParams.get(paramProperty);
+        let searchParamValue = searchParams.get(paramName);
         if (searchParamValue) {
-          queryParamString += `&${paramProperty}=${searchParamValue}`;
+          queryParamString += `&${paramName}=${searchParamValue}`;
           functionToCall(searchParamValue);
         } else if (defaultValue) {
-          queryParamString += `&${paramProperty}=${defaultValue}`;
+          queryParamString += `&${paramName}=${defaultValue}`;
         }
       }
       if (searchParams.get('process_status')) {
@@ -85,14 +78,13 @@ export default function ProcessInstanceList() {
             const processInstancesFromApi = result.results;
             setProcessInstances(processInstancesFromApi);
             setPagination(result.pagination);
-            executedRef.current = true;
           },
           (error) => {
             console.log(error);
           }
         )
     }
-  }, [searchParams, params, startFrom, startTill, endFrom, endTill]);
+  }, [searchParams, params, oneMonthInSeconds, oneHourInSeconds]);
 
   const buildTable = (() => {
       const rows = processInstances.map((row,i) => {
@@ -158,7 +150,6 @@ export default function ProcessInstanceList() {
       queryParamString += `&process_status=${processStatus}`;
     }
 
-    executedRef.current = false;
     navigate(`/process-models/${params.process_group_id}/${params.process_model_id}/process-instances?${queryParamString}`)
   });
 
@@ -176,6 +167,7 @@ export default function ProcessInstanceList() {
     )
   });
 
+
   const filterOptions = (() => {
     const processStatusesRows = PROCESS_STATUSES.map(processStatusOption => {
       if (processStatusOption === processStatus) {
@@ -184,10 +176,11 @@ export default function ProcessInstanceList() {
         return <Dropdown.Item key={processStatusOption} onClick={(e) => setProcessStatus(processStatusOption)}>{processStatusOption}</Dropdown.Item>
       }
     });
+
     return (
-      <div class="container">
-        <div class="row">
-          <div class="col">
+      <div className="container">
+        <div className="row">
+          <div className="col">
             <form onSubmit={handleFilter}>
               <Stack direction="horizontal" gap={3}>
                 {dateComponent("Start Range: ", startFrom, setStartFrom)}
@@ -213,11 +206,23 @@ export default function ProcessInstanceList() {
               </Stack>
             </form>
           </div>
-          <div class="col">
+          <div className="col">
           </div>
         </div>
       </div>
-    );
+    )
+  });
+
+  const getSearchParamsAsQueryString = (() => {
+    const properties = ["start_from", "start_till", "end_from", "end_till"];
+    let queryParamString = "";
+    for (const paramName of properties) {
+      let searchParamValue = searchParams.get(paramName);
+      if (searchParamValue) {
+        queryParamString += `&${paramName}=${searchParamValue}`;
+      }
+    }
+    return queryParamString;
   });
 
   if (pagination) {
@@ -237,6 +242,7 @@ export default function ProcessInstanceList() {
         perPage={perPage}
         pagination={pagination}
         tableToDisplay={buildTable()}
+        queryParamString={getSearchParamsAsQueryString()}
         path={`/process-models/${params.process_group_id}/${params.process_model_id}/process-instances`}
       />
    	  </main>

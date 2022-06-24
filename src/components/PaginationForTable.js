@@ -41,7 +41,7 @@ export default function PaginationForTable(props) {
     } else {
       previousPageTag = (
         <li className="page-item" key="previous">
-          <Link data-qa="pagination-previous-button" className="page-link" style={{fontSize:"1.5em"}} to={`${props.path}?page=${props.page - 1}&per_page=${props.perPage}`}>&laquo;</Link>
+          <Link data-qa="pagination-previous-button" className="page-link" style={{fontSize:"1.5em"}} to={`${props.path}?page=${props.page - 1}&per_page=${props.perPage}${props.queryParamString}`}>&laquo;</Link>
         </li>
       )
     }
@@ -54,7 +54,7 @@ export default function PaginationForTable(props) {
     } else {
       nextPageTag = (
         <li className="page-item" key="next">
-          <Link data-qa="pagination-next-button" className="page-link" style={{fontSize:"1.5em"}} to={`${props.path}?page=${props.page + 1}&per_page=${props.perPage}`}>&raquo;</Link>
+          <Link data-qa="pagination-next-button" className="page-link" style={{fontSize:"1.5em"}} to={`${props.path}?page=${props.page + 1}&per_page=${props.perPage}${props.queryParamString}`}>&raquo;</Link>
         </li>
       )
     }
