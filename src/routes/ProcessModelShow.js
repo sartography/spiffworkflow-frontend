@@ -30,8 +30,26 @@ export default function ProcessModelShow() {
       )
   }, [params]);
 
-  const processModelRun = ((event) => {
+  const processInstanceCreateAndRun = ((event) => {
     fetch(`${BACKEND_BASE_URL}/process-models/${processModel.process_group_id}/${processModel.id}`, {
+      headers: new Headers({
+        'Authorization': `Bearer ${HOT_AUTH_TOKEN}`
+      }),
+      method: 'POST',
+    })
+      .then(res => res.json())
+      .then(
+        (result) => {
+          processModelRun(result);
+        },
+        (error) => {
+          console.log(error);
+        }
+      )
+  });
+
+  const processModelRun = ((processInstance) => {
+    fetch(`${BACKEND_BASE_URL}/process-models/${processModel.process_group_id}/${processModel.id}/process-instances/${processInstance.id}/run`, {
       headers: new Headers({
         'Authorization': `Bearer ${HOT_AUTH_TOKEN}`
       }),
@@ -82,7 +100,7 @@ export default function ProcessModelShow() {
       <FileInput processModel={processModel} />
       <br />
       <Stack direction="horizontal" gap={3}>
-        <Button onClick={processModelRun} variant="primary">Run Primary</Button>
+        <Button onClick={processInstanceCreateAndRun} variant="primary">Run</Button>
         <Button href={`/process-models/${processModel.process_group_id}/${processModel.id}/edit`} variant="secondary">Edit process model</Button>
         <Button href={`/process-models/${processModel.process_group_id}/${processModel.id}/file?file_type=bpmn`} variant="warning">Add New BPMN File</Button>
         <Button href={`/process-models/${processModel.process_group_id}/${processModel.id}/file?file_type=dmn`} variant="success">Add New DMN File</Button>

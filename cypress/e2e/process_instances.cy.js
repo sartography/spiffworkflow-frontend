@@ -71,7 +71,7 @@ describe('process-instances', () => {
     cy.runPrimaryBpmnFile(dmnOutputForKevin);
   });
 
-  it.only('can paginate items', () => {
+  it('can paginate items', () => {
     // make sure we have some process instances
     cy.runPrimaryBpmnFile('Very wonderful');
     cy.runPrimaryBpmnFile('Very wonderful');
@@ -110,6 +110,9 @@ describe('process-instances', () => {
     date.setHours(date.getHours() - 1);
     filterByDate(date);
     assertAtLeastOneItemInPaginatedResults();
+
+    // make sure we are at the bottom of the page
+    cy.scrollTo(0, 1000)
     cy.getBySel("process-instance-status").contains("not_started");
 
     date.setHours(date.getHours() + 2);
