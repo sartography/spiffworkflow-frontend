@@ -70,7 +70,7 @@ export default function PaginationForTable(props) {
 
     return (
       <Stack direction="horizontal" gap={3}>
-        <p className="ms-auto">{startingNumber}-{endingNumber} of {props.pagination.total}</p>
+        <p className="ms-auto">{startingNumber}-{endingNumber} of <span data-qa="total-paginated-items">{props.pagination.total}</span></p>
         <nav aria-label="Page navigation">
         <div>
         <ul className="pagination">

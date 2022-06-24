@@ -9,7 +9,11 @@ export const slugifyString = ((str) => {
 });
 
 export const convertDateToSeconds = ((date, onChangeFunction) => {
-  const dateInSeconds = Math.floor(date.getTime() / 1000);
+  let dateInMilliseconds = date;
+  if (typeof(date.getTime) === "function") {
+    dateInMilliseconds = date.getTime();
+  }
+  const dateInSeconds = Math.floor(dateInMilliseconds / 1000);
   if (onChangeFunction) {
     onChangeFunction(dateInSeconds);
   } else {

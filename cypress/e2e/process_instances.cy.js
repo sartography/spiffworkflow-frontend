@@ -36,13 +36,13 @@ describe('process-instances', () => {
     // Change bpmn
     cy.contains(bpmnFile).click();
     cy.contains(`Process Model File: ${bpmnFile}`);
-    updateBpmnPythonScript(newPythonScript, bpmnFile);
+    updateBpmnPythonScript(newPythonScript);
     cy.contains('acceptance-tests-model-1').click();
     cy.runPrimaryBpmnFile(dmnOutputForDan);
 
     cy.contains(bpmnFile).click();
     cy.contains(`Process Model File: ${bpmnFile}`);
-    updateBpmnPythonScript(originalPythonScript, bpmnFile);
+    updateBpmnPythonScript(originalPythonScript);
     cy.contains('acceptance-tests-model-1').click();
     cy.runPrimaryBpmnFile(originalDmnOutputForKevin);
   });
@@ -78,10 +78,24 @@ describe('process-instances', () => {
 
     cy.contains('Process Instances').click();
     cy.basicPaginationTest();
-  })
+  });
+
+  it.only('can filter', () => {
+    cy.contains('Process Instances').click();
+    cy.get('[data-qa="total-paginated-items"')
+      .invoke('text')
+      .then(parseFloat)
+      .should('be.gt', 0)
+    cy.getBySel("process-status-dropdown")
+      .type("typing_to_open_dropdown_box....FIXME")
+      .find('.dropdown-item')
+      .contains(/^waiting$/)
+      .click();
+    cy.contains('Filter').click();
+  });
 })
 
-function updateDmnText(oldText, newText, elementId="wonderful_process", dmnFile="awesome_decision.dmn") {
+function updateDmnText(oldText, newText, elementId="wonderful_process") {
   // this will break if there are more elements added to the drd
   cy.get(`g[data-element-id=${elementId}]`).click().should('exist');
   cy.get('.dmn-icon-decision-table').click();
@@ -93,7 +107,7 @@ function updateDmnText(oldText, newText, elementId="wonderful_process", dmnFile=
 
 }
 
-function updateBpmnPythonScript(pythonScript, bpmnFile, elementId="process_script") {
+function updateBpmnPythonScript(pythonScript, elementId="process_script") {
   cy.get(`g[data-element-id=${elementId}]`).click().should('exist');
   cy.contains('SpiffWorkflow Properties').click();
   cy.get('#bio-properties-panel-pythonScript').clear().type(pythonScript);
