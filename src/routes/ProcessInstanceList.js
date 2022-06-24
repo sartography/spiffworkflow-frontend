@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 import { BACKEND_BASE_URL } from '../config';
@@ -35,12 +35,14 @@ export default function ProcessInstanceList() {
     "erroring",
   ]
   const [processStatus, setProcessStatus] = useState(PROCESS_STATUSES[0]);
-  const parametersToAlwaysFilterBy = {
-    'start_from': setStartFrom,
-    'start_till': setStartTill,
-    'end_from': setEndFrom, //, convertDateToSeconds(new Date()) - oneMonthInSeconds],
-    'end_till': setEndTill, //, convertDateToSeconds(new Date()) + oneHourInSeconds],
-  }
+  const parametersToAlwaysFilterBy = useMemo(() => {
+    return {
+      'start_from': setStartFrom,
+      'start_till': setStartTill,
+      'end_from': setEndFrom,
+      'end_till': setEndTill,
+    }
+  }, [setStartFrom, setStartTill, setEndFrom, setEndTill]);
 
   useEffect(() => {
     getProcessInstances();
@@ -88,49 +90,7 @@ export default function ProcessInstanceList() {
           }
         )
     }
-  }, [searchParams, params, oneMonthInSeconds, oneHourInSeconds]);
-
-  const buildTable = (() => {
-      const rows = processInstances.map((row,i) => {
-        let start_date = 'N/A'
-        if (row.start_in_seconds) {
-          start_date = new Date(row.start_in_seconds * 1000);
-        }
-        let end_date = 'N/A'
-        if (row.end_in_seconds) {
-          end_date = new Date(row.end_in_seconds * 1000);
-        }
-        return (
-          <tr key={i}>
-          <td>
-            <Link data-qa="process-instance-show-link" to={`/process-models/${params.process_group_id}/${params.process_model_id}/process-instances/${row.id}`}>{row.id}</Link>
-          </td>
-          <td>{row.process_model_identifier}</td>
-          <td>{row.process_group_id}</td>
-          <td>{start_date.toString()}</td>
-          <td>{end_date.toString()}</td>
-          <td>{row.status}</td>
-          </tr>
-        )
-      })
-    return(
-      <Table striped bordered >
-        <thead>
-          <tr>
-            <th>Process Instance Id</th>
-            <th>Process Model Id</th>
-            <th>Process Group Id</th>
-            <th>Start Time</th>
-            <th>End Time</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows}
-        </tbody>
-      </Table>
-    )
-  });
+  }, [searchParams, params, oneMonthInSeconds, oneHourInSeconds, parametersToAlwaysFilterBy]);
 
   const handleFilter = ((event) => {
     event.preventDefault();
@@ -224,6 +184,48 @@ export default function ProcessInstanceList() {
           </div>
         </div>
       </div>
+    )
+  });
+
+  const buildTable = (() => {
+      const rows = processInstances.map((row,i) => {
+        let start_date = 'N/A'
+        if (row.start_in_seconds) {
+          start_date = new Date(row.start_in_seconds * 1000);
+        }
+        let end_date = 'N/A'
+        if (row.end_in_seconds) {
+          end_date = new Date(row.end_in_seconds * 1000);
+        }
+        return (
+          <tr key={i}>
+          <td>
+            <Link data-qa="process-instance-show-link" to={`/process-models/${params.process_group_id}/${params.process_model_id}/process-instances/${row.id}`}>{row.id}</Link>
+          </td>
+          <td>{row.process_model_identifier}</td>
+          <td>{row.process_group_id}</td>
+          <td>{start_date.toString()}</td>
+          <td>{end_date.toString()}</td>
+          <td data-qa="process-instance-status">{row.status}</td>
+          </tr>
+        )
+      })
+    return(
+      <Table striped bordered >
+        <thead>
+          <tr>
+            <th>Process Instance Id</th>
+            <th>Process Model Id</th>
+            <th>Process Group Id</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows}
+        </tbody>
+      </Table>
     )
   });
 

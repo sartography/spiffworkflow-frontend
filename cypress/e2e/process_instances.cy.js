@@ -82,10 +82,7 @@ describe('process-instances', () => {
 
   it.only('can filter', () => {
     cy.contains('Process Instances').click();
-    cy.get('[data-qa="total-paginated-items"')
-      .invoke('text')
-      .then(parseFloat)
-      .should('be.gt', 0)
+    assertAtLeastOneItemInPaginatedResults();
     cy.getBySel("process-status-dropdown")
       .type("typing_to_open_dropdown_box....FIXME")
       .find('.dropdown-item')
@@ -95,7 +92,14 @@ describe('process-instances', () => {
   });
 })
 
-function updateDmnText(oldText, newText, elementId="wonderful_process") {
+const assertAtLeastOneItemInPaginatedResults = (() => {
+  cy.get('[data-qa="total-paginated-items"')
+    .invoke('text')
+    .then(parseFloat)
+    .should('be.gt', 0)
+});
+
+const updateDmnText = ((oldText, newText, elementId="wonderful_process") => {
   // this will break if there are more elements added to the drd
   cy.get(`g[data-element-id=${elementId}]`).click().should('exist');
   cy.get('.dmn-icon-decision-table').click();
@@ -104,10 +108,9 @@ function updateDmnText(oldText, newText, elementId="wonderful_process") {
   // wait for a little bit for the xml to get set before saving
   cy.wait(500);
   cy.contains('Save').click();
+});
 
-}
-
-function updateBpmnPythonScript(pythonScript, elementId="process_script") {
+const updateBpmnPythonScript = ((pythonScript, elementId="process_script") => {
   cy.get(`g[data-element-id=${elementId}]`).click().should('exist');
   cy.contains('SpiffWorkflow Properties').click();
   cy.get('#bio-properties-panel-pythonScript').clear().type(pythonScript);
@@ -115,9 +118,9 @@ function updateBpmnPythonScript(pythonScript, elementId="process_script") {
   // wait for a little bit for the xml to get set before saving
   cy.wait(500);
   cy.contains('Save').click();
-}
+});
 
-function updateBpmnPythonScriptWithMonaco(pythonScript, bpmnFile, elementId="process_script") {
+const updateBpmnPythonScriptWithMonaco = ((pythonScript, bpmnFile, elementId="process_script") => {
   cy.get(`g[data-element-id=${elementId}]`).click().should('exist');
   cy.contains('SpiffWorkflow Properties').click();
   cy.contains('Launch Editor').click();
@@ -132,4 +135,4 @@ function updateBpmnPythonScriptWithMonaco(pythonScript, bpmnFile, elementId="pro
   // wait for a little bit for the xml to get set before saving
   cy.wait(500);
   cy.contains('Save').click();
-}
+});
