@@ -71,7 +71,7 @@ describe('process-instances', () => {
     cy.runPrimaryBpmnFile(dmnOutputForKevin);
   });
 
-  it('can paginate items', () => {
+  it.only('can paginate items', () => {
     // make sure we have some process instances
     cy.runPrimaryBpmnFile('Very wonderful');
     cy.runPrimaryBpmnFile('Very wonderful');
@@ -83,7 +83,7 @@ describe('process-instances', () => {
     cy.basicPaginationTest();
   });
 
-  it.only('can filter', () => {
+  it('can filter', () => {
     cy.contains('Process Instances').click();
     assertAtLeastOneItemInPaginatedResults();
 

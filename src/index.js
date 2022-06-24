@@ -1,6 +1,6 @@
 import React from 'react';
-// import ReactDOM from 'react-dom/client';
 import * as ReactDOMClient from 'react-dom/client';
+import logo from './logo.svg';
 
 
 import 'bootstrap/dist/css/bootstrap.css';
@@ -33,6 +33,7 @@ const root = ReactDOMClient.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <Container>
+      <img src={logo} className="app-logo" alt="logo" />
       <ErrorBoundary>
         <BrowserRouter>
           <Routes>

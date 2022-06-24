@@ -18,3 +18,9 @@ span.bjs-crumb {
 .bjs-breadcrumbs li:last-of-type span.bjs-crumb a {
   color: black;
 }
+
+.app-logo {
+  height: 20%;
+  width: 20%;
+  margin-top: 2em;
+}
