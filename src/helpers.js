@@ -1,20 +1,20 @@
 // https://www.30secondsofcode.org/js/s/slugify
-export const slugifyString = ((str) => {
+export const slugifyString = (str) => {
   return str
     .toLowerCase()
     .trim()
     .replace(/[^\w\s-]/g, '')
     .replace(/[\s_-]+/g, '-')
     .replace(/^-+|-+$/g, '');
-});
+};
 
-export const convertDateToSeconds = ((date, onChangeFunction) => {
+export const convertDateToSeconds = (date, onChangeFunction) => {
   if (date === null) {
-    return;
+    return undefined;
   }
 
   let dateInMilliseconds = date;
-  if (typeof(date.getTime) === "function") {
+  if (typeof date.getTime === 'function') {
     dateInMilliseconds = date.getTime();
   }
   const dateInSeconds = Math.floor(dateInMilliseconds / 1000);
@@ -23,4 +23,6 @@ export const convertDateToSeconds = ((date, onChangeFunction) => {
   } else {
     return dateInSeconds;
   }
-});
+
+  return undefined;
+};

@@ -1,23 +1,25 @@
-import React from "react";
-import { BACKEND_BASE_URL } from '../config';
-import { HOT_AUTH_TOKEN } from '../config';
+import React from 'react';
 import axios from 'axios';
+import PropTypes from 'prop-types';
+import { BACKEND_BASE_URL, HOT_AUTH_TOKEN } from '../config';
 
 export default class FileInput extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor({ processGroupId, processModelId }) {
+    super({ processGroupId, processModelId });
     this.handleSubmit = this.handleSubmit.bind(this);
     this.fileInput = React.createRef();
-    this.props = props;
+    this.processGroupId = processGroupId;
+    this.processModelId = processModelId;
   }
 
   handleSubmit(event) {
-    event.preventDefault()
-    const url = `${BACKEND_BASE_URL}/process-models/${this.props.processModel.process_group_id}/${this.props.processModel.id}/file`;
+    event.preventDefault();
+    const url = `${BACKEND_BASE_URL}/process-models/${this.processGroupId}/${this.processModelId}/file`;
     const formData = new FormData();
     formData.append('file', this.fileInput.current.files[0]);
     formData.append('fileName', this.fileInput.current.files[0].name);
 
+    // this might work if we remove the content-type header
     // const headers = {
     //   'Authorization': `Bearer ${HOT_AUTH_TOKEN}`,
     //     'content-type': 'multipart/form-data',
@@ -38,7 +40,7 @@ export default class FileInput extends React.Component {
     const config = {
       headers: {
         'content-type': 'multipart/form-data',
-        'Authorization': `Bearer ${HOT_AUTH_TOKEN}`,
+        Authorization: `Bearer ${HOT_AUTH_TOKEN}`,
       },
     };
     axios.post(url, formData, config).then((response) => {
@@ -58,3 +60,8 @@ export default class FileInput extends React.Component {
     );
   }
 }
+
+FileInput.propTypes = {
+  processGroupId: PropTypes.string.isRequired,
+  processModelId: PropTypes.string.isRequired,
+};

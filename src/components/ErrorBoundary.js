@@ -1,5 +1,6 @@
-import React from "react";
-//FIXME: this is currently not actually catching any issues. not sure why
+import React from 'react';
+import PropTypes from 'prop-types';
+
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
@@ -8,26 +9,29 @@ class ErrorBoundary extends React.Component {
 
   static getDerivedStateFromError(error) {
     // Update state so the next render will show the fallback UI.
-    return { hasError: true };
+    return { hasError: true, error };
   }
 
   componentDidCatch(error, errorInfo) {
-    this.setState({
-      error: error,
-      errorInfo: errorInfo
-    })
     // You can also log the error to an error reporting service
-    console.log("HELLO: ", error, errorInfo);
+    console.log('HELLO: ', error, errorInfo);
   }
 
   render() {
-    if (this.state.hasError) {
+    const { hasError } = this.state;
+    const { children } = this.props;
+
+    if (hasError) {
       // You can render any custom fallback UI
       return <h1>Something went wrong.</h1>;
     }
 
-    return this.props.children;
+    return children;
   }
 }
 
 export default ErrorBoundary;
+
+ErrorBoundary.propTypes = {
+  children: PropTypes.string.isRequired,
+};

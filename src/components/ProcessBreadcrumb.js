@@ -1,30 +1,67 @@
-import { Link } from "react-router-dom";
-import Breadcrumb from 'react-bootstrap/Breadcrumb'
+import { Link } from 'react-router-dom';
+import Breadcrumb from 'react-bootstrap/Breadcrumb';
+import PropTypes from 'prop-types';
 
-export default function ProcessBreadcrumb(props) {
-  let processGroupBreadcrumb = ''
-  let processModelBreadcrumb = ''
+export default function ProcessBreadcrumb({
+  processModelId,
+  processGroupId,
+  linkProcessModel,
+}) {
+  let processGroupBreadcrumb = '';
+  let processModelBreadcrumb = '';
 
-  if (props.processModelId) {
-    if (props.linkProcessModel) {
-      processModelBreadcrumb = <Breadcrumb.Item linkAs={Link} linkProps={{ to: `/process-models/${props.processGroupId}/${props.processModelId}` }}>Process Model: {props.processModelId}</Breadcrumb.Item>
+  if (processModelId) {
+    if (linkProcessModel) {
+      processModelBreadcrumb = (
+        <Breadcrumb.Item
+          linkAs={Link}
+          linkProps={{
+            to: `/process-models/${processGroupId}/${processModelId}`,
+          }}
+        >
+          Process Model: {processModelId}
+        </Breadcrumb.Item>
+      );
     } else {
-      processModelBreadcrumb = <Breadcrumb.Item active={true}>Process Model: {props.processModelId}</Breadcrumb.Item>
+      processModelBreadcrumb = (
+        <Breadcrumb.Item active>
+          Process Model: {processModelId}
+        </Breadcrumb.Item>
+      );
     }
-    processGroupBreadcrumb = <Breadcrumb.Item linkAs={Link} linkProps={{ to: `/process-groups/${props.processGroupId}` }}>
-      Process Group: {props.processGroupId}
-    </Breadcrumb.Item>
-  } else if (props.processGroupId) {
-    processGroupBreadcrumb = <Breadcrumb.Item active={true}>Process Group: {props.processGroupId}</Breadcrumb.Item>
+    processGroupBreadcrumb = (
+      <Breadcrumb.Item
+        linkAs={Link}
+        linkProps={{ to: `/process-groups/${processGroupId}` }}
+      >
+        Process Group: {processGroupId}
+      </Breadcrumb.Item>
+    );
+  } else if (processGroupId) {
+    processGroupBreadcrumb = (
+      <Breadcrumb.Item active>Process Group: {processGroupId}</Breadcrumb.Item>
+    );
   }
 
   return (
-    <main style={{ padding: "1rem 0" }}>
-    <Breadcrumb>
-      <Breadcrumb.Item linkAs={Link} linkProps={{ to: '/' }}>Home</Breadcrumb.Item>
-      {processGroupBreadcrumb}
-      {processModelBreadcrumb}
-    </Breadcrumb>
+    <main style={{ padding: '1rem 0' }}>
+      <Breadcrumb>
+        <Breadcrumb.Item linkAs={Link} linkProps={{ to: '/' }}>
+          Home
+        </Breadcrumb.Item>
+        {processGroupBreadcrumb}
+        {processModelBreadcrumb}
+      </Breadcrumb>
     </main>
   );
 }
+
+ProcessBreadcrumb.propTypes = {
+  processModelId: PropTypes.string.isRequired,
+  processGroupId: PropTypes.string.isRequired,
+  linkProcessModel: PropTypes.bool,
+};
+
+ProcessBreadcrumb.defaultProps = {
+  linkProcessModel: false,
+};

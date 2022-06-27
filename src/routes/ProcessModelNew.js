@@ -1,25 +1,24 @@
-import React, { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { BACKEND_BASE_URL } from '../config';
-import { HOT_AUTH_TOKEN } from '../config';
-import ProcessBreadcrumb from '../components/ProcessBreadcrumb'
-import { slugifyString } from '../helpers'
+import React, { useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { BACKEND_BASE_URL, HOT_AUTH_TOKEN } from '../config';
+import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
+import { slugifyString } from '../helpers';
 
-export default function ProcessModelNew(props) {
-  let params = useParams();
+export default function ProcessModelNew() {
+  const params = useParams();
 
-  const [identifier, setIdentifier] = useState("");
+  const [identifier, setIdentifier] = useState('');
   const [idHasBeenUpdatedByUser, setIdHasBeenUpdatedByUser] = useState(false);
-  const [displayName, setDisplayName] = useState("");
+  const [displayName, setDisplayName] = useState('');
   const navigate = useNavigate();
 
-  const addProcessModel = ((event) => {
-    event.preventDefault()
+  const addProcessModel = (event) => {
+    event.preventDefault();
 
     fetch(`${BACKEND_BASE_URL}/process-models`, {
       headers: new Headers({
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${HOT_AUTH_TOKEN}`
+        Authorization: `Bearer ${HOT_AUTH_TOKEN}`,
       }),
       method: 'POST',
       body: JSON.stringify({
@@ -31,49 +30,55 @@ export default function ProcessModelNew(props) {
         standalone: false,
         library: false,
       }),
-    })
-      .then(res => res.json())
-      .then(
-        (result) => {
-          navigate(`/process-models/${params.process_group_id}/${identifier}`);
-        },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
-        (newError) => {
-          console.log(newError);
-        }
-      )
+    }).then(
+      () => {
+        navigate(`/process-models/${params.process_group_id}/${identifier}`);
+      },
+      // Note: it's important to handle errors here
+      // instead of a catch() block so that we don't swallow
+      // exceptions from actual bugs in components.
+      (newError) => {
+        console.log(newError);
+      }
+    );
+  };
 
-  });
-
-  const onDisplayNameChanged = ((newDisplayName) => {
+  const onDisplayNameChanged = (newDisplayName) => {
     setDisplayName(newDisplayName);
     if (!idHasBeenUpdatedByUser) {
       setIdentifier(slugifyString(newDisplayName));
     }
-  });
+  };
 
   return (
-    <main style={{ padding: "1rem 0" }}>
+    <main style={{ padding: '1rem 0' }}>
       <ProcessBreadcrumb />
       <h2>Add Process Model</h2>
       <form onSubmit={addProcessModel}>
-        <label>Display Name:</label>
-        <input
-          name='display_name'
-          type='text'
-          value={displayName}
-          onChange={e => onDisplayNameChanged(e.target.value)}
-        />
+        <label htmlFor="display_name">
+          Display Name:
+          <input
+            name="display_name"
+            id="display_name"
+            type="text"
+            value={displayName}
+            onChange={(e) => onDisplayNameChanged(e.target.value)}
+          />
+        </label>
         <br />
-        <label>ID:</label>
-        <input
-          name='id'
-          type='text'
-          value={identifier}
-          onChange={e => { setIdentifier(e.target.value); setIdHasBeenUpdatedByUser(true)} }
-        />
+        <label htmlFor="id">
+          ID:
+          <input
+            name="id"
+            id="id"
+            type="text"
+            value={identifier}
+            onChange={(e) => {
+              setIdentifier(e.target.value);
+              setIdHasBeenUpdatedByUser(true);
+            }}
+          />
+        </label>
         <br />
         <button type="submit">Submit</button>
       </form>
