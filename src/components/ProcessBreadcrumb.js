@@ -57,11 +57,13 @@ export default function ProcessBreadcrumb({
 }
 
 ProcessBreadcrumb.propTypes = {
-  processModelId: PropTypes.string.isRequired,
-  processGroupId: PropTypes.string.isRequired,
+  processModelId: PropTypes.string,
+  processGroupId: PropTypes.string,
   linkProcessModel: PropTypes.bool,
 };
 
 ProcessBreadcrumb.defaultProps = {
+  processGroupId: null,
+  processModelId: null,
   linkProcessModel: false,
 };

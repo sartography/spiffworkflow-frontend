@@ -20,6 +20,7 @@ module.exports = {
   },
   plugins: ['react'],
   rules: {
+    'jest/expect-expect': 'off',
     'react/jsx-no-bind': 'off',
     'jsx-a11y/no-autofocus': 'off',
     'jsx-a11y/label-has-associated-control': 'off',

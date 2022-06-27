@@ -25,8 +25,8 @@
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
 Cypress.Commands.add('getBySel', (selector, ...args) => {
-  return cy.get(`[data-qa=${selector}]`, ...args)
-})
+  return cy.get(`[data-qa=${selector}]`, ...args);
+});
 
 Cypress.Commands.add('createGroup', (groupId, groupDisplayName) => {
   cy.contains(groupId).should('not.exist');
@@ -56,21 +56,21 @@ Cypress.Commands.add('createModel', (groupId, modelId, modelDisplayName) => {
 Cypress.Commands.add('runPrimaryBpmnFile', (expectedText) => {
   cy.contains('Run').click();
   cy.contains(expectedText);
-  cy.reload(true)
+  cy.reload(true);
   cy.contains(expectedText).should('not.exist');
 });
 
 Cypress.Commands.add('basicPaginationTest', () => {
-  cy.get("#pagination-page-dropdown")
-    .type("typing_to_open_dropdown_box....FIXME")
+  cy.get('#pagination-page-dropdown')
+    .type('typing_to_open_dropdown_box....FIXME')
     .find('.dropdown-item')
     .contains(/^2$/)
     .click();
 
   cy.contains(/^1-2 of \d+$/);
-  cy.getBySel("pagination-previous-button-inactive");
-  cy.getBySel("pagination-next-button").click();
+  cy.getBySel('pagination-previous-button-inactive');
+  cy.getBySel('pagination-next-button').click();
   cy.contains(/^3-4 of \d+$/);
-  cy.getBySel("pagination-previous-button").click();
+  cy.getBySel('pagination-previous-button').click();
   cy.contains(/^1-2 of \d+$/);
 });

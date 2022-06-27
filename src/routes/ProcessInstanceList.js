@@ -264,7 +264,9 @@ export default function ProcessInstanceList() {
           <td>{row.process_group_id}</td>
           <td>{format(startDate, DATE_FORMAT)}</td>
           <td>{format(endDate, DATE_FORMAT)}</td>
-          <td data-qa="process-instance-status">{row.status}</td>
+          <td data-qa={`process-instance-status-${row.status}`}>
+            {row.status}
+          </td>
         </tr>
       );
     });

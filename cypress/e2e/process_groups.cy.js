@@ -4,8 +4,8 @@ describe('process-groups', () => {
   });
 
   it('can perform crud operations', () => {
-    const uuid = () => Cypress._.random(0, 1e6)
-    const id = uuid()
+    const uuid = () => Cypress._.random(0, 1e6);
+    const id = uuid();
     const groupDisplayName = `Test Group 1 ${id}`;
     const newGroupDisplayName = `${groupDisplayName} edited`;
     const groupId = `test-group-1-${id}`;
@@ -13,7 +13,7 @@ describe('process-groups', () => {
 
     cy.contains('Home').click();
     cy.contains(groupId);
-    cy.contains(groupId).click()
+    cy.contains(groupId).click();
     cy.url().should('include', `process-groups/${groupId}`);
     cy.contains(`Process Group: ${groupId}`);
 
@@ -23,14 +23,17 @@ describe('process-groups', () => {
     cy.contains(`Process Group: ${groupId}`);
 
     cy.contains('Edit process group').click();
-    cy.get('input[name=display_name]').should('have.value', newGroupDisplayName)
+    cy.get('input[name=display_name]').should(
+      'have.value',
+      newGroupDisplayName
+    );
 
     cy.contains('Delete Process Group').click();
     cy.url().should('include', `process-groups`);
     cy.contains(groupId).should('not.exist');
-  })
+  });
 
   it('can paginate items', () => {
     cy.basicPaginationTest();
-  })
-})
+  });
+});
