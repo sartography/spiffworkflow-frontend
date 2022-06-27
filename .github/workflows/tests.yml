@@ -17,7 +17,7 @@ jobs:
         with:
           node-version: 18.x
       - run: npm install
-      - run: npm lint
+      - run: npm run lint
       - run: npm test
       - run: npm run build --if-present
       # part about saving PR number and then using it from auto-merge-dependabot-prs from:
