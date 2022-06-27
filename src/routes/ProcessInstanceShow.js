@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import { BACKEND_BASE_URL, HOT_AUTH_TOKEN } from '../config';
@@ -7,8 +7,6 @@ import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 export default function ProcessInstanceShow() {
   const navigate = useNavigate();
   const params = useParams();
-
-  useEffect(() => {}, []);
 
   const deleteProcessInstance = () => {
     fetch(

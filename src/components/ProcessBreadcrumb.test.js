@@ -42,5 +42,4 @@ test('renders process model when given processModelId', async () => {
     /Process Group: group-b/
   );
   expect(processGroupBreadcrumbs[0]).toBeInTheDocument();
-  // expect(processGroupBreadcrumbs[0]).toHaveClass('breadcrumb-item');
 });

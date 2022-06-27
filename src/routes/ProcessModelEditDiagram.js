@@ -178,10 +178,7 @@ export default function ProcessModelEditDiagram() {
 
   const isDmn = () => {
     const fileName = params.file_name || '';
-    if (searchParams.get('file_type') === 'dmn' || fileName.endsWith('.dmn')) {
-      return true;
-    }
-    return false;
+    return searchParams.get('file_type') === 'dmn' || fileName.endsWith('.dmn');
   };
 
   const appropriateEditor = () => {
