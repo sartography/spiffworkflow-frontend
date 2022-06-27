@@ -5,7 +5,8 @@ export const slugifyString = (str) => {
     .trim()
     .replace(/[^\w\s-]/g, '')
     .replace(/[\s_-]+/g, '-')
-    .replace(/^-+|-+$/g, '');
+    .replace(/^-+/g, '')
+    .replace(/-+$/g, '');
 };
 
 export const convertDateToSeconds = (date, onChangeFunction) => {
