@@ -37,7 +37,8 @@
     "test": "react-scripts test",
     "eject": "craco eject",
     "format": "prettier --write src/**/*.ts{,x}",
-    "lint": "eslint --fix src/**/*.js{,x}"
+    "lint": "eslint src/**/*.js{,x}",
+    "lint:fix": "eslint --fix src/**/*.js{,x}"
   },
   "eslintConfig": {
     "extends": [
