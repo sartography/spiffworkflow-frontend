@@ -16,12 +16,12 @@ import spiffworkflowPanel from 'bpmn-js-spiffworkflow/app/spiffworkflow/Properti
 
 import Button from 'react-bootstrap/Button';
 import PropTypes from 'prop-types';
-import { HOT_AUTH_TOKEN, BACKEND_BASE_URL } from './config';
+import { HOT_AUTH_TOKEN, BACKEND_BASE_URL } from '../config';
 
 import 'bpmn-js/dist/assets/diagram-js.css';
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css';
 import 'bpmn-js-properties-panel/dist/assets/properties-panel.css';
-import './bpmn-js-properties-panel.css';
+import '../bpmn-js-properties-panel.css';
 import 'bpmn-js/dist/assets/bpmn-js.css';
 
 import 'dmn-js/dist/assets/diagram-js.css';
@@ -41,7 +41,6 @@ export default function ReactDiagramEditor({
   processGroupId,
   saveDiagram,
   diagramType,
-
   diagramXML,
   fileName,
   onLaunchScriptEditor,

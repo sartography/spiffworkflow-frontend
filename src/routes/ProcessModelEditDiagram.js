@@ -4,7 +4,7 @@ import { Button, Modal } from 'react-bootstrap';
 import Editor from '@monaco-editor/react';
 import { BACKEND_BASE_URL, HOT_AUTH_TOKEN } from '../config';
 
-import ReactDiagramEditor from '../react_diagram_editor';
+import ReactDiagramEditor from '../components/ReactDiagramEditor';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 
 export default function ProcessModelEditDiagram() {

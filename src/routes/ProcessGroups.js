@@ -66,19 +66,15 @@ export default function ProcessGroups() {
     );
   };
 
-  if (processGroups?.length > 0) {
+  const processGroupsDisplayArea = () => {
     const perPage = parseInt(
       searchParams.get('per_page') || DEFAULT_PER_PAGE,
       10
     );
     const page = parseInt(searchParams.get('page') || DEFAULT_PAGE, 10);
-    return (
-      <main style={{ padding: '1rem 0' }}>
-        <ProcessBreadcrumb />
-        <h2>Process Groups</h2>
-        <Button href="/process-groups/new">Add a process group</Button>
-        <br />
-        <br />
+    let displayText = '';
+    if (processGroups?.length > 0) {
+      displayText = (
         <PaginationForTable
           page={page}
           perPage={perPage}
@@ -86,6 +82,22 @@ export default function ProcessGroups() {
           tableToDisplay={buildTable()}
           path="/process-groups"
         />
+      );
+    } else {
+      displayText = <p>No Groups To Display</p>;
+    }
+    return displayText;
+  };
+
+  if (pagination) {
+    return (
+      <main style={{ padding: '1rem 0' }}>
+        <ProcessBreadcrumb />
+        <h2>Process Groups</h2>
+        <Button href="/process-groups/new">Add a process group</Button>
+        <br />
+        <br />
+        {processGroupsDisplayArea()}
       </main>
     );
   }
