@@ -1,9 +1,10 @@
-const { defineConfig } = require("cypress");
+/* eslint-disable */
+const { defineConfig } = require('cypress');
 
 module.exports = defineConfig({
-  projectId: "crax1q",
+  projectId: 'crax1q',
   e2e: {
-    baseUrl: "http://localhost:7001",
+    baseUrl: 'http://localhost:7001',
     setupNodeEvents(_on, _config) {
       // implement node event listeners here
     },
