@@ -17,6 +17,7 @@ import ProcessModelNew from './routes/ProcessModelNew';
 import ProcessModelEdit from './routes/ProcessModelEdit';
 import ProcessInstanceShow from './routes/ProcessInstanceShow';
 import TaskList from './routes/TaskList';
+import TaskShow from './routes/TaskShow';
 import ErrorBoundary from './components/ErrorBoundary';
 
 export default function App() {
@@ -90,6 +91,7 @@ export default function App() {
                 element={<ProcessInstanceShow />}
               />
               <Route path="tasks" element={<TaskList />} />
+              <Route path="tasks/:task_id" element={<TaskShow />} />
             </Routes>
           </BrowserRouter>
         </ErrorBoundary>
