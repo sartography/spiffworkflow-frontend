@@ -34,18 +34,11 @@ export default function ProcessInstanceList() {
 
   const oneHourInSeconds = 3600;
   const oneMonthInSeconds = oneHourInSeconds * 24 * 30;
-  const [startFrom, setStartFrom] = useState(
-    convertDateToSeconds(new Date()) - oneMonthInSeconds
-  );
-  const [startTill, setStartTill] = useState(
-    convertDateToSeconds(new Date()) + oneHourInSeconds
-  );
-  const [endFrom, setEndFrom] = useState(
-    convertDateToSeconds(new Date()) - oneMonthInSeconds
-  );
-  const [endTill, setEndTill] = useState(
-    convertDateToSeconds(new Date()) + oneHourInSeconds
-  );
+  const [startFrom, setStartFrom] = useState(null);
+  const [startTill, setStartTill] = useState(null);
+  const [endFrom, setEndFrom] = useState(null);
+  const [endTill, setEndTill] = useState(null);
+  const [filterErrorMessage, setFilterErrorMessage] = useState('');
 
   const [processStatus, setProcessStatus] = useState(PROCESS_STATUSES[0]);
   const parametersToAlwaysFilterBy = useMemo(() => {
@@ -68,18 +61,10 @@ export default function ProcessInstanceList() {
 
       Object.keys(parametersToAlwaysFilterBy).forEach((paramName) => {
         const functionToCall = parametersToAlwaysFilterBy[paramName];
-        let defaultValue = null;
-        if (paramName.endsWith('_from')) {
-          defaultValue = convertDateToSeconds(new Date()) - oneMonthInSeconds;
-        } else if (paramName.endsWith('_till')) {
-          defaultValue = convertDateToSeconds(new Date()) + oneHourInSeconds;
-        }
         const searchParamValue = searchParams.get(paramName);
         if (searchParamValue) {
           queryParamString += `&${paramName}=${searchParamValue}`;
           functionToCall(searchParamValue);
-        } else if (defaultValue) {
-          queryParamString += `&${paramName}=${defaultValue}`;
         }
       });
 
@@ -129,6 +114,23 @@ export default function ProcessInstanceList() {
     );
     let queryParamString = `per_page=${perPage}&page=${page}`;
 
+    if (startFrom && startTill && startFrom > startTill) {
+      setFilterErrorMessage('startFrom cannot be after startTill');
+      return;
+    }
+    if (endFrom && endTill && endFrom > endTill) {
+      setFilterErrorMessage('endFrom cannot be after endTill');
+      return;
+    }
+    if (startFrom && endFrom && startFrom > endFrom) {
+      setFilterErrorMessage('startFrom cannot be after endFrom');
+      return;
+    }
+    if (startTill && endTill && startTill > endTill) {
+      setFilterErrorMessage('startTill cannot be after endTill');
+      return;
+    }
+
     if (startFrom) {
       queryParamString += `&start_from=${startFrom}`;
     }
@@ -145,18 +147,23 @@ export default function ProcessInstanceList() {
       queryParamString += `&process_status=${processStatus}`;
     }
 
+    setFilterErrorMessage('');
     navigate(
       `/process-models/${params.process_group_id}/${params.process_model_id}/process-instances?${queryParamString}`
     );
   };
 
   const dateComponent = (labelString, name, initialDate, onChangeFunction) => {
+    let selectedDate = null;
+    if (initialDate) {
+      selectedDate = new Date(initialDate * 1000);
+    }
     return (
       <Stack className="ms-auto" direction="horizontal" gap={3}>
         <label className="text-nowrap">{labelString}</label>
         <DatePicker
           id={`date-picker-${name}`}
-          selected={new Date(initialDate * 1000)}
+          selected={selectedDate}
           onChange={(date) => convertDateToSeconds(date, onChangeFunction)}
           showTimeSelect
           dateFormat={DATE_FORMAT}
@@ -195,8 +202,18 @@ export default function ProcessInstanceList() {
       );
     });
 
+    let errorTag = '';
+    if (filterErrorMessage !== '') {
+      errorTag = (
+        <div id="filter-errors" className="alert alert-danger" role="alert">
+          {filterErrorMessage}
+        </div>
+      );
+    }
+
     return (
       <div className="container">
+        {errorTag}
         <div className="row">
           <div className="col">
             <form onSubmit={handleFilter}>
@@ -242,14 +259,17 @@ export default function ProcessInstanceList() {
 
   const buildTable = () => {
     const rows = processInstances.map((row) => {
-      let startDate = 'N/A';
+      let formattedStartDate = '-';
       if (row.start_in_seconds) {
-        startDate = new Date(row.start_in_seconds * 1000);
+        const startDate = new Date(row.start_in_seconds * 1000);
+        formattedStartDate = format(startDate, DATE_FORMAT);
       }
-      let endDate = 'N/A';
+      let formattedEndDate = '-';
       if (row.end_in_seconds) {
-        endDate = new Date(row.end_in_seconds * 1000);
+        const endDate = new Date(row.end_in_seconds * 1000);
+        formattedEndDate = format(endDate, DATE_FORMAT);
       }
+
       return (
         <tr key={row.id}>
           <td>
@@ -262,8 +282,8 @@ export default function ProcessInstanceList() {
           </td>
           <td>{row.process_model_identifier}</td>
           <td>{row.process_group_id}</td>
-          <td>{format(startDate, DATE_FORMAT)}</td>
-          <td>{format(endDate, DATE_FORMAT)}</td>
+          <td>{formattedStartDate}</td>
+          <td>{formattedEndDate}</td>
           <td data-qa={`process-instance-status-${row.status}`}>
             {row.status}
           </td>

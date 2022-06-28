@@ -10,15 +10,15 @@ export const slugifyString = (str) => {
 };
 
 export const convertDateToSeconds = (date, onChangeFunction) => {
-  if (date === null) {
-    return undefined;
+  let dateInSeconds = date;
+  if (date !== null) {
+    let dateInMilliseconds = date;
+    if (typeof date.getTime === 'function') {
+      dateInMilliseconds = date.getTime();
+    }
+    dateInSeconds = Math.floor(dateInMilliseconds / 1000);
   }
 
-  let dateInMilliseconds = date;
-  if (typeof date.getTime === 'function') {
-    dateInMilliseconds = date.getTime();
-  }
-  const dateInSeconds = Math.floor(dateInMilliseconds / 1000);
   if (onChangeFunction) {
     onChangeFunction(dateInSeconds);
   } else {

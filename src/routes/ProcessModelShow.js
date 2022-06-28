@@ -86,27 +86,23 @@ export default function ProcessModelShow() {
   if (processModel) {
     let processModelFilesTag = '';
     processModelFilesTag = processModel.files.map((fileBpmn) => {
-      if (fileBpmn.name === processModel.primary_file_name) {
+      if (fileBpmn.name.match(/\.(dmn|bpmn)$/)) {
+        let primarySuffix = '';
+        if (fileBpmn.name === processModel.primary_file_name) {
+          primarySuffix = '- Primary File';
+        }
         return (
           <li key={fileBpmn.name}>
             <Link
               to={`/process-models/${processModel.process_group_id}/${processModel.id}/file/${fileBpmn.name}`}
             >
               {fileBpmn.name}
-            </Link>{' '}
-            - Primary File
+            </Link>
+            {primarySuffix}
           </li>
         );
       }
-      return (
-        <li key={fileBpmn.name}>
-          <Link
-            to={`/process-models/${processModel.process_group_id}/${processModel.id}/file/${fileBpmn.name}`}
-          >
-            {fileBpmn.name}
-          </Link>
-        </li>
-      );
+      return <li key={fileBpmn.name}>{fileBpmn.name}</li>;
     });
 
     return (
