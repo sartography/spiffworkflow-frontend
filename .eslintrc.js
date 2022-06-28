@@ -27,5 +27,6 @@ module.exports = {
     'no-console': 'off',
     'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
     'react/react-in-jsx-scope': 'off',
+    'no-unused-vars': ['error', { destructuredArrayIgnorePattern: '^_' }],
   },
 };

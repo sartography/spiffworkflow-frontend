@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import {
   Link,
   useNavigate,
@@ -24,6 +24,8 @@ import PaginationForTable, {
 } from '../components/PaginationForTable';
 import 'react-datepicker/dist/react-datepicker.css';
 
+import ErrorContext from '../contexts/ErrorContext';
+
 export default function ProcessInstanceList() {
   const params = useParams();
   const [searchParams] = useSearchParams();
@@ -38,7 +40,9 @@ export default function ProcessInstanceList() {
   const [startTill, setStartTill] = useState(null);
   const [endFrom, setEndFrom] = useState(null);
   const [endTill, setEndTill] = useState(null);
-  const [filterErrorMessage, setFilterErrorMessage] = useState('');
+
+  const [_errorMessage, setErrorMessage] = useContext(ErrorContext);
+  // const [filterErrorMessage, setFilterErrorMessage] = useState('');
 
   const [processStatus, setProcessStatus] = useState(PROCESS_STATUSES[0]);
   const parametersToAlwaysFilterBy = useMemo(() => {
@@ -115,19 +119,19 @@ export default function ProcessInstanceList() {
     let queryParamString = `per_page=${perPage}&page=${page}`;
 
     if (startFrom && startTill && startFrom > startTill) {
-      setFilterErrorMessage('startFrom cannot be after startTill');
+      setErrorMessage('startFrom cannot be after startTill');
       return;
     }
     if (endFrom && endTill && endFrom > endTill) {
-      setFilterErrorMessage('endFrom cannot be after endTill');
+      setErrorMessage('endFrom cannot be after endTill');
       return;
     }
     if (startFrom && endFrom && startFrom > endFrom) {
-      setFilterErrorMessage('startFrom cannot be after endFrom');
+      setErrorMessage('startFrom cannot be after endFrom');
       return;
     }
     if (startTill && endTill && startTill > endTill) {
-      setFilterErrorMessage('startTill cannot be after endTill');
+      setErrorMessage('startTill cannot be after endTill');
       return;
     }
 
@@ -147,7 +151,7 @@ export default function ProcessInstanceList() {
       queryParamString += `&process_status=${processStatus}`;
     }
 
-    setFilterErrorMessage('');
+    setErrorMessage('');
     navigate(
       `/process-models/${params.process_group_id}/${params.process_model_id}/process-instances?${queryParamString}`
     );
@@ -202,18 +206,8 @@ export default function ProcessInstanceList() {
       );
     });
 
-    let errorTag = '';
-    if (filterErrorMessage !== '') {
-      errorTag = (
-        <div id="filter-errors" className="alert alert-danger" role="alert">
-          {filterErrorMessage}
-        </div>
-      );
-    }
-
     return (
       <div className="container">
-        {errorTag}
         <div className="row">
           <div className="col">
             <form onSubmit={handleFilter}>
