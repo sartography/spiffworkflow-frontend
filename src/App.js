@@ -3,6 +3,7 @@ import { Container } from 'react-bootstrap';
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import ErrorContext from './contexts/ErrorContext';
+import NavigationBar from './components/NavigationBar';
 
 import ProcessGroups from './routes/ProcessGroups';
 import ProcessGroupShow from './routes/ProcessGroupShow';
@@ -15,9 +16,8 @@ import ProcessInstanceReport from './routes/ProcessInstanceReport';
 import ProcessModelNew from './routes/ProcessModelNew';
 import ProcessModelEdit from './routes/ProcessModelEdit';
 import ProcessInstanceShow from './routes/ProcessInstanceShow';
+import TaskList from './routes/TaskList';
 import ErrorBoundary from './components/ErrorBoundary';
-
-import logo from './logo.svg';
 
 export default function App() {
   const [errorMessage, setErrorMessage] = useState('');
@@ -38,8 +38,8 @@ export default function App() {
 
   return (
     <ErrorContext.Provider value={errorContextValueArray}>
+      <NavigationBar />
       <Container>
-        <img src={logo} className="app-logo" alt="logo" />
         {errorTag}
         <ErrorBoundary>
           <BrowserRouter>
@@ -89,6 +89,7 @@ export default function App() {
                 path="process-models/:process_group_id/:process_model_id/process-instances/:process_instance_id"
                 element={<ProcessInstanceShow />}
               />
+              <Route path="tasks" element={<TaskList />} />
             </Routes>
           </BrowserRouter>
         </ErrorBoundary>

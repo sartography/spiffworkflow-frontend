@@ -157,6 +157,10 @@ PaginationForTable.propTypes = {
   perPage: PropTypes.number.isRequired,
   pagination: PropTypes.objectOf(PropTypes.number).isRequired,
   tableToDisplay: PropTypes.string.isRequired,
-  queryParamString: PropTypes.string.isRequired,
+  queryParamString: PropTypes.string,
   path: PropTypes.string.isRequired,
+};
+
+PaginationForTable.defaultProps = {
+  queryParamString: '',
 };
