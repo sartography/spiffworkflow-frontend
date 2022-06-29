@@ -86,7 +86,7 @@ export default function ProcessModelEditDiagram() {
       () => {
         if (!params.file_name) {
           navigate(
-            `/process-models/${params.process_group_id}/${params.process_model_id}/file/${fileNameWithExtension}`
+            `/admin/process-models/${params.process_group_id}/${params.process_model_id}/file/${fileNameWithExtension}`
           );
         }
       },

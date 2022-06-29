@@ -46,7 +46,7 @@ export default function ProcessModelEdit() {
       }),
     }).then(
       () => {
-        navigate(`/${processModelPath}`);
+        navigate(`/admin/${processModelPath}`);
       },
       // Note: it's important to handle errors here
       // instead of a catch() block so that we don't swallow
@@ -68,7 +68,7 @@ export default function ProcessModelEdit() {
       }
     ).then(
       () => {
-        navigate(`/process-groups/${params.process_group_id}`);
+        navigate(`/admin/process-groups/${params.process_group_id}`);
       },
       (error) => {
         console.log(error);

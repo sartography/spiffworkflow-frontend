@@ -1,6 +1,6 @@
 describe('process-groups', () => {
   beforeEach(() => {
-    cy.visit('/');
+    cy.visit('/admin');
   });
 
   it('can perform crud operations', () => {

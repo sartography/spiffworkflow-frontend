@@ -42,7 +42,7 @@ export default function ProcessGroupEdit() {
       }),
     }).then(
       () => {
-        navigate(`/process-groups/${processGroup.id}`);
+        navigate(`/admin/process-groups/${processGroup.id}`);
       },
       // Note: it's important to handle errors here
       // instead of a catch() block so that we don't swallow
@@ -92,7 +92,7 @@ export default function ProcessGroupEdit() {
             <Button type="submit">Submit</Button>
             <Button
               variant="secondary"
-              href={`/process-groups/${processGroup.id}`}
+              href={`/admin/process-groups/${processGroup.id}`}
             >
               Cancel
             </Button>

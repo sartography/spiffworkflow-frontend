@@ -64,7 +64,7 @@ const updateBpmnPythonScriptWithMonaco = (
 
 describe('process-instances', () => {
   beforeEach(() => {
-    cy.visit('/');
+    cy.visit('/admin');
     cy.contains('acceptance-tests-group-one').click();
     cy.contains('acceptance-tests-model-1').click();
   });

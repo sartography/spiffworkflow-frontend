@@ -9,6 +9,10 @@ export const slugifyString = (str) => {
     .replace(/-+$/g, '');
 };
 
+export const capitalizeFirstLetter = (string) => {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+};
+
 export const convertDateToSeconds = (date, onChangeFunction) => {
   let dateInSeconds = date;
   if (date !== null) {

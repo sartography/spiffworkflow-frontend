@@ -16,7 +16,7 @@ export default function ProcessBreadcrumb({
         <Breadcrumb.Item
           linkAs={Link}
           linkProps={{
-            to: `/process-models/${processGroupId}/${processModelId}`,
+            to: `/admin/process-models/${processGroupId}/${processModelId}`,
           }}
         >
           Process Model: {processModelId}
@@ -32,7 +32,7 @@ export default function ProcessBreadcrumb({
     processGroupBreadcrumb = (
       <Breadcrumb.Item
         linkAs={Link}
-        linkProps={{ to: `/process-groups/${processGroupId}` }}
+        linkProps={{ to: `/admin/process-groups/${processGroupId}` }}
       >
         Process Group: {processGroupId}
       </Breadcrumb.Item>
@@ -46,7 +46,7 @@ export default function ProcessBreadcrumb({
   return (
     <main style={{ padding: '1rem 0' }}>
       <Breadcrumb>
-        <Breadcrumb.Item linkAs={Link} linkProps={{ to: '/' }}>
+        <Breadcrumb.Item linkAs={Link} linkProps={{ to: '/admin' }}>
           Home
         </Breadcrumb.Item>
         {processGroupBreadcrumb}

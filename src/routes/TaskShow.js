@@ -29,6 +29,7 @@ export default function TaskShow() {
       <main>
         <h1>Task ID: {task.id}</h1>
         <h3>process_instance_id: {task.process_instance_id}</h3>
+        <h3>status: {task.status}</h3>
       </main>
     );
   }

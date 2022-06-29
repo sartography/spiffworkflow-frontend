@@ -47,7 +47,7 @@ export default function ProcessGroups() {
       return (
         <tr key={row.id}>
           <td>
-            <Link to={`/process-groups/${row.id}`}>{row.id}</Link>
+            <Link to={`/admin/process-groups/${row.id}`}>{row.id}</Link>
           </td>
           <td>{row.display_name}</td>
         </tr>
@@ -80,7 +80,7 @@ export default function ProcessGroups() {
           perPage={perPage}
           pagination={pagination}
           tableToDisplay={buildTable()}
-          path="/process-groups"
+          path="/admin/process-groups"
         />
       );
     } else {
@@ -94,7 +94,7 @@ export default function ProcessGroups() {
       <main style={{ padding: '1rem 0' }}>
         <ProcessBreadcrumb />
         <h2>Process Groups</h2>
-        <Button href="/process-groups/new">Add a process group</Button>
+        <Button href="/admin/process-groups/new">Add a process group</Button>
         <br />
         <br />
         {processGroupsDisplayArea()}

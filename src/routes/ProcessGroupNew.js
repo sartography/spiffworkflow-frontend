@@ -25,7 +25,7 @@ export default function ProcessGroupNew() {
       }),
     }).then(
       () => {
-        navigate(`/process-groups/${identifier}`);
+        navigate(`/admin/process-groups/${identifier}`);
       },
       // Note: it's important to handle errors here
       // instead of a catch() block so that we don't swallow

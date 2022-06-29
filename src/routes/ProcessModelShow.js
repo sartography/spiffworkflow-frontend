@@ -94,7 +94,7 @@ export default function ProcessModelShow() {
         return (
           <li key={fileBpmn.name}>
             <Link
-              to={`/process-models/${processModel.process_group_id}/${processModel.id}/file/${fileBpmn.name}`}
+              to={`/admin/process-models/${processModel.process_group_id}/${processModel.id}/file/${fileBpmn.name}`}
             >
               {fileBpmn.name}
             </Link>
@@ -123,19 +123,19 @@ export default function ProcessModelShow() {
             Run
           </Button>
           <Button
-            href={`/process-models/${processModel.process_group_id}/${processModel.id}/edit`}
+            href={`/admin/process-models/${processModel.process_group_id}/${processModel.id}/edit`}
             variant="secondary"
           >
             Edit process model
           </Button>
           <Button
-            href={`/process-models/${processModel.process_group_id}/${processModel.id}/file?file_type=bpmn`}
+            href={`/admin/process-models/${processModel.process_group_id}/${processModel.id}/file?file_type=bpmn`}
             variant="warning"
           >
             Add New BPMN File
           </Button>
           <Button
-            href={`/process-models/${processModel.process_group_id}/${processModel.id}/file?file_type=dmn`}
+            href={`/admin/process-models/${processModel.process_group_id}/${processModel.id}/file?file_type=dmn`}
             variant="success"
           >
             Add New DMN File
@@ -144,7 +144,7 @@ export default function ProcessModelShow() {
         <br />
         <br />
         <Link
-          to={`/process-models/${processModel.process_group_id}/${processModel.id}/process-instances`}
+          to={`/admin/process-models/${processModel.process_group_id}/${processModel.id}/process-instances`}
         >
           Process Instances
         </Link>

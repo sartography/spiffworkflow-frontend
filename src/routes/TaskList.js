@@ -45,6 +45,7 @@ export default function TaskList() {
           <td>
             <Link to={`/tasks/${row.id}`}>{row.id}</Link>
           </td>
+          <td>{row.status}</td>
         </tr>
       );
     });
@@ -53,6 +54,7 @@ export default function TaskList() {
         <thead>
           <tr>
             <th>Id</th>
+            <th>Status</th>
           </tr>
         </thead>
         <tbody>{rows}</tbody>

@@ -32,7 +32,9 @@ export default function ProcessModelNew() {
       }),
     }).then(
       () => {
-        navigate(`/process-models/${params.process_group_id}/${identifier}`);
+        navigate(
+          `/admin/process-models/${params.process_group_id}/${identifier}`
+        );
       },
       // Note: it's important to handle errors here
       // instead of a catch() block so that we don't swallow

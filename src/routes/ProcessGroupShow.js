@@ -61,7 +61,7 @@ export default function ProcessGroupShow() {
       return (
         <tr key={row.id}>
           <td>
-            <Link to={`/process-models/${processGroup.id}/${row.id}`}>
+            <Link to={`/admin/process-models/${processGroup.id}/${row.id}`}>
               {row.id}
             </Link>
           </td>
@@ -97,11 +97,11 @@ export default function ProcessGroupShow() {
         <h2>Process Group: {processGroup.id}</h2>
         <ul>
           <Stack direction="horizontal" gap={3}>
-            <Button href={`/process-models/${processGroup.id}/new`}>
+            <Button href={`/admin/process-models/${processGroup.id}/new`}>
               Add a process model
             </Button>
             <Button
-              href={`/process-groups/${processGroup.id}/edit`}
+              href={`/admin/process-groups/${processGroup.id}/edit`}
               variant="secondary"
             >
               Edit process group
@@ -114,7 +114,7 @@ export default function ProcessGroupShow() {
             perPage={perPage}
             pagination={pagination}
             tableToDisplay={buildTable()}
-            path={`/process-groups/${processGroup.id}`}
+            path={`/admin/process-groups/${processGroup.id}`}
           />
         </ul>
       </main>

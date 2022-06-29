@@ -101,7 +101,7 @@ export default function ProcessInstanceReport() {
           perPage={perPage}
           pagination={pagination}
           tableToDisplay={buildTable()}
-          path={`/process-models/${params.process_group_id}/${params.process_model_id}/process-instances/report`}
+          path={`/admin/process-models/${params.process_group_id}/${params.process_model_id}/process-instances/report`}
         />
       </main>
     );

@@ -153,7 +153,7 @@ export default function ProcessInstanceList() {
 
     setErrorMessage('');
     navigate(
-      `/process-models/${params.process_group_id}/${params.process_model_id}/process-instances?${queryParamString}`
+      `/admin/process-models/${params.process_group_id}/${params.process_model_id}/process-instances?${queryParamString}`
     );
   };
 
@@ -269,7 +269,7 @@ export default function ProcessInstanceList() {
           <td>
             <Link
               data-qa="process-instance-show-link"
-              to={`/process-models/${params.process_group_id}/${params.process_model_id}/process-instances/${row.id}`}
+              to={`/admin/process-models/${params.process_group_id}/${params.process_model_id}/process-instances/${row.id}`}
             >
               {row.id}
             </Link>
@@ -322,7 +322,7 @@ export default function ProcessInstanceList() {
           pagination={pagination}
           tableToDisplay={buildTable()}
           queryParamString={getSearchParamsAsQueryString()}
-          path={`/process-models/${params.process_group_id}/${params.process_model_id}/process-instances`}
+          path={`/admin/process-models/${params.process_group_id}/${params.process_model_id}/process-instances`}
         />
       </main>
     );
