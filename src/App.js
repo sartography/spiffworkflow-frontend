@@ -35,6 +35,7 @@ export default function App() {
         <ErrorBoundary>
           <BrowserRouter>
             <Routes>
+              <Route path="/" element={<AdminRoutes />} />
               <Route path="/admin/*" element={<AdminRoutes />} />
               <Route path="/tasks" element={<TaskList />} />
               <Route path="/tasks/:task_id" element={<TaskShow />} />
