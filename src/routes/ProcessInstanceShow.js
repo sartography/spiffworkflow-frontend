@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import { BACKEND_BASE_URL, HOT_AUTH_TOKEN } from '../config';
@@ -7,6 +7,28 @@ import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 export default function ProcessInstanceShow() {
   const navigate = useNavigate();
   const params = useParams();
+
+  const [processInstance, setProcessInstance] = useState(null);
+
+  useEffect(() => {
+    fetch(
+      `${BACKEND_BASE_URL}/process-models/${params.process_group_id}/${params.process_model_id}/process-instances/${params.process_instance_id}`,
+      {
+        headers: new Headers({
+          Authorization: `Bearer ${HOT_AUTH_TOKEN}`,
+        }),
+      }
+    )
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          setProcessInstance(result);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+  }, [params]);
 
   const deleteProcessInstance = () => {
     fetch(
@@ -29,16 +51,23 @@ export default function ProcessInstanceShow() {
     );
   };
 
-  return (
-    <main style={{ padding: '1rem 0' }}>
-      <ProcessBreadcrumb
-        processModelId={params.process_model_id}
-        processGroupId={params.process_group_id}
-        linkProcessModel="true"
-      />
-      <Button onClick={deleteProcessInstance} variant="danger">
-        Delete process instance
-      </Button>
-    </main>
-  );
+  if (processInstance) {
+    return (
+      <main style={{ padding: '1rem 0' }}>
+        <ProcessBreadcrumb
+          processModelId={params.process_model_id}
+          processGroupId={params.process_group_id}
+          linkProcessModel="true"
+        />
+        <h2>Process Instance Id: {processInstance.id}</h2>
+        <h2>Data</h2>
+        <div>
+          <pre>{JSON.stringify(processInstance.data, null, 2)}</pre>
+        </div>
+        <Button onClick={deleteProcessInstance} variant="danger">
+          Delete process instance
+        </Button>
+      </main>
+    );
+  }
 }
