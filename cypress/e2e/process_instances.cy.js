@@ -66,6 +66,7 @@ describe('process-instances', () => {
   beforeEach(() => {
     cy.visit('/admin');
     cy.contains('acceptance-tests-group-one').click();
+    cy.contains('Process Group: acceptance-tests-group-one');
     cy.contains('acceptance-tests-model-1').click();
   });
 
