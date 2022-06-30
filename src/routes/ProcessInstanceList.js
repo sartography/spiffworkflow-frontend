@@ -41,8 +41,7 @@ export default function ProcessInstanceList() {
   const [endFrom, setEndFrom] = useState(null);
   const [endTill, setEndTill] = useState(null);
 
-  const [_errorMessage, setErrorMessage] = useContext(ErrorContext);
-  // const [filterErrorMessage, setFilterErrorMessage] = useState('');
+  const [_, setErrorMessage] = useContext(ErrorContext);
 
   const [processStatus, setProcessStatus] = useState(PROCESS_STATUSES[0]);
   const parametersToAlwaysFilterBy = useMemo(() => {

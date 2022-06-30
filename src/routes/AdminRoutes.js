@@ -12,7 +12,7 @@ import ProcessModelNew from './ProcessModelNew';
 import ProcessModelEdit from './ProcessModelEdit';
 import ProcessInstanceShow from './ProcessInstanceShow';
 
-export default function Admin() {
+export default function AdminRoutes() {
   return (
     <Routes>
       <Route path="/" element={<ProcessGroups />} />
