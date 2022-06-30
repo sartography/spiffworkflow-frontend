@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Form from '@rjsf/core';
+import { Button } from 'react-bootstrap';
 
 import { BACKEND_BASE_URL, HOT_AUTH_TOKEN } from '../config';
 
@@ -49,11 +50,15 @@ export default function TaskShow() {
     // <JSONSchemaForm schema={JSON.parse(task.form_json)} />
     return (
       <main>
+        <Button href="/tasks">Go Back</Button>
         <h1>Task ID: {task.id}</h1>
         <h3>process_instance_id: {task.process_instance_id}</h3>
         <h3>status: {task.status}</h3>
-        <p>form json: {task.form_json}</p>
-        <Form onSubmit={handleFormSubmit} schema={JSON.parse(task.form_json)} />
+        <Form
+          formData={JSON.parse(task.spiffworkflow_task_data)}
+          onSubmit={handleFormSubmit}
+          schema={JSON.parse(task.form_json)}
+        />
       </main>
     );
   }

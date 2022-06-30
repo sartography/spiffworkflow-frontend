@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table } from 'react-bootstrap';
+import { Button, Table } from 'react-bootstrap';
 import { Link, useSearchParams } from 'react-router-dom';
 import PaginationForTable, {
   DEFAULT_PER_PAGE,
@@ -45,7 +45,13 @@ export default function TaskList() {
           <td>
             <Link to={`/tasks/${row.id}`}>{row.id}</Link>
           </td>
+          <td>{row.process_instance_id}</td>
           <td>{row.status}</td>
+          <td>
+            <Button variant="primary" href={`/tasks/${row.id}`}>
+              Start
+            </Button>
+          </td>
         </tr>
       );
     });
@@ -54,7 +60,9 @@ export default function TaskList() {
         <thead>
           <tr>
             <th>Id</th>
+            <th>Process Instance Id</th>
             <th>Status</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>{rows}</tbody>
