@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/cognitive-complexity */
 import BpmnModeler from 'bpmn-js/lib/Modeler';
 import {
   BpmnPropertiesPanelModule,

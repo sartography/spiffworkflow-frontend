@@ -72,6 +72,8 @@
     "eslint-plugin-prettier": "^4.1.0",
     "eslint-plugin-react": "^7.30.1",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "prettier": "^2.7.1"
+    "eslint-plugin-sonarjs": "^0.13.0",
+    "prettier": "^2.7.1",
+    "safe-regex": "^2.1.1"
   }
 }

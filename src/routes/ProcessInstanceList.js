@@ -108,6 +108,23 @@ export default function ProcessInstanceList() {
     parametersToAlwaysFilterBy,
   ]);
 
+  // does the comparison, but also returns false if either argument
+  // is not truthy and therefore not comparable.
+  const isTrueComparison = (param1, operation, param2) => {
+    if (param1 && param2) {
+      switch (operation) {
+        case '<':
+          return param1 < param2;
+        case '>':
+          return param1 > param2;
+        default:
+          return false;
+      }
+    } else {
+      return false;
+    }
+  };
+
   const handleFilter = (event) => {
     event.preventDefault();
     const page = searchParams.get('page') || DEFAULT_PAGE;
@@ -117,19 +134,19 @@ export default function ProcessInstanceList() {
     );
     let queryParamString = `per_page=${perPage}&page=${page}`;
 
-    if (startFrom && startTill && startFrom > startTill) {
+    if (isTrueComparison(startFrom, '>', startTill)) {
       setErrorMessage('startFrom cannot be after startTill');
       return;
     }
-    if (endFrom && endTill && endFrom > endTill) {
+    if (isTrueComparison(endFrom, '>', endTill)) {
       setErrorMessage('endFrom cannot be after endTill');
       return;
     }
-    if (startFrom && endFrom && startFrom > endFrom) {
+    if (isTrueComparison(startFrom, '>', endFrom)) {
       setErrorMessage('startFrom cannot be after endFrom');
       return;
     }
-    if (startTill && endTill && startTill > endTill) {
+    if (isTrueComparison(startTill, '>', endTill)) {
       setErrorMessage('startTill cannot be after endTill');
       return;
     }

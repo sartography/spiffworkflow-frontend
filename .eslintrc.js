@@ -10,6 +10,7 @@ module.exports = {
     'airbnb',
     'plugin:jest/recommended',
     'plugin:prettier/recommended',
+    'plugin:sonarjs/recommended',
   ],
   parserOptions: {
     ecmaFeatures: {
@@ -18,7 +19,7 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
-  plugins: ['react'],
+  plugins: ['react', 'sonarjs'],
   rules: {
     'jest/expect-expect': 'off',
     'react/jsx-no-bind': 'off',
