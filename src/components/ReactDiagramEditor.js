@@ -139,7 +139,7 @@ export default function ReactDiagramEditor({
       console.log('ERROR:', err);
     }
 
-    diagramModelerState.on('import.done', (event) => {
+    function onImportDone(event) {
       const { error } = event;
 
       if (error) {
@@ -158,7 +158,9 @@ export default function ReactDiagramEditor({
       if (modeler.constructor.name === 'Modeler') {
         modeler.get('canvas').zoom('fit-viewport');
       }
-    });
+    }
+
+    diagramModelerState.on('import.done', onImportDone);
 
     function displayDiagram(diagramModelerToUse, diagramXMLToDisplay) {
       if (alreadyImportedXmlRef.current) {
