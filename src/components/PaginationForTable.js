@@ -46,7 +46,7 @@ export default function PaginationForTable({
             id="process-instances-per-page"
             variant="light border"
           >
-            Process Instances to Show: {perPage}
+            Number to show: {perPage}
           </Dropdown.Toggle>
 
           <Dropdown.Menu variant="light">{perPageDropdownRows}</Dropdown.Menu>
