@@ -7,7 +7,7 @@ import {
 } from 'react-router-dom';
 
 import { Button, Table, Stack, Dropdown } from 'react-bootstrap';
-// @ts-expect-error TS(7016) FIXME: Could not find a declaration file for module 'reac... Remove this comment to see the full error message
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'reac... Remove this comment to see the full error message
 import DatePicker from 'react-datepicker';
 import { format } from 'date-fns';
 import {
@@ -58,14 +58,14 @@ export default function ProcessInstanceList() {
     function getProcessInstances() {
       const page = searchParams.get('page') || DEFAULT_PAGE;
       const perPage = parseInt(
-        // @ts-expect-error TS(2345) FIXME: Argument of type 'string | 50' is not assignable t... Remove this comment to see the full error message
+        // @ts-expect-error TS(2345): Argument of type 'string | 50' is not assignable t... Remove this comment to see the full error message
         searchParams.get('per_page') || DEFAULT_PER_PAGE,
         10
       );
       let queryParamString = `per_page=${perPage}&page=${page}`;
 
       Object.keys(parametersToAlwaysFilterBy).forEach((paramName) => {
-        // @ts-expect-error TS(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
+        // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
         const functionToCall = parametersToAlwaysFilterBy[paramName];
         const searchParamValue = searchParams.get(paramName);
         if (searchParamValue) {
@@ -78,7 +78,7 @@ export default function ProcessInstanceList() {
         queryParamString += `&process_status=${searchParams.get(
           'process_status'
         )}`;
-        // @ts-expect-error TS(2345) FIXME: Argument of type 'string | null' is not assignable... Remove this comment to see the full error message
+        // @ts-expect-error TS(2345): Argument of type 'string | null' is not assignable... Remove this comment to see the full error message
         setProcessStatus(searchParams.get('process_status'));
       }
 
@@ -133,7 +133,7 @@ export default function ProcessInstanceList() {
     event.preventDefault();
     const page = searchParams.get('page') || DEFAULT_PAGE;
     const perPage = parseInt(
-      // @ts-expect-error TS(2345) FIXME: Argument of type 'string | 50' is not assignable t... Remove this comment to see the full error message
+      // @ts-expect-error TS(2345): Argument of type 'string | 50' is not assignable t... Remove this comment to see the full error message
       searchParams.get('per_page') || DEFAULT_PER_PAGE,
       10
     );
@@ -331,18 +331,18 @@ export default function ProcessInstanceList() {
 
   if (pagination) {
     const perPage = parseInt(
-      // @ts-expect-error TS(2345) FIXME: Argument of type 'string | 50' is not assignable t... Remove this comment to see the full error message
+      // @ts-expect-error TS(2345): Argument of type 'string | 50' is not assignable t... Remove this comment to see the full error message
       searchParams.get('per_page') || DEFAULT_PER_PAGE,
       10
     );
-    // @ts-expect-error TS(2345) FIXME: Argument of type 'string | 1' is not assignable to... Remove this comment to see the full error message
+    // @ts-expect-error TS(2345): Argument of type 'string | 1' is not assignable to... Remove this comment to see the full error message
     const page = parseInt(searchParams.get('page') || DEFAULT_PAGE, 10);
     return (
       <main>
         <ProcessBreadcrumb
           processModelId={params.process_model_id}
           processGroupId={params.process_group_id}
-          // @ts-expect-error TS(2322) FIXME: Type 'string' is not assignable to type 'boolean |... Remove this comment to see the full error message
+          // @ts-expect-error TS(2322): Type 'string' is not assignable to type 'boolean |... Remove this comment to see the full error message
           linkProcessModel="true"
         />
         <h2>Process Instances for {params.process_model_id}</h2>
@@ -351,7 +351,7 @@ export default function ProcessInstanceList() {
           page={page}
           perPage={perPage}
           pagination={pagination}
-          // @ts-expect-error TS(2322) FIXME: Type 'Element' is not assignable to type 'string'.
+          // @ts-expect-error TS(2322): Type 'Element' is not assignable to type 'string'.
           tableToDisplay={buildTable()}
           queryParamString={getSearchParamsAsQueryString()}
           path={`/admin/process-models/${params.process_group_id}/${params.process_model_id}/process-instances`}

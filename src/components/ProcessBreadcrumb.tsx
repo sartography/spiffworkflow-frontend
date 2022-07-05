@@ -17,9 +17,9 @@ export default function ProcessBreadcrumb({
 
   if (processModelId) {
     if (linkProcessModel) {
-      // @ts-expect-error TS(2322) FIXME: Type 'Element' is not assignable to type 'string'.
+      // @ts-expect-error TS(2322): Type 'Element' is not assignable to type 'string'.
       processModelBreadcrumb = (
-        // @ts-expect-error TS(2686) FIXME: 'React' refers to a UMD global, but the current fi... Remove this comment to see the full error message
+        // @ts-expect-error TS(2686): 'React' refers to a UMD global, but the current fi... Remove this comment to see the full error message
         <Breadcrumb.Item
           linkAs={Link}
           linkProps={{
@@ -30,17 +30,17 @@ export default function ProcessBreadcrumb({
         </Breadcrumb.Item>
       );
     } else {
-      // @ts-expect-error TS(2322) FIXME: Type 'Element' is not assignable to type 'string'.
+      // @ts-expect-error TS(2322): Type 'Element' is not assignable to type 'string'.
       processModelBreadcrumb = (
-        // @ts-expect-error TS(2686) FIXME: 'React' refers to a UMD global, but the current fi... Remove this comment to see the full error message
+        // @ts-expect-error TS(2686): 'React' refers to a UMD global, but the current fi... Remove this comment to see the full error message
         <Breadcrumb.Item active>
           Process Model: {processModelId}
         </Breadcrumb.Item>
       );
     }
-    // @ts-expect-error TS(2322) FIXME: Type 'Element' is not assignable to type 'string'.
+    // @ts-expect-error TS(2322): Type 'Element' is not assignable to type 'string'.
     processGroupBreadcrumb = (
-      // @ts-expect-error TS(2686) FIXME: 'React' refers to a UMD global, but the current fi... Remove this comment to see the full error message
+      // @ts-expect-error TS(2686): 'React' refers to a UMD global, but the current fi... Remove this comment to see the full error message
       <Breadcrumb.Item
         linkAs={Link}
         linkProps={{ to: `/admin/process-groups/${processGroupId}` }}
@@ -49,19 +49,19 @@ export default function ProcessBreadcrumb({
       </Breadcrumb.Item>
     );
   } else if (processGroupId) {
-    // @ts-expect-error TS(2322) FIXME: Type 'Element' is not assignable to type 'string'.
+    // @ts-expect-error TS(2322): Type 'Element' is not assignable to type 'string'.
     processGroupBreadcrumb = (
-      // @ts-expect-error TS(2686) FIXME: 'React' refers to a UMD global, but the current fi... Remove this comment to see the full error message
+      // @ts-expect-error TS(2686): 'React' refers to a UMD global, but the current fi... Remove this comment to see the full error message
       <Breadcrumb.Item active>Process Group: {processGroupId}</Breadcrumb.Item>
     );
   }
 
   return (
-    // @ts-expect-error TS(2686) FIXME: 'React' refers to a UMD global, but the current fi... Remove this comment to see the full error message
+    // @ts-expect-error TS(2686): 'React' refers to a UMD global, but the current fi... Remove this comment to see the full error message
     <main style={{ padding: '1rem 0' }}>
-      {/* @ts-expect-error TS(2686) FIXME: 'React' refers to a UMD global, but the current fi... Remove this comment to see the full error message */}
+      {/* @ts-expect-error TS(2686): 'React' refers to a UMD global, but the current fi... Remove this comment to see the full error message */}
       <Breadcrumb>
-        {/* @ts-expect-error TS(2686) FIXME: 'React' refers to a UMD global, but the current fi... Remove this comment to see the full error message */}
+        {/* @ts-expect-error TS(2686): 'React' refers to a UMD global, but the current fi... Remove this comment to see the full error message */}
         <Breadcrumb.Item linkAs={Link} linkProps={{ to: '/admin' }}>
           Home
         </Breadcrumb.Item>

@@ -20,7 +20,7 @@ export default function App() {
 
   let errorTag = '';
   if (errorMessage !== '') {
-    // @ts-expect-error TS(2322) FIXME: Type 'Element' is not assignable to type 'string'.
+    // @ts-expect-error TS(2322): Type 'Element' is not assignable to type 'string'.
     errorTag = (
       <div id="filter-errors" className="mt-4 alert alert-danger" role="alert">
         {errorMessage}
@@ -38,9 +38,9 @@ export default function App() {
             <Routes>
               <Route path="/" element={<AdminRoutes />} />
               <Route path="/admin/*" element={<AdminRoutes />} />
-              {/* @ts-expect-error TS(2786) FIXME: 'TaskList' cannot be used as a JSX component. */}
+              {/* @ts-expect-error TS(2786): 'TaskList' cannot be used as a JSX component. */}
               <Route path="/tasks" element={<TaskList />} />
-              {/* @ts-expect-error TS(2786) FIXME: 'TaskShow' cannot be used as a JSX component. */}
+              {/* @ts-expect-error TS(2786): 'TaskShow' cannot be used as a JSX component. */}
               <Route path="/tasks/:task_id" element={<TaskShow />} />
             </Routes>
           </BrowserRouter>
