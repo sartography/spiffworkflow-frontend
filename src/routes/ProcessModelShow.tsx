@@ -159,6 +159,7 @@ export default function ProcessModelShow() {
           to={`/admin/process-models/${
             (processModel as any).process_group_id
           }/${(processModel as any).id}/process-instances`}
+          data-qa="process-instance-list-link"
         >
           Process Instances
         </Link>

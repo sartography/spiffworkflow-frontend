@@ -99,7 +99,7 @@ describe('process-models', () => {
     cy.contains(groupId).click();
     cy.createModel(groupId, modelId, modelDisplayName);
     cy.contains(`Process Group: ${groupId}`).click();
-    cy.contains(modelId);
+    cy.contains('Add a process model');
 
     cy.contains(modelId).click();
     cy.url().should('include', `process-models/${groupId}/${modelId}`);

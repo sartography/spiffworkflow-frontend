@@ -146,7 +146,7 @@ describe('process-instances', () => {
   });
 
   it('can filter', () => {
-    cy.contains('Process Instances').click();
+    cy.getBySel('process-instance-list-link').click();
     assertAtLeastOneItemInPaginatedResults();
 
     PROCESS_STATUSES.forEach((processStatus) => {
