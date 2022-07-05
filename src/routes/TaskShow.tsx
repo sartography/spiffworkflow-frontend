@@ -11,7 +11,7 @@ export default function TaskShow() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // @ts-expect-error TS(2345): Argument of type 'string | undefined' is not assig... Remove this comment to see the full error message
+    // @ts-expect-error TS(2345) FIXME: Argument of type 'string | undefined' is not assig... Remove this comment to see the full error message
     const taskId = parseInt(params.task_id, 10);
     fetch(`${BACKEND_BASE_URL}/tasks/${taskId}`, {
       headers: new Headers({
@@ -30,7 +30,7 @@ export default function TaskShow() {
   }, [params.task_id]);
 
   const handleFormSubmit = (event: any) => {
-    // @ts-expect-error TS(2531): Object is possibly 'null'.
+    // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
     fetch(`${BACKEND_BASE_URL}/tasks/${task.id}/submit`, {
       headers: new Headers({
         Authorization: `Bearer ${HOT_AUTH_TOKEN}`,

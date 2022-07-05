@@ -54,7 +54,6 @@ export default function ProcessModelNew() {
 
   return (
     <main style={{ padding: '1rem 0' }}>
-      {/* @ts-expect-error TS(2322): Type '{}' is not assignable to type 'never'. */}
       <ProcessBreadcrumb />
       <h2>Add Process Model</h2>
       <form onSubmit={addProcessModel}>

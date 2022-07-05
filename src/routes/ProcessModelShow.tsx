@@ -33,7 +33,7 @@ export default function ProcessModelShow() {
 
   const processModelRun = (processInstance: any) => {
     fetch(
-      // @ts-expect-error TS(2531): Object is possibly 'null'.
+      // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
       `${BACKEND_BASE_URL}/process-models/${processModel.process_group_id}/${processModel.id}/process-instances/${processInstance.id}/run`,
       {
         headers: new Headers({
@@ -55,7 +55,7 @@ export default function ProcessModelShow() {
 
   const processInstanceCreateAndRun = () => {
     fetch(
-      // @ts-expect-error TS(2531): Object is possibly 'null'.
+      // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
       `${BACKEND_BASE_URL}/process-models/${processModel.process_group_id}/${processModel.id}`,
       {
         headers: new Headers({
@@ -77,7 +77,7 @@ export default function ProcessModelShow() {
 
   let processInstanceResultTag = '';
   if (processInstanceResult) {
-    // @ts-expect-error TS(2322): Type 'Element' is not assignable to type 'string'.
+    // @ts-expect-error TS(2322) FIXME: Type 'Element' is not assignable to type 'string'.
     processInstanceResultTag = (
       <pre>
         {(processInstanceResult as any).status}:{' '}
@@ -91,13 +91,14 @@ export default function ProcessModelShow() {
       (fileBpmn: any) => {
         if (fileBpmn.name.match(/\.(dmn|bpmn)$/)) {
           let primarySuffix = '';
-          // @ts-expect-error TS(2339): Property 'primary_file_name' does not exist on typ... Remove this comment to see the full error message
+          // @ts-expect-error TS(2339) FIXME: Property 'primary_file_name' does not exist on typ... Remove this comment to see the full error message
           if (fileBpmn.name === processModel.primary_file_name) {
             primarySuffix = '- Primary File';
           }
           return (
             <li key={fileBpmn.name}>
               <Link
+                // @ts-expect-error TS(2339) FIXME: Property 'process_group_id' does not exist on type... Remove this comment to see the full error message
                 to={`/admin/process-models/${processModel.process_group_id}/${processModel.id}/file/${fileBpmn.name}`}
               >
                 {fileBpmn.name}
