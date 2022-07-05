@@ -1,5 +1,5 @@
-import axios from "axios";
-import UserService from "./UserService";
+import axios from 'axios';
+import UserService from './UserService';
 
 const HttpMethods = {
   GET: 'GET',
@@ -7,21 +7,24 @@ const HttpMethods = {
   DELETE: 'DELETE',
 };
 
-const _axios = axios.create();
+const axiosClient = axios.create();
 
 const configure = () => {
-  _axios.interceptors.request.use((config) => {
+  axiosClient.interceptors.request.use((config) => {
     if (UserService.isLoggedIn()) {
       const cb = () => {
+        // @ts-expect-error TS(2532): Object is possibly 'undefined'.
+        // eslint-disable-next-line no-param-reassign
         config.headers.Authorization = `Bearer ${UserService.getToken()}`;
         return Promise.resolve(config);
       };
       return UserService.updateToken(cb);
     }
+    return null;
   });
 };
 
-const getAxiosClient = () => _axios;
+const getAxiosClient = () => axiosClient;
 
 const HttpService = {
   HttpMethods,

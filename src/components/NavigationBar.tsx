@@ -2,10 +2,15 @@ import { Navbar, Nav, Container } from 'react-bootstrap';
 import { capitalizeFirstLetter } from '../helpers';
 // @ts-expect-error TS(2307): Cannot find module '../logo.svg' or its correspond... Remove this comment to see the full error message
 import logo from '../logo.svg';
+import UserService from '../services/UserService';
 
 // for ref: https://react-bootstrap.github.io/components/navbar/
 export default function NavigationBar() {
-  const navItems = ['/admin', '/tasks'];
+  const navItems: string[] = [];
+  if (UserService.hasRole(['admin'])) {
+    navItems.push('/admin');
+  }
+  navItems.push('/tasks');
 
   const navElements = navItems.map((navItem) => {
     let className = '';
