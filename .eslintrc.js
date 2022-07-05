@@ -11,7 +11,11 @@ module.exports = {
     'plugin:jest/recommended',
     'plugin:prettier/recommended',
     'plugin:sonarjs/recommended',
+    'plugin:import/errors',
+    'plugin:import/warnings',
+    'plugin:import/typescript',
   ],
+  parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
@@ -19,15 +23,36 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
-  plugins: ['react', 'sonarjs'],
+  plugins: ['react', 'sonarjs', '@typescript-eslint'],
   rules: {
     'jest/expect-expect': 'off',
     'react/jsx-no-bind': 'off',
     'jsx-a11y/no-autofocus': 'off',
     'jsx-a11y/label-has-associated-control': 'off',
     'no-console': 'off',
-    'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
+    'react/jsx-filename-extension': [
+      1,
+      { extensions: ['.js', '.jsx', '.tsx', '.ts'] },
+    ],
     'react/react-in-jsx-scope': 'off',
-    'no-unused-vars': ['error', { destructuredArrayIgnorePattern: '^_' }],
+    'react/require-default-props': 'off',
+    'no-unused-vars': [
+      'error',
+      {
+        destructuredArrayIgnorePattern: '^_',
+        varsIgnorePattern: '_',
+        argsIgnorePattern: '^_',
+      },
+    ],
+    'import/extensions': [
+      'error',
+      'ignorePackages',
+      {
+        js: 'never',
+        jsx: 'never',
+        ts: 'never',
+        tsx: 'never',
+      },
+    ],
   },
 };

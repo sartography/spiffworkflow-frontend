@@ -22,6 +22,7 @@ export default function ProcessInstanceReport() {
     function getProcessInstances() {
       const page = searchParams.get('page') || DEFAULT_PAGE;
       const perPage = parseInt(
+        // @ts-expect-error TS(2345): Argument of type 'string | 50' is not assignable t... Remove this comment to see the full error message
         searchParams.get('per_page') || DEFAULT_PER_PAGE,
         10
       );
@@ -55,13 +56,13 @@ export default function ProcessInstanceReport() {
   const buildTable = () => {
     const rows = processInstances.map((row) => {
       return (
-        <tr key={row.id}>
-          <td>{row.id}</td>
-          <td>{row.data.month}</td>
-          <td>{row.data.milestone}</td>
-          <td>{row.data.req_id}</td>
-          <td>{row.data.feature}</td>
-          <td>{row.data.priority}</td>
+        <tr key={(row as any).id}>
+          <td>{(row as any).id}</td>
+          <td>{(row as any).data.month}</td>
+          <td>{(row as any).data.milestone}</td>
+          <td>{(row as any).data.req_id}</td>
+          <td>{(row as any).data.feature}</td>
+          <td>{(row as any).data.priority}</td>
         </tr>
       );
     });
@@ -84,15 +85,20 @@ export default function ProcessInstanceReport() {
 
   if (pagination) {
     const perPage = parseInt(
+      // @ts-expect-error TS(2345): Argument of type 'string | 50' is not assignable t... Remove this comment to see the full error message
       searchParams.get('per_page') || DEFAULT_PER_PAGE,
       10
     );
+    // @ts-expect-error TS(2345): Argument of type 'string | 1' is not assignable to... Remove this comment to see the full error message
     const page = parseInt(searchParams.get('page') || DEFAULT_PAGE, 10);
     return (
       <main>
         <ProcessBreadcrumb
+          // @ts-expect-error TS(2322): Type 'string | undefined' is not assignable to typ... Remove this comment to see the full error message
           processModelId={params.process_model_id}
+          // @ts-expect-error TS(2322): Type 'null' is not assignable to type 'never'.
           processGroupId={processGroupId}
+          // @ts-expect-error TS(2322): Type 'string' is not assignable to type 'never'.
           linkProcessModel="true"
         />
         <h2>Process Instances for {params.process_model_id}</h2>
@@ -100,6 +106,7 @@ export default function ProcessInstanceReport() {
           page={page}
           perPage={perPage}
           pagination={pagination}
+          // @ts-expect-error TS(2322): Type 'Element' is not assignable to type 'string'.
           tableToDisplay={buildTable()}
           path={`/admin/process-models/${params.process_group_id}/${params.process_model_id}/process-instances/report`}
         />

@@ -1,10 +1,20 @@
 import React from 'react';
 import axios from 'axios';
-import PropTypes from 'prop-types';
 import { BACKEND_BASE_URL, HOT_AUTH_TOKEN } from '../config';
 
-export default class FileInput extends React.Component {
-  constructor({ processGroupId, processModelId }) {
+type Props = {
+  processGroupId: string;
+  processModelId: string;
+};
+
+export default class FileInput extends React.Component<Props> {
+  fileInput: any;
+
+  processGroupId: any;
+
+  processModelId: any;
+
+  constructor({ processGroupId, processModelId }: Props) {
     super({ processGroupId, processModelId });
     this.handleSubmit = this.handleSubmit.bind(this);
     this.fileInput = React.createRef();
@@ -12,7 +22,7 @@ export default class FileInput extends React.Component {
     this.processModelId = processModelId;
   }
 
-  handleSubmit(event) {
+  handleSubmit(event: any) {
     event.preventDefault();
     const url = `${BACKEND_BASE_URL}/process-models/${this.processGroupId}/${this.processModelId}/file`;
     const formData = new FormData();
@@ -60,8 +70,3 @@ export default class FileInput extends React.Component {
     );
   }
 }
-
-FileInput.propTypes = {
-  processGroupId: PropTypes.string.isRequired,
-  processModelId: PropTypes.string.isRequired,
-};

@@ -26,7 +26,7 @@ export default function ProcessModelEdit() {
       );
   }, [processModelPath]);
 
-  const updateProcessModel = (event) => {
+  const updateProcessModel = (event: any) => {
     event.preventDefault();
 
     fetch(`${BACKEND_BASE_URL}/${processModelPath}`, {
@@ -36,12 +36,18 @@ export default function ProcessModelEdit() {
       }),
       method: 'PUT',
       body: JSON.stringify({
+        // @ts-expect-error TS(2531): Object is possibly 'null'.
         id: processModel.id,
         display_name: displayName,
+        // @ts-expect-error TS(2531): Object is possibly 'null'.
         description: processModel.description,
+        // @ts-expect-error TS(2531): Object is possibly 'null'.
         process_group_id: processModel.process_group_id,
+        // @ts-expect-error TS(2531): Object is possibly 'null'.
         is_master_spec: processModel.is_master_spec,
+        // @ts-expect-error TS(2531): Object is possibly 'null'.
         standalone: processModel.standalone,
+        // @ts-expect-error TS(2531): Object is possibly 'null'.
         library: processModel.library,
       }),
     }).then(
@@ -59,7 +65,10 @@ export default function ProcessModelEdit() {
 
   const deleteProcessModel = () => {
     fetch(
-      `${BACKEND_BASE_URL}/process-models/${processModel.process_group_id}/${processModel.id}`,
+      `${BACKEND_BASE_URL}/process-models/${
+        // @ts-expect-error TS(2531): Object is possibly 'null'.
+        processModel.process_group_id
+      }/${processModel.id}`,
       {
         headers: new Headers({
           Authorization: `Bearer ${HOT_AUTH_TOKEN}`,
@@ -76,15 +85,16 @@ export default function ProcessModelEdit() {
     );
   };
 
-  const onDisplayNameChanged = (newDisplayName) => {
+  const onDisplayNameChanged = (newDisplayName: any) => {
     setDisplayName(newDisplayName);
   };
 
   if (processModel) {
     return (
       <main style={{ padding: '1rem 0' }}>
-        <ProcessBreadcrumb processGroupId={processModel.id} />
-        <h2>Edit Process Group: {processModel.id}</h2>
+        {/* @ts-expect-error TS(2322): Type 'any' is not assignable to type 'never'. */}
+        <ProcessBreadcrumb processGroupId={(processModel as any).id} />
+        <h2>Edit Process Group: {(processModel as any).id}</h2>
         <form onSubmit={updateProcessModel}>
           <label>Display Name:</label>
           <input

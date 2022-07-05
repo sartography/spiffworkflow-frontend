@@ -27,9 +27,10 @@ export default function ProcessGroupEdit() {
       );
   }, [params]);
 
-  const updateProcessGroup = (event) => {
+  const updateProcessGroup = (event: any) => {
     event.preventDefault();
 
+    // @ts-expect-error TS(2531): Object is possibly 'null'.
     fetch(`${BACKEND_BASE_URL}/process-groups/${processGroup.id}`, {
       headers: new Headers({
         'Content-Type': 'application/json',
@@ -38,10 +39,12 @@ export default function ProcessGroupEdit() {
       method: 'PUT',
       body: JSON.stringify({
         display_name: displayName,
+        // @ts-expect-error TS(2531): Object is possibly 'null'.
         id: processGroup.id,
       }),
     }).then(
       () => {
+        // @ts-expect-error TS(2531): Object is possibly 'null'.
         navigate(`/admin/process-groups/${processGroup.id}`);
       },
       // Note: it's important to handle errors here
@@ -54,6 +57,7 @@ export default function ProcessGroupEdit() {
   };
 
   const deleteProcessGroup = () => {
+    // @ts-expect-error TS(2531): Object is possibly 'null'.
     fetch(`${BACKEND_BASE_URL}/process-groups/${processGroup.id}`, {
       headers: new Headers({
         Authorization: `Bearer ${HOT_AUTH_TOKEN}`,
@@ -69,15 +73,15 @@ export default function ProcessGroupEdit() {
     );
   };
 
-  const onDisplayNameChanged = (newDisplayName) => {
+  const onDisplayNameChanged = (newDisplayName: any) => {
     setDisplayName(newDisplayName);
   };
 
   if (processGroup) {
     return (
       <main style={{ padding: '1rem 0' }}>
-        <ProcessBreadcrumb processGroupId={processGroup.id} />
-        <h2>Edit Process Group: {processGroup.id}</h2>
+        <ProcessBreadcrumb processGroupId={(processGroup as any).id} />
+        <h2>Edit Process Group: {(processGroup as any).id}</h2>
         <form onSubmit={updateProcessGroup}>
           <label>Display Name:</label>
           <input
@@ -92,7 +96,7 @@ export default function ProcessGroupEdit() {
             <Button type="submit">Submit</Button>
             <Button
               variant="secondary"
-              href={`/admin/process-groups/${processGroup.id}`}
+              href={`/admin/process-groups/${(processGroup as any).id}`}
             >
               Cancel
             </Button>

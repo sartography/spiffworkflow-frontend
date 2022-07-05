@@ -1,5 +1,5 @@
 // https://www.30secondsofcode.org/js/s/slugify
-export const slugifyString = (str) => {
+export const slugifyString = (str: any) => {
   return str
     .toLowerCase()
     .trim()
@@ -9,11 +9,11 @@ export const slugifyString = (str) => {
     .replace(/-+$/g, '');
 };
 
-export const capitalizeFirstLetter = (string) => {
+export const capitalizeFirstLetter = (string: any) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
-export const convertDateToSeconds = (date, onChangeFunction) => {
+export const convertDateToSeconds = (date: any, onChangeFunction: any) => {
   let dateInSeconds = date;
   if (date !== null) {
     let dateInMilliseconds = date;

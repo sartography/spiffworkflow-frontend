@@ -17,8 +17,10 @@ export default function ProcessGroups() {
   const [pagination, setPagination] = useState(null);
 
   useEffect(() => {
+    // @ts-expect-error TS(2345): Argument of type 'string | 1' is not assignable to... Remove this comment to see the full error message
     const page = parseInt(searchParams.get('page') || DEFAULT_PAGE, 10);
     const perPage = parseInt(
+      // @ts-expect-error TS(2345): Argument of type 'string | 50' is not assignable t... Remove this comment to see the full error message
       searchParams.get('per_page') || DEFAULT_PER_PAGE,
       10
     );
@@ -45,11 +47,13 @@ export default function ProcessGroups() {
   const buildTable = () => {
     const rows = processGroups.map((row) => {
       return (
-        <tr key={row.id}>
+        <tr key={(row as any).id}>
           <td>
-            <Link to={`/admin/process-groups/${row.id}`}>{row.id}</Link>
+            <Link to={`/admin/process-groups/${(row as any).id}`}>
+              {(row as any).id}
+            </Link>
           </td>
-          <td>{row.display_name}</td>
+          <td>{(row as any).display_name}</td>
         </tr>
       );
     });
@@ -68,22 +72,28 @@ export default function ProcessGroups() {
 
   const processGroupsDisplayArea = () => {
     const perPage = parseInt(
+      // @ts-expect-error TS(2345): Argument of type 'string | 50' is not assignable t... Remove this comment to see the full error message
       searchParams.get('per_page') || DEFAULT_PER_PAGE,
       10
     );
+    // @ts-expect-error TS(2345): Argument of type 'string | 1' is not assignable to... Remove this comment to see the full error message
     const page = parseInt(searchParams.get('page') || DEFAULT_PAGE, 10);
     let displayText = '';
     if (processGroups?.length > 0) {
+      // @ts-expect-error TS(2322): Type 'Element' is not assignable to type 'string'.
       displayText = (
         <PaginationForTable
           page={page}
           perPage={perPage}
+          // @ts-expect-error TS(2322): Type 'null' is not assignable to type '{ [key: str... Remove this comment to see the full error message
           pagination={pagination}
+          // @ts-expect-error TS(2322): Type 'Element' is not assignable to type 'string'.
           tableToDisplay={buildTable()}
           path="/admin/process-groups"
         />
       );
     } else {
+      // @ts-expect-error TS(2322): Type 'Element' is not assignable to type 'string'.
       displayText = <p>No Groups To Display</p>;
     }
     return displayText;
@@ -92,6 +102,7 @@ export default function ProcessGroups() {
   if (pagination) {
     return (
       <main style={{ padding: '1rem 0' }}>
+        {/* @ts-expect-error TS(2322): Type '{}' is not assignable to type 'never'. */}
         <ProcessBreadcrumb />
         <h2>Process Groups</h2>
         <Button href="/admin/process-groups/new">Add a process group</Button>

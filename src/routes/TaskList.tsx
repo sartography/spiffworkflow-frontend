@@ -13,8 +13,10 @@ export default function TaskList() {
   const [pagination, setPagination] = useState(null);
 
   useEffect(() => {
+    // @ts-expect-error TS(2345): Argument of type 'string | 1' is not assignable to... Remove this comment to see the full error message
     const page = parseInt(searchParams.get('page') || DEFAULT_PAGE, 10);
     const perPage = parseInt(
+      // @ts-expect-error TS(2345): Argument of type 'string | 50' is not assignable t... Remove this comment to see the full error message
       searchParams.get('per_page') || DEFAULT_PER_PAGE,
       10
     );
@@ -41,14 +43,14 @@ export default function TaskList() {
   const buildTable = () => {
     const rows = tasks.map((row) => {
       return (
-        <tr key={row.id}>
+        <tr key={(row as any).id}>
           <td>
-            <Link to={`/tasks/${row.id}`}>{row.id}</Link>
+            <Link to={`/tasks/${(row as any).id}`}>{(row as any).id}</Link>
           </td>
-          <td>{row.process_instance_id}</td>
-          <td>{row.status}</td>
+          <td>{(row as any).process_instance_id}</td>
+          <td>{(row as any).status}</td>
           <td>
-            <Button variant="primary" href={`/tasks/${row.id}`}>
+            <Button variant="primary" href={`/tasks/${(row as any).id}`}>
               Start
             </Button>
           </td>
@@ -72,9 +74,11 @@ export default function TaskList() {
 
   if (pagination) {
     const perPage = parseInt(
+      // @ts-expect-error TS(2345): Argument of type 'string | 50' is not assignable t... Remove this comment to see the full error message
       searchParams.get('per_page') || DEFAULT_PER_PAGE,
       10
     );
+    // @ts-expect-error TS(2345): Argument of type 'string | 1' is not assignable to... Remove this comment to see the full error message
     const page = parseInt(searchParams.get('page') || DEFAULT_PAGE, 10);
     return (
       <main>
@@ -83,6 +87,7 @@ export default function TaskList() {
           page={page}
           perPage={perPage}
           pagination={pagination}
+          // @ts-expect-error TS(2322): Type 'Element' is not assignable to type 'string'.
           tableToDisplay={buildTable()}
           path="/tasks"
         />

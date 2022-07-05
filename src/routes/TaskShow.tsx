@@ -11,6 +11,7 @@ export default function TaskShow() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // @ts-expect-error TS(2345): Argument of type 'string | undefined' is not assig... Remove this comment to see the full error message
     const taskId = parseInt(params.task_id, 10);
     fetch(`${BACKEND_BASE_URL}/tasks/${taskId}`, {
       headers: new Headers({
@@ -28,7 +29,8 @@ export default function TaskShow() {
       );
   }, [params.task_id]);
 
-  const handleFormSubmit = (event) => {
+  const handleFormSubmit = (event: any) => {
+    // @ts-expect-error TS(2531): Object is possibly 'null'.
     fetch(`${BACKEND_BASE_URL}/tasks/${task.id}/submit`, {
       headers: new Headers({
         Authorization: `Bearer ${HOT_AUTH_TOKEN}`,
@@ -51,13 +53,13 @@ export default function TaskShow() {
     return (
       <main>
         <Button href="/tasks">Go Back</Button>
-        <h1>Task ID: {task.id}</h1>
-        <h3>process_instance_id: {task.process_instance_id}</h3>
-        <h3>status: {task.status}</h3>
+        <h1>Task ID: {(task as any).id}</h1>
+        <h3>process_instance_id: {(task as any).process_instance_id}</h3>
+        <h3>status: {(task as any).status}</h3>
         <Form
-          formData={JSON.parse(task.spiffworkflow_task_data)}
+          formData={JSON.parse((task as any).spiffworkflow_task_data)}
           onSubmit={handleFormSubmit}
-          schema={JSON.parse(task.form_json)}
+          schema={JSON.parse((task as any).form_json)}
         />
       </main>
     );

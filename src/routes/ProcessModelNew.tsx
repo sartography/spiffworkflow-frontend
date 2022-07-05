@@ -12,7 +12,7 @@ export default function ProcessModelNew() {
   const [displayName, setDisplayName] = useState('');
   const navigate = useNavigate();
 
-  const addProcessModel = (event) => {
+  const addProcessModel = (event: any) => {
     event.preventDefault();
 
     fetch(`${BACKEND_BASE_URL}/process-models`, {
@@ -45,7 +45,7 @@ export default function ProcessModelNew() {
     );
   };
 
-  const onDisplayNameChanged = (newDisplayName) => {
+  const onDisplayNameChanged = (newDisplayName: any) => {
     setDisplayName(newDisplayName);
     if (!idHasBeenUpdatedByUser) {
       setIdentifier(slugifyString(newDisplayName));
@@ -54,6 +54,7 @@ export default function ProcessModelNew() {
 
   return (
     <main style={{ padding: '1rem 0' }}>
+      {/* @ts-expect-error TS(2322): Type '{}' is not assignable to type 'never'. */}
       <ProcessBreadcrumb />
       <h2>Add Process Model</h2>
       <form onSubmit={addProcessModel}>

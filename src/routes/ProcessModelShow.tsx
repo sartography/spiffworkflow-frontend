@@ -31,8 +31,9 @@ export default function ProcessModelShow() {
       );
   }, [params]);
 
-  const processModelRun = (processInstance) => {
+  const processModelRun = (processInstance: any) => {
     fetch(
+      // @ts-expect-error TS(2531): Object is possibly 'null'.
       `${BACKEND_BASE_URL}/process-models/${processModel.process_group_id}/${processModel.id}/process-instances/${processInstance.id}/run`,
       {
         headers: new Headers({
@@ -54,6 +55,7 @@ export default function ProcessModelShow() {
 
   const processInstanceCreateAndRun = () => {
     fetch(
+      // @ts-expect-error TS(2531): Object is possibly 'null'.
       `${BACKEND_BASE_URL}/process-models/${processModel.process_group_id}/${processModel.id}`,
       {
         headers: new Headers({
@@ -75,47 +77,50 @@ export default function ProcessModelShow() {
 
   let processInstanceResultTag = '';
   if (processInstanceResult) {
+    // @ts-expect-error TS(2322): Type 'Element' is not assignable to type 'string'.
     processInstanceResultTag = (
       <pre>
-        {processInstanceResult.status}:{' '}
-        {JSON.stringify(processInstanceResult.data)}
+        {(processInstanceResult as any).status}:{' '}
+        {JSON.stringify((processInstanceResult as any).data)}
       </pre>
     );
   }
 
   if (processModel) {
-    let processModelFilesTag = '';
-    processModelFilesTag = processModel.files.map((fileBpmn) => {
-      if (fileBpmn.name.match(/\.(dmn|bpmn)$/)) {
-        let primarySuffix = '';
-        if (fileBpmn.name === processModel.primary_file_name) {
-          primarySuffix = '- Primary File';
+    const processModelFilesTag = (processModel as any).files.map(
+      (fileBpmn: any) => {
+        if (fileBpmn.name.match(/\.(dmn|bpmn)$/)) {
+          let primarySuffix = '';
+          // @ts-expect-error TS(2339): Property 'primary_file_name' does not exist on typ... Remove this comment to see the full error message
+          if (fileBpmn.name === processModel.primary_file_name) {
+            primarySuffix = '- Primary File';
+          }
+          return (
+            <li key={fileBpmn.name}>
+              <Link
+                to={`/admin/process-models/${processModel.process_group_id}/${processModel.id}/file/${fileBpmn.name}`}
+              >
+                {fileBpmn.name}
+              </Link>
+              {primarySuffix}
+            </li>
+          );
         }
-        return (
-          <li key={fileBpmn.name}>
-            <Link
-              to={`/admin/process-models/${processModel.process_group_id}/${processModel.id}/file/${fileBpmn.name}`}
-            >
-              {fileBpmn.name}
-            </Link>
-            {primarySuffix}
-          </li>
-        );
+        return <li key={fileBpmn.name}>{fileBpmn.name}</li>;
       }
-      return <li key={fileBpmn.name}>{fileBpmn.name}</li>;
-    });
+    );
 
     return (
       <main style={{ padding: '1rem 0' }}>
         <ProcessBreadcrumb
-          processGroupId={processModel.process_group_id}
-          processModelId={processModel.id}
+          processGroupId={(processModel as any).process_group_id}
+          processModelId={(processModel as any).id}
         />
-        <h2>Process Model: {processModel.id}</h2>
+        <h2>Process Model: {(processModel as any).id}</h2>
         {processInstanceResultTag}
         <FileInput
-          processModelId={processModel.id}
-          processGroupId={processModel.process_group_id}
+          processModelId={(processModel as any).id}
+          processGroupId={(processModel as any).process_group_id}
         />
         <br />
         <Stack direction="horizontal" gap={3}>
@@ -123,19 +128,25 @@ export default function ProcessModelShow() {
             Run
           </Button>
           <Button
-            href={`/admin/process-models/${processModel.process_group_id}/${processModel.id}/edit`}
+            href={`/admin/process-models/${
+              (processModel as any).process_group_id
+            }/${(processModel as any).id}/edit`}
             variant="secondary"
           >
             Edit process model
           </Button>
           <Button
-            href={`/admin/process-models/${processModel.process_group_id}/${processModel.id}/file?file_type=bpmn`}
+            href={`/admin/process-models/${
+              (processModel as any).process_group_id
+            }/${(processModel as any).id}/file?file_type=bpmn`}
             variant="warning"
           >
             Add New BPMN File
           </Button>
           <Button
-            href={`/admin/process-models/${processModel.process_group_id}/${processModel.id}/file?file_type=dmn`}
+            href={`/admin/process-models/${
+              (processModel as any).process_group_id
+            }/${(processModel as any).id}/file?file_type=dmn`}
             variant="success"
           >
             Add New DMN File
@@ -144,7 +155,9 @@ export default function ProcessModelShow() {
         <br />
         <br />
         <Link
-          to={`/admin/process-models/${processModel.process_group_id}/${processModel.id}/process-instances`}
+          to={`/admin/process-models/${
+            (processModel as any).process_group_id
+          }/${(processModel as any).id}/process-instances`}
         >
           Process Instances
         </Link>

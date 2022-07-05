@@ -55,14 +55,17 @@ export default function ProcessInstanceShow() {
     return (
       <main style={{ padding: '1rem 0' }}>
         <ProcessBreadcrumb
+          // @ts-expect-error TS(2322): Type 'string | undefined' is not assignable to typ... Remove this comment to see the full error message
           processModelId={params.process_model_id}
+          // @ts-expect-error TS(2322): Type 'string | undefined' is not assignable to typ... Remove this comment to see the full error message
           processGroupId={params.process_group_id}
+          // @ts-expect-error TS(2322): Type 'string' is not assignable to type 'never'.
           linkProcessModel="true"
         />
-        <h2>Process Instance Id: {processInstance.id}</h2>
+        <h2>Process Instance Id: {(processInstance as any).id}</h2>
         <h2>Data</h2>
         <div>
-          <pre>{JSON.stringify(processInstance.data, null, 2)}</pre>
+          <pre>{JSON.stringify((processInstance as any).data, null, 2)}</pre>
         </div>
         <Button onClick={deleteProcessInstance} variant="danger">
           Delete process instance

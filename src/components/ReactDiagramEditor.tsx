@@ -1,22 +1,27 @@
 /* eslint-disable sonarjs/cognitive-complexity */
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'bpmn... Remove this comment to see the full error message
 import BpmnModeler from 'bpmn-js/lib/Modeler';
 import {
   BpmnPropertiesPanelModule,
   BpmnPropertiesProviderModule,
+  // @ts-expect-error TS(7016): Could not find a declaration file for module 'bpmn... Remove this comment to see the full error message
 } from 'bpmn-js-properties-panel';
 
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'dmn-... Remove this comment to see the full error message
 import DmnModeler from 'dmn-js/lib/Modeler';
 import {
   DmnPropertiesPanelModule,
   DmnPropertiesProviderModule,
+  // @ts-expect-error TS(7016): Could not find a declaration file for module 'dmn-... Remove this comment to see the full error message
 } from 'dmn-js-properties-panel';
 
 import React, { useRef, useEffect, useState } from 'react';
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'bpmn... Remove this comment to see the full error message
 import spiffworkflowIO from 'bpmn-js-spiffworkflow/app/spiffworkflow/InputOutput';
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'bpmn... Remove this comment to see the full error message
 import spiffworkflowPanel from 'bpmn-js-spiffworkflow/app/spiffworkflow/PropertiesPanel';
 
 import Button from 'react-bootstrap/Button';
-import PropTypes from 'prop-types';
 import { HOT_AUTH_TOKEN, BACKEND_BASE_URL } from '../config';
 
 import 'bpmn-js/dist/assets/diagram-js.css';
@@ -36,6 +41,17 @@ import 'dmn-js-properties-panel/dist/assets/properties-panel.css';
 
 import 'bpmn-js-spiffworkflow/app/css/app.css';
 
+type OwnProps = {
+  processModelId: string;
+  processGroupId: string;
+  saveDiagram: (..._args: any[]) => any;
+  diagramType: string;
+  diagramXML?: string;
+  fileName?: string;
+  onLaunchScriptEditor?: (..._args: any[]) => any;
+  url?: string;
+};
+
 // https://codesandbox.io/s/quizzical-lake-szfyo?file=/src/App.js was a handy reference
 export default function ReactDiagramEditor({
   processModelId,
@@ -46,7 +62,7 @@ export default function ReactDiagramEditor({
   fileName,
   onLaunchScriptEditor,
   url,
-}) {
+}: OwnProps) {
   const [diagramXMLString, setDiagramXMLString] = useState('');
   const [diagramModelerState, setDiagramModelerState] = useState(null);
   const [performingXmlUpdates, setPerformingXmlUpdates] = useState(false);
@@ -58,6 +74,7 @@ export default function ReactDiagramEditor({
       return;
     }
 
+    // @ts-expect-error TS(2531): Object is possibly 'null'.
     document.getElementById('diagram-container').innerHTML = '';
     const temp = document.createElement('template');
 
@@ -70,9 +87,10 @@ export default function ReactDiagramEditor({
     `;
 
     const frag = temp.content;
+    // @ts-expect-error TS(2531): Object is possibly 'null'.
     document.getElementById('diagram-container').appendChild(frag);
 
-    let diagramModeler = null;
+    let diagramModeler: any = null;
 
     if (diagramType === 'bpmn') {
       diagramModeler = new BpmnModeler({
@@ -108,7 +126,7 @@ export default function ReactDiagramEditor({
       });
     }
 
-    function handleLaunchScriptEditor(element) {
+    function handleLaunchScriptEditor(element: any) {
       if (onLaunchScriptEditor) {
         setPerformingXmlUpdates(true);
         const modeling = diagramModeler.get('modeling');
@@ -118,7 +136,7 @@ export default function ReactDiagramEditor({
 
     setDiagramModelerState(diagramModeler);
 
-    diagramModeler.on('launch.script.editor', (event) => {
+    diagramModeler.on('launch.script.editor', (event: any) => {
       const { error, element } = event;
       if (error) {
         console.log(error);
@@ -135,11 +153,11 @@ export default function ReactDiagramEditor({
       return undefined;
     }
 
-    function handleError(err) {
+    function handleError(err: any) {
       console.log('ERROR:', err);
     }
 
-    function onImportDone(event) {
+    function onImportDone(event: any) {
       const { error } = event;
 
       if (error) {
@@ -149,20 +167,26 @@ export default function ReactDiagramEditor({
 
       let modeler = diagramModelerState;
       if (diagramType === 'dmn') {
+        // @ts-expect-error TS(2531): Object is possibly 'null'.
         modeler = diagramModelerState.getActiveViewer();
       }
 
       // only get the canvas if the dmn active viewer is actually
       // a Modeler and not an Editor which is what it will when we are
       // actively editing a decision table
+      // @ts-expect-error TS(2531): Object is possibly 'null'.
       if (modeler.constructor.name === 'Modeler') {
+        // @ts-expect-error TS(2531): Object is possibly 'null'.
         modeler.get('canvas').zoom('fit-viewport');
       }
     }
 
-    diagramModelerState.on('import.done', onImportDone);
+    (diagramModelerState as any).on('import.done', onImportDone);
 
-    function displayDiagram(diagramModelerToUse, diagramXMLToDisplay) {
+    function displayDiagram(
+      diagramModelerToUse: any,
+      diagramXMLToDisplay: any
+    ) {
       if (alreadyImportedXmlRef.current) {
         return;
       }
@@ -170,7 +194,7 @@ export default function ReactDiagramEditor({
       alreadyImportedXmlRef.current = true;
     }
 
-    function fetchDiagramFromURL(urlToUse) {
+    function fetchDiagramFromURL(urlToUse: any) {
       fetch(urlToUse)
         .then((response) => response.text())
         .then((text) => setDiagramXMLString(text))
@@ -218,7 +242,7 @@ export default function ReactDiagramEditor({
     }
 
     return () => {
-      diagramModelerState.destroy();
+      (diagramModelerState as any).destroy();
     };
   }, [
     diagramModelerState,
@@ -233,7 +257,8 @@ export default function ReactDiagramEditor({
   ]);
 
   function handleSave() {
-    diagramModelerState.saveXML({ format: true }).then((xmlObject) => {
+    // @ts-expect-error TS(2531): Object is possibly 'null'.
+    diagramModelerState.saveXML({ format: true }).then((xmlObject: any) => {
       saveDiagram(xmlObject.xml);
     });
   }
@@ -246,22 +271,3 @@ export default function ReactDiagramEditor({
     </div>
   );
 }
-
-ReactDiagramEditor.propTypes = {
-  processModelId: PropTypes.string.isRequired,
-  processGroupId: PropTypes.string.isRequired,
-  saveDiagram: PropTypes.func.isRequired,
-  diagramType: PropTypes.string.isRequired,
-
-  diagramXML: PropTypes.string,
-  fileName: PropTypes.string,
-  onLaunchScriptEditor: PropTypes.func,
-  url: PropTypes.string,
-};
-
-ReactDiagramEditor.defaultProps = {
-  diagramXML: null,
-  fileName: null,
-  onLaunchScriptEditor: null,
-  url: null,
-};

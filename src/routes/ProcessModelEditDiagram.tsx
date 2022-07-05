@@ -54,7 +54,7 @@ export default function ProcessModelEditDiagram() {
     setNewFileName('');
   };
 
-  const saveDiagram = (bpmnXML, fileName = params.file_name) => {
+  const saveDiagram = (bpmnXML: any, fileName = params.file_name) => {
     setBpmnXmlForDiagramRendering(bpmnXML);
 
     let url = `${BACKEND_BASE_URL}/process-models/${params.process_group_id}/${params.process_model_id}/file`;
@@ -96,7 +96,7 @@ export default function ProcessModelEditDiagram() {
     );
   };
 
-  const handleFileNameSave = (event) => {
+  const handleFileNameSave = (event: any) => {
     event.preventDefault();
     setShowFileNameEditor(false);
     saveDiagram(bpmnXmlForDiagramRendering);
@@ -134,7 +134,7 @@ export default function ProcessModelEditDiagram() {
     );
   };
 
-  const onLaunchScriptEditor = (element, modeling) => {
+  const onLaunchScriptEditor = (element: any, modeling: any) => {
     setScriptText(element.businessObject.script || '');
     setScriptModeling(modeling);
     setScriptElement(element);
@@ -143,8 +143,9 @@ export default function ProcessModelEditDiagram() {
   const handleScriptEditorClose = () => {
     setShowScriptEditor(false);
   };
-  const handleEditorChange = (value) => {
+  const handleEditorChange = (value: any) => {
     setScriptText(value);
+    // @ts-expect-error TS(2531): Object is possibly 'null'.
     scriptModeling.updateProperties(scriptElement, {
       scriptFormat: 'python',
       script: value,
@@ -153,7 +154,7 @@ export default function ProcessModelEditDiagram() {
   const scriptEditor = () => {
     let scriptName = '';
     if (scriptElement) {
-      scriptName = scriptElement.di.bpmnElement.name;
+      scriptName = (scriptElement as any).di.bpmnElement.name;
     }
     return (
       <Modal size="xl" show={showScriptEditor} onHide={handleScriptEditorClose}>
@@ -185,23 +186,36 @@ export default function ProcessModelEditDiagram() {
     if (isDmn()) {
       return (
         <ReactDiagramEditor
+          // @ts-expect-error TS(2322): Type 'string | undefined' is not assignable to typ... Remove this comment to see the full error message
           process_model_id={params.process_model_id}
+          // @ts-expect-error TS(2322): Type 'string | undefined' is not assignable to typ... Remove this comment to see the full error message
           process_group_id={params.process_group_id}
+          // @ts-expect-error TS(2322): Type '(bpmnXML: any, fileName?: string | undefined... Remove this comment to see the full error message
           saveDiagram={saveDiagram}
+          // @ts-expect-error TS(2322): Type 'null' is not assignable to type 'never'.
           diagramXML={bpmnXmlForDiagramRendering}
-          fileName={processModelFile ? processModelFile.name : null}
+          // @ts-expect-error TS(2322): Type 'any' is not assignable to type 'never'.
+          fileName={processModelFile ? (processModelFile as any).name : null}
+          // @ts-expect-error TS(2322): Type 'string' is not assignable to type 'never'.
           diagramType="dmn"
         />
       );
     }
     return (
       <ReactDiagramEditor
+        // @ts-expect-error TS(2322): Type 'string | undefined' is not assignable to typ... Remove this comment to see the full error message
         process_model_id={params.process_model_id}
+        // @ts-expect-error TS(2322): Type 'string | undefined' is not assignable to typ... Remove this comment to see the full error message
         process_group_id={params.process_group_id}
+        // @ts-expect-error TS(2322): Type '(bpmnXML: any, fileName?: string | undefined... Remove this comment to see the full error message
         saveDiagram={saveDiagram}
+        // @ts-expect-error TS(2322): Type 'null' is not assignable to type 'never'.
         diagramXML={bpmnXmlForDiagramRendering}
-        fileName={processModelFile ? processModelFile.name : null}
+        // @ts-expect-error TS(2322): Type 'any' is not assignable to type 'never'.
+        fileName={processModelFile ? (processModelFile as any).name : null}
+        // @ts-expect-error TS(2322): Type 'string' is not assignable to type 'never'.
         diagramType="bpmn"
+        // @ts-expect-error TS(2322): Type '(element: any, modeling: any) => void' is no... Remove this comment to see the full error message
         onLaunchScriptEditor={onLaunchScriptEditor}
       />
     );
@@ -212,13 +226,16 @@ export default function ProcessModelEditDiagram() {
     return (
       <main style={{ padding: '1rem 0' }}>
         <ProcessBreadcrumb
+          // @ts-expect-error TS(2322): Type 'string | undefined' is not assignable to typ... Remove this comment to see the full error message
           processGroupId={params.process_group_id}
+          // @ts-expect-error TS(2322): Type 'string | undefined' is not assignable to typ... Remove this comment to see the full error message
           processModelId={params.process_model_id}
+          // @ts-expect-error TS(2322): Type 'string' is not assignable to type 'never'.
           linkProcessModel="true"
         />
         <h2>
           Process Model File
-          {processModelFile ? `: ${processModelFile.name}` : ''}
+          {processModelFile ? `: ${(processModelFile as any).name}` : ''}
         </h2>
         {appropriateEditor()}
         {newFileNameBox()}

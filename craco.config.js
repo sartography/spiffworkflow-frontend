@@ -2,7 +2,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.m?js$/,
+        test: /\.m?[jt]sx?$/,
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
@@ -16,6 +16,7 @@ module.exports = {
                 },
               ],
               '@babel/preset-react',
+              '@babel/plugin-transform-typescript',
             ],
           },
         },
@@ -42,6 +43,7 @@ module.exports = {
     presets: [
       '@babel/preset-env',
       ['@babel/preset-react', { runtime: 'automatic' }],
+      '@babel/preset-typescript',
     ],
     // plugins: [],
     loaderOptions: (babelLoaderOptions) => {

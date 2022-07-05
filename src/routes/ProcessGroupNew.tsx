@@ -10,7 +10,7 @@ export default function ProcessGroupNew() {
   const [displayName, setDisplayName] = useState('');
   const navigate = useNavigate();
 
-  const addProcessGroup = (event) => {
+  const addProcessGroup = (event: any) => {
     event.preventDefault();
 
     fetch(`${BACKEND_BASE_URL}/process-groups`, {
@@ -36,7 +36,7 @@ export default function ProcessGroupNew() {
     );
   };
 
-  const onDisplayNameChanged = (newDisplayName) => {
+  const onDisplayNameChanged = (newDisplayName: any) => {
     setDisplayName(newDisplayName);
     if (!idHasBeenUpdatedByUser) {
       setIdentifier(slugifyString(newDisplayName));

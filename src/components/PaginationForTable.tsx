@@ -2,19 +2,29 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { Dropdown, Stack } from 'react-bootstrap';
-import PropTypes from 'prop-types';
 
 export const DEFAULT_PER_PAGE = 50;
 export const DEFAULT_PAGE = 1;
+
+type OwnProps = {
+  page: number;
+  perPage: number;
+  pagination: {
+    [key: string]: number;
+  };
+  tableToDisplay: string;
+  queryParamString?: string;
+  path: string;
+};
 
 export default function PaginationForTable({
   page,
   perPage,
   pagination,
   tableToDisplay,
-  queryParamString,
+  queryParamString = '',
   path,
-}) {
+}: OwnProps) {
   const PER_PAGE_OPTIONS = [2, 10, 50, 100];
 
   const buildPerPageDropdown = () => {
@@ -58,6 +68,7 @@ export default function PaginationForTable({
   const buildPaginationNav = () => {
     let previousPageTag = '';
     if (page === 1) {
+      // @ts-expect-error TS(2322): Type 'Element' is not assignable to type 'string'.
       previousPageTag = (
         <li
           data-qa="pagination-previous-button-inactive"
@@ -70,6 +81,7 @@ export default function PaginationForTable({
         </li>
       );
     } else {
+      // @ts-expect-error TS(2322): Type 'Element' is not assignable to type 'string'.
       previousPageTag = (
         <li className="page-item" key="previous">
           <Link
@@ -88,6 +100,7 @@ export default function PaginationForTable({
 
     let nextPageTag = '';
     if (page >= pagination.pages) {
+      // @ts-expect-error TS(2322): Type 'Element' is not assignable to type 'string'.
       nextPageTag = (
         <li
           data-qa="pagination-next-button-inactive"
@@ -100,6 +113,7 @@ export default function PaginationForTable({
         </li>
       );
     } else {
+      // @ts-expect-error TS(2322): Type 'Element' is not assignable to type 'string'.
       nextPageTag = (
         <li className="page-item" key="next">
           <Link
@@ -151,16 +165,3 @@ export default function PaginationForTable({
     </main>
   );
 }
-
-PaginationForTable.propTypes = {
-  page: PropTypes.number.isRequired,
-  perPage: PropTypes.number.isRequired,
-  pagination: PropTypes.objectOf(PropTypes.number).isRequired,
-  tableToDisplay: PropTypes.string.isRequired,
-  queryParamString: PropTypes.string,
-  path: PropTypes.string.isRequired,
-};
-
-PaginationForTable.defaultProps = {
-  queryParamString: '',
-};

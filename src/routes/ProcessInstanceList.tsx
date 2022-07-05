@@ -7,6 +7,7 @@ import {
 } from 'react-router-dom';
 
 import { Button, Table, Stack, Dropdown } from 'react-bootstrap';
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'reac... Remove this comment to see the full error message
 import DatePicker from 'react-datepicker';
 import { format } from 'date-fns';
 import {
@@ -41,7 +42,7 @@ export default function ProcessInstanceList() {
   const [endFrom, setEndFrom] = useState(null);
   const [endTill, setEndTill] = useState(null);
 
-  const setErrorMessage = useContext(ErrorContext)[1];
+  const setErrorMessage = (useContext as any)(ErrorContext)[1];
 
   const [processStatus, setProcessStatus] = useState(PROCESS_STATUSES[0]);
   const parametersToAlwaysFilterBy = useMemo(() => {
@@ -57,12 +58,14 @@ export default function ProcessInstanceList() {
     function getProcessInstances() {
       const page = searchParams.get('page') || DEFAULT_PAGE;
       const perPage = parseInt(
+        // @ts-expect-error TS(2345): Argument of type 'string | 50' is not assignable t... Remove this comment to see the full error message
         searchParams.get('per_page') || DEFAULT_PER_PAGE,
         10
       );
       let queryParamString = `per_page=${perPage}&page=${page}`;
 
       Object.keys(parametersToAlwaysFilterBy).forEach((paramName) => {
+        // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
         const functionToCall = parametersToAlwaysFilterBy[paramName];
         const searchParamValue = searchParams.get(paramName);
         if (searchParamValue) {
@@ -75,6 +78,7 @@ export default function ProcessInstanceList() {
         queryParamString += `&process_status=${searchParams.get(
           'process_status'
         )}`;
+        // @ts-expect-error TS(2345): Argument of type 'string | null' is not assignable... Remove this comment to see the full error message
         setProcessStatus(searchParams.get('process_status'));
       }
 
@@ -110,7 +114,7 @@ export default function ProcessInstanceList() {
 
   // does the comparison, but also returns false if either argument
   // is not truthy and therefore not comparable.
-  const isTrueComparison = (param1, operation, param2) => {
+  const isTrueComparison = (param1: any, operation: any, param2: any) => {
     if (param1 && param2) {
       switch (operation) {
         case '<':
@@ -125,10 +129,11 @@ export default function ProcessInstanceList() {
     }
   };
 
-  const handleFilter = (event) => {
+  const handleFilter = (event: any) => {
     event.preventDefault();
     const page = searchParams.get('page') || DEFAULT_PAGE;
     const perPage = parseInt(
+      // @ts-expect-error TS(2345): Argument of type 'string | 50' is not assignable t... Remove this comment to see the full error message
       searchParams.get('per_page') || DEFAULT_PER_PAGE,
       10
     );
@@ -173,7 +178,12 @@ export default function ProcessInstanceList() {
     );
   };
 
-  const dateComponent = (labelString, name, initialDate, onChangeFunction) => {
+  const dateComponent = (
+    labelString: any,
+    name: any,
+    initialDate: any,
+    onChangeFunction: any
+  ) => {
     let selectedDate = null;
     if (initialDate) {
       selectedDate = new Date(initialDate * 1000);
@@ -184,7 +194,7 @@ export default function ProcessInstanceList() {
         <DatePicker
           id={`date-picker-${name}`}
           selected={selectedDate}
-          onChange={(date) => convertDateToSeconds(date, onChangeFunction)}
+          onChange={(date: any) => convertDateToSeconds(date, onChangeFunction)}
           showTimeSelect
           dateFormat={DATE_FORMAT}
         />
@@ -270,32 +280,34 @@ export default function ProcessInstanceList() {
   const buildTable = () => {
     const rows = processInstances.map((row) => {
       let formattedStartDate = '-';
-      if (row.start_in_seconds) {
-        const startDate = new Date(row.start_in_seconds * 1000);
+      if ((row as any).start_in_seconds) {
+        const startDate = new Date((row as any).start_in_seconds * 1000);
         formattedStartDate = format(startDate, DATE_FORMAT);
       }
       let formattedEndDate = '-';
-      if (row.end_in_seconds) {
-        const endDate = new Date(row.end_in_seconds * 1000);
+      if ((row as any).end_in_seconds) {
+        const endDate = new Date((row as any).end_in_seconds * 1000);
         formattedEndDate = format(endDate, DATE_FORMAT);
       }
 
       return (
-        <tr key={row.id}>
+        <tr key={(row as any).id}>
           <td>
             <Link
               data-qa="process-instance-show-link"
-              to={`/admin/process-models/${params.process_group_id}/${params.process_model_id}/process-instances/${row.id}`}
+              to={`/admin/process-models/${params.process_group_id}/${
+                params.process_model_id
+              }/process-instances/${(row as any).id}`}
             >
-              {row.id}
+              {(row as any).id}
             </Link>
           </td>
-          <td>{row.process_model_identifier}</td>
-          <td>{row.process_group_identifier}</td>
+          <td>{(row as any).process_model_identifier}</td>
+          <td>{(row as any).process_group_identifier}</td>
           <td>{formattedStartDate}</td>
           <td>{formattedEndDate}</td>
-          <td data-qa={`process-instance-status-${row.status}`}>
-            {row.status}
+          <td data-qa={`process-instance-status-${(row as any).status}`}>
+            {(row as any).status}
           </td>
         </tr>
       );
@@ -319,15 +331,20 @@ export default function ProcessInstanceList() {
 
   if (pagination) {
     const perPage = parseInt(
+      // @ts-expect-error TS(2345): Argument of type 'string | 50' is not assignable t... Remove this comment to see the full error message
       searchParams.get('per_page') || DEFAULT_PER_PAGE,
       10
     );
+    // @ts-expect-error TS(2345): Argument of type 'string | 1' is not assignable to... Remove this comment to see the full error message
     const page = parseInt(searchParams.get('page') || DEFAULT_PAGE, 10);
     return (
       <main>
         <ProcessBreadcrumb
+          // @ts-expect-error TS(2322): Type 'string | undefined' is not assignable to typ... Remove this comment to see the full error message
           processModelId={params.process_model_id}
+          // @ts-expect-error TS(2322): Type 'string | undefined' is not assignable to typ... Remove this comment to see the full error message
           processGroupId={params.process_group_id}
+          // @ts-expect-error TS(2322): Type 'string' is not assignable to type 'never'.
           linkProcessModel="true"
         />
         <h2>Process Instances for {params.process_model_id}</h2>
@@ -336,6 +353,7 @@ export default function ProcessInstanceList() {
           page={page}
           perPage={perPage}
           pagination={pagination}
+          // @ts-expect-error TS(2322): Type 'Element' is not assignable to type 'string'.
           tableToDisplay={buildTable()}
           queryParamString={getSearchParamsAsQueryString()}
           path={`/admin/process-models/${params.process_group_id}/${params.process_model_id}/process-instances`}
