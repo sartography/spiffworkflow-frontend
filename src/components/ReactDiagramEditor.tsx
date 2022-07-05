@@ -1,24 +1,24 @@
 /* eslint-disable sonarjs/cognitive-complexity */
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'bpmn... Remove this comment to see the full error message
+// @ts-expect-error TS(7016) FIXME: Could not find a declaration file for module 'bpmn... Remove this comment to see the full error message
 import BpmnModeler from 'bpmn-js/lib/Modeler';
 import {
   BpmnPropertiesPanelModule,
   BpmnPropertiesProviderModule,
-  // @ts-expect-error TS(7016): Could not find a declaration file for module 'bpmn... Remove this comment to see the full error message
+  // @ts-expect-error TS(7016) FIXME: Could not find a declaration file for module 'bpmn... Remove this comment to see the full error message
 } from 'bpmn-js-properties-panel';
 
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'dmn-... Remove this comment to see the full error message
+// @ts-expect-error TS(7016) FIXME: Could not find a declaration file for module 'dmn-... Remove this comment to see the full error message
 import DmnModeler from 'dmn-js/lib/Modeler';
 import {
   DmnPropertiesPanelModule,
   DmnPropertiesProviderModule,
-  // @ts-expect-error TS(7016): Could not find a declaration file for module 'dmn-... Remove this comment to see the full error message
+  // @ts-expect-error TS(7016) FIXME: Could not find a declaration file for module 'dmn-... Remove this comment to see the full error message
 } from 'dmn-js-properties-panel';
 
 import React, { useRef, useEffect, useState } from 'react';
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'bpmn... Remove this comment to see the full error message
+// @ts-expect-error TS(7016) FIXME: Could not find a declaration file for module 'bpmn... Remove this comment to see the full error message
 import spiffworkflowIO from 'bpmn-js-spiffworkflow/app/spiffworkflow/InputOutput';
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'bpmn... Remove this comment to see the full error message
+// @ts-expect-error TS(7016) FIXME: Could not find a declaration file for module 'bpmn... Remove this comment to see the full error message
 import spiffworkflowPanel from 'bpmn-js-spiffworkflow/app/spiffworkflow/PropertiesPanel';
 
 import Button from 'react-bootstrap/Button';
@@ -74,7 +74,7 @@ export default function ReactDiagramEditor({
       return;
     }
 
-    // @ts-expect-error TS(2531): Object is possibly 'null'.
+    // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
     document.getElementById('diagram-container').innerHTML = '';
     const temp = document.createElement('template');
 
@@ -87,7 +87,7 @@ export default function ReactDiagramEditor({
     `;
 
     const frag = temp.content;
-    // @ts-expect-error TS(2531): Object is possibly 'null'.
+    // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
     document.getElementById('diagram-container').appendChild(frag);
 
     let diagramModeler: any = null;
@@ -167,16 +167,16 @@ export default function ReactDiagramEditor({
 
       let modeler = diagramModelerState;
       if (diagramType === 'dmn') {
-        // @ts-expect-error TS(2531): Object is possibly 'null'.
+        // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
         modeler = diagramModelerState.getActiveViewer();
       }
 
       // only get the canvas if the dmn active viewer is actually
       // a Modeler and not an Editor which is what it will when we are
       // actively editing a decision table
-      // @ts-expect-error TS(2531): Object is possibly 'null'.
+      // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
       if (modeler.constructor.name === 'Modeler') {
-        // @ts-expect-error TS(2531): Object is possibly 'null'.
+        // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
         modeler.get('canvas').zoom('fit-viewport');
       }
     }
@@ -257,7 +257,7 @@ export default function ReactDiagramEditor({
   ]);
 
   function handleSave() {
-    // @ts-expect-error TS(2531): Object is possibly 'null'.
+    // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
     diagramModelerState.saveXML({ format: true }).then((xmlObject: any) => {
       saveDiagram(xmlObject.xml);
     });

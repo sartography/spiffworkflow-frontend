@@ -13,7 +13,7 @@ const configure = () => {
   axiosClient.interceptors.request.use((config) => {
     if (UserService.isLoggedIn()) {
       const cb = () => {
-        // @ts-expect-error TS(2532): Object is possibly 'undefined'.
+        // @ts-expect-error TS(2532) FIXME: Object is possibly 'undefined'.
         // eslint-disable-next-line no-param-reassign
         config.headers.Authorization = `Bearer ${UserService.getToken()}`;
         return Promise.resolve(config);

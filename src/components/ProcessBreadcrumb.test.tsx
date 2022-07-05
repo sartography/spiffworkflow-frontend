@@ -4,9 +4,7 @@ import ProcessBreadcrumb from './ProcessBreadcrumb';
 
 test('renders home link', () => {
   render(
-    // @ts-expect-error TS(2686): 'React' refers to a UMD global, but the current fi... Remove this comment to see the full error message
     <BrowserRouter>
-      {/* @ts-expect-error TS(2686): 'React' refers to a UMD global, but the current fi... Remove this comment to see the full error message */}
       <ProcessBreadcrumb />
     </BrowserRouter>
   );
@@ -16,9 +14,7 @@ test('renders home link', () => {
 
 test('renders process group when given processGroupId', async () => {
   render(
-    // @ts-expect-error TS(2686): 'React' refers to a UMD global, but the current fi... Remove this comment to see the full error message
     <BrowserRouter>
-      {/* @ts-expect-error TS(2686): 'React' refers to a UMD global, but the current fi... Remove this comment to see the full error message */}
       <ProcessBreadcrumb processGroupId="group-a" />
     </BrowserRouter>
   );
@@ -32,9 +28,7 @@ test('renders process group when given processGroupId', async () => {
 
 test('renders process model when given processModelId', async () => {
   render(
-    // @ts-expect-error TS(2686): 'React' refers to a UMD global, but the current fi... Remove this comment to see the full error message
     <BrowserRouter>
-      {/* @ts-expect-error TS(2686): 'React' refers to a UMD global, but the current fi... Remove this comment to see the full error message */}
       <ProcessBreadcrumb processGroupId="group-b" processModelId="model-c" />
     </BrowserRouter>
   );

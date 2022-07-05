@@ -57,7 +57,7 @@ export default function ProcessInstanceShow() {
         <ProcessBreadcrumb
           processModelId={params.process_model_id}
           processGroupId={params.process_group_id}
-          // @ts-expect-error TS(2322): Type 'string' is not assignable to type 'boolean |... Remove this comment to see the full error message
+          // @ts-expect-error TS(2322) FIXME: Type 'string' is not assignable to type 'boolean |... Remove this comment to see the full error message
           linkProcessModel="true"
         />
         <h2>Process Instance Id: {(processInstance as any).id}</h2>

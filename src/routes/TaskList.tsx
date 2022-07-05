@@ -13,10 +13,10 @@ export default function TaskList() {
   const [pagination, setPagination] = useState(null);
 
   useEffect(() => {
-    // @ts-expect-error TS(2345): Argument of type 'string | 1' is not assignable to... Remove this comment to see the full error message
+    // @ts-expect-error TS(2345) FIXME: Argument of type 'string | 1' is not assignable to... Remove this comment to see the full error message
     const page = parseInt(searchParams.get('page') || DEFAULT_PAGE, 10);
     const perPage = parseInt(
-      // @ts-expect-error TS(2345): Argument of type 'string | 50' is not assignable t... Remove this comment to see the full error message
+      // @ts-expect-error TS(2345) FIXME: Argument of type 'string | 50' is not assignable t... Remove this comment to see the full error message
       searchParams.get('per_page') || DEFAULT_PER_PAGE,
       10
     );
@@ -74,11 +74,11 @@ export default function TaskList() {
 
   if (pagination) {
     const perPage = parseInt(
-      // @ts-expect-error TS(2345): Argument of type 'string | 50' is not assignable t... Remove this comment to see the full error message
+      // @ts-expect-error TS(2345) FIXME: Argument of type 'string | 50' is not assignable t... Remove this comment to see the full error message
       searchParams.get('per_page') || DEFAULT_PER_PAGE,
       10
     );
-    // @ts-expect-error TS(2345): Argument of type 'string | 1' is not assignable to... Remove this comment to see the full error message
+    // @ts-expect-error TS(2345) FIXME: Argument of type 'string | 1' is not assignable to... Remove this comment to see the full error message
     const page = parseInt(searchParams.get('page') || DEFAULT_PAGE, 10);
     return (
       <main>
@@ -87,7 +87,7 @@ export default function TaskList() {
           page={page}
           perPage={perPage}
           pagination={pagination}
-          // @ts-expect-error TS(2322): Type 'Element' is not assignable to type 'string'.
+          // @ts-expect-error TS(2322) FIXME: Type 'Element' is not assignable to type 'string'.
           tableToDisplay={buildTable()}
           path="/tasks"
         />

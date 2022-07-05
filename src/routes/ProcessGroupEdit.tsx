@@ -30,7 +30,7 @@ export default function ProcessGroupEdit() {
   const updateProcessGroup = (event: any) => {
     event.preventDefault();
 
-    // @ts-expect-error TS(2531): Object is possibly 'null'.
+    // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
     fetch(`${BACKEND_BASE_URL}/process-groups/${processGroup.id}`, {
       headers: new Headers({
         'Content-Type': 'application/json',
@@ -39,12 +39,12 @@ export default function ProcessGroupEdit() {
       method: 'PUT',
       body: JSON.stringify({
         display_name: displayName,
-        // @ts-expect-error TS(2531): Object is possibly 'null'.
+        // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
         id: processGroup.id,
       }),
     }).then(
       () => {
-        // @ts-expect-error TS(2531): Object is possibly 'null'.
+        // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
         navigate(`/admin/process-groups/${processGroup.id}`);
       },
       // Note: it's important to handle errors here
@@ -57,7 +57,7 @@ export default function ProcessGroupEdit() {
   };
 
   const deleteProcessGroup = () => {
-    // @ts-expect-error TS(2531): Object is possibly 'null'.
+    // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
     fetch(`${BACKEND_BASE_URL}/process-groups/${processGroup.id}`, {
       headers: new Headers({
         Authorization: `Bearer ${HOT_AUTH_TOKEN}`,

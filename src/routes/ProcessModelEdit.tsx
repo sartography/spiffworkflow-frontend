@@ -36,18 +36,18 @@ export default function ProcessModelEdit() {
       }),
       method: 'PUT',
       body: JSON.stringify({
-        // @ts-expect-error TS(2531): Object is possibly 'null'.
+        // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
         id: processModel.id,
         display_name: displayName,
-        // @ts-expect-error TS(2531): Object is possibly 'null'.
+        // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
         description: processModel.description,
-        // @ts-expect-error TS(2531): Object is possibly 'null'.
+        // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
         process_group_id: processModel.process_group_id,
-        // @ts-expect-error TS(2531): Object is possibly 'null'.
+        // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
         is_master_spec: processModel.is_master_spec,
-        // @ts-expect-error TS(2531): Object is possibly 'null'.
+        // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
         standalone: processModel.standalone,
-        // @ts-expect-error TS(2531): Object is possibly 'null'.
+        // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
         library: processModel.library,
       }),
     }).then(
@@ -64,16 +64,14 @@ export default function ProcessModelEdit() {
   };
 
   const deleteProcessModel = () => {
-    fetch(
-      // @ts-expect-error TS(2531): Object is possibly 'null'.
-      `${BACKEND_BASE_URL}/process-models/${processModel.process_group_id}/${processModel.id}`,
-      {
-        headers: new Headers({
-          Authorization: `Bearer ${HOT_AUTH_TOKEN}`,
-        }),
-        method: 'DELETE',
-      }
-    ).then(
+    // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
+    const processModelShowPath = `${BACKEND_BASE_URL}/process-models/${processModel.process_group_id}/${processModel.id}`;
+    fetch(processModelShowPath, {
+      headers: new Headers({
+        Authorization: `Bearer ${HOT_AUTH_TOKEN}`,
+      }),
+      method: 'DELETE',
+    }).then(
       () => {
         navigate(`/admin/process-groups/${params.process_group_id}`);
       },

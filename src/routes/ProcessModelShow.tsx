@@ -33,8 +33,13 @@ export default function ProcessModelShow() {
 
   const processModelRun = (processInstance: any) => {
     fetch(
-      // @ts-expect-error TS(2531): Object is possibly 'null'.
-      `${BACKEND_BASE_URL}/process-models/${processModel.process_group_id}/${processModel.id}/process-instances/${processInstance.id}/run`,
+      `${BACKEND_BASE_URL}/process-models/${
+        // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
+        processModel.process_group_id
+      }/${
+        // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
+        processModel.id
+      }/process-instances/${processInstance.id}/run`,
       {
         headers: new Headers({
           Authorization: `Bearer ${HOT_AUTH_TOKEN}`,
@@ -55,8 +60,13 @@ export default function ProcessModelShow() {
 
   const processInstanceCreateAndRun = () => {
     fetch(
-      // @ts-expect-error TS(2531): Object is possibly 'null'.
-      `${BACKEND_BASE_URL}/process-models/${processModel.process_group_id}/${processModel.id}`,
+      `${BACKEND_BASE_URL}/process-models/${
+        // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
+        processModel.process_group_id
+      }/${
+        // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
+        processModel.id
+      }`,
       {
         headers: new Headers({
           Authorization: `Bearer ${HOT_AUTH_TOKEN}`,
@@ -77,7 +87,7 @@ export default function ProcessModelShow() {
 
   let processInstanceResultTag = '';
   if (processInstanceResult) {
-    // @ts-expect-error TS(2322): Type 'Element' is not assignable to type 'string'.
+    // @ts-expect-error TS(2322) FIXME: Type 'Element' is not assignable to type 'string'.
     processInstanceResultTag = (
       <pre>
         {(processInstanceResult as any).status}:{' '}
