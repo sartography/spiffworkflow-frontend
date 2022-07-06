@@ -36,7 +36,8 @@ export default function App() {
         <ErrorBoundary>
           <BrowserRouter>
             <Routes>
-              <Route path="/" element={<AdminRoutes />} />
+              {/* @ts-expect-error TS(2786) FIXME: 'TaskList' cannot be used as a JSX component. */}
+              <Route path="/" element={<TaskList />} />
               <Route path="/admin/*" element={<AdminRoutes />} />
               {/* @ts-expect-error TS(2786) FIXME: 'TaskList' cannot be used as a JSX component. */}
               <Route path="/tasks" element={<TaskList />} />

@@ -1,6 +1,6 @@
 describe('process-models', () => {
   beforeEach(() => {
-    cy.visit('/admin');
+    cy.signInToAdmin();
   });
 
   it('can perform crud operations', () => {

@@ -24,6 +24,13 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
+Cypress.Commands.add('signInToAdmin', (selector, ...args) => {
+  cy.visit('/admin');
+  cy.get('#username').type('ciadmin1');
+  cy.get('#password').type('ciadmin1');
+  cy.get('#kc-login').click();
+});
+
 Cypress.Commands.add('getBySel', (selector, ...args) => {
   return cy.get(`[data-qa=${selector}]`, ...args);
 });
