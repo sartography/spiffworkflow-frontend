@@ -86,5 +86,5 @@ jobs:
         if: failure()
         uses: "actions/upload-artifact@v3.0.0"
         with:
-          name: logs
+          name: spiffworkflow-backend-logs
           path: "./spiffworkflow-backend/log/*.log"
