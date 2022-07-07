@@ -10,6 +10,7 @@ export default function ProcessModelShow() {
 
   const [processModel, setProcessModel] = useState(null);
   const [processInstanceResult, setProcessInstanceResult] = useState(null);
+  const [reloadModel, setReloadModel] = useState(false);
 
   useEffect(() => {
     fetch(
@@ -24,12 +25,13 @@ export default function ProcessModelShow() {
       .then(
         (result) => {
           setProcessModel(result);
+          setReloadModel(false);
         },
         (error) => {
           console.log(error);
         }
       );
-  }, [params]);
+  }, [params, reloadModel]);
 
   const processModelRun = (processInstance: any) => {
     fetch(
@@ -96,6 +98,10 @@ export default function ProcessModelShow() {
     );
   }
 
+  const onUploadedCallback = () => {
+    setReloadModel(true);
+  };
+
   if (processModel) {
     const processModelFilesTag = (processModel as any).files.map(
       (fileBpmn: any) => {
@@ -132,6 +138,7 @@ export default function ProcessModelShow() {
         <FileInput
           processModelId={(processModel as any).id}
           processGroupId={(processModel as any).process_group_id}
+          onUploadedCallback={onUploadedCallback}
         />
         <br />
         <Stack direction="horizontal" gap={3}>

@@ -41,7 +41,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "PORT=7001 craco start",
+    "start": "ESLINT_NO_DEV_ERRORS=true PORT=7001 craco start",
     "build": "craco build",
     "test": "react-scripts test",
     "eject": "craco eject",

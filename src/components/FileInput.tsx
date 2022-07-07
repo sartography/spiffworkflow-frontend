@@ -5,6 +5,7 @@ import { BACKEND_BASE_URL, HOT_AUTH_TOKEN } from '../config';
 type Props = {
   processGroupId: string;
   processModelId: string;
+  onUploadedCallback?: (..._args: any[]) => any;
 };
 
 export default class FileInput extends React.Component<Props> {
@@ -14,12 +15,15 @@ export default class FileInput extends React.Component<Props> {
 
   processModelId: any;
 
-  constructor({ processGroupId, processModelId }: Props) {
-    super({ processGroupId, processModelId });
+  onUploadedCallback: any;
+
+  constructor({ processGroupId, processModelId, onUploadedCallback }: Props) {
+    super({ processGroupId, processModelId, onUploadedCallback });
     this.handleSubmit = this.handleSubmit.bind(this);
     this.fileInput = React.createRef();
     this.processGroupId = processGroupId;
     this.processModelId = processModelId;
+    this.onUploadedCallback = onUploadedCallback;
   }
 
   handleSubmit(event: any) {
@@ -55,6 +59,9 @@ export default class FileInput extends React.Component<Props> {
     };
     axios.post(url, formData, config).then((response) => {
       console.log(response.data);
+      if (this.onUploadedCallback) {
+        this.onUploadedCallback();
+      }
     });
   }
 
