@@ -82,3 +82,9 @@ jobs:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           # pass GitHub token to allow accurately detecting a build vs a re-run build
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload logs
+        if: failure()
+        uses: "actions/upload-artifact@v3.0.0"
+        with:
+          name: logs
+          path: "./spiffworkflow-backend/log/*.log"
