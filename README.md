@@ -58,6 +58,10 @@ Check for lint in code.
 
 Fix lint in code.
 
+### `npm run format`
+
+Probably just stick with lint:fix which also runs prettier.
+
 ## Learn More
 
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
