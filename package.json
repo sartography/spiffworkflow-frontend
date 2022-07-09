@@ -24,7 +24,7 @@
     "craco": "^0.0.3",
     "date-fns": "^2.28.0",
     "dmn-js": "^12.2.0",
-    "dmn-js-properties-panel": "^1.0.0",
+    "dmn-js-properties-panel": "^1.1.0",
     "dmn-js-shared": "^12.1.1",
     "keycloak-js": "^18.0.1",
     "prop-types": "^15.8.1",
