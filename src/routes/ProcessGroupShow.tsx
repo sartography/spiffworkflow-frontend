@@ -66,6 +66,7 @@ export default function ProcessGroupShow() {
             <Link
               // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
               to={`/admin/process-models/${processGroup.id}/${(row as any).id}`}
+              data-qa="process-model-show-link"
             >
               {(row as any).id}
             </Link>

@@ -67,7 +67,8 @@ describe('process-instances', () => {
     cy.signInToAdmin();
     cy.contains('acceptance-tests-group-one').click();
     cy.contains('Process Group: acceptance-tests-group-one');
-    cy.contains('acceptance-tests-model-1').click();
+    // https://stackoverflow.com/q/51254946/6090676
+    cy.getBySel('process-model-show-link').contains('acceptance-tests-model-1').click()
   });
 
   it('can create a new instance and can modify', () => {
