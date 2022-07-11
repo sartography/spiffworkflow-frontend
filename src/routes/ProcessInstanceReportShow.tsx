@@ -27,8 +27,14 @@ export default function ProcessInstanceReport() {
         searchParams.get('per_page') || PER_PAGE_FOR_PROCESS_INSTANCE_REPORT,
         10
       );
+      let query = `?page=${page}&per_page=${perPage}`;
+      searchParams.forEach((value, key) => {
+        if (key !== 'page' && key !== 'per_page') {
+          query += `&${key}=${value}`;
+        }
+      });
       fetch(
-        `${BACKEND_BASE_URL}/process-models/${params.process_group_id}/${params.process_model_id}/process-instances/reports/${params.report_identifier}?per_page=${perPage}&page=${page}`,
+        `${BACKEND_BASE_URL}/process-models/${params.process_group_id}/${params.process_model_id}/process-instances/reports/${params.report_identifier}?${query}`,
         {
           headers: new Headers({
             Authorization: `Bearer ${HOT_AUTH_TOKEN}`,
