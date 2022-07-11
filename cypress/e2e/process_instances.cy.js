@@ -68,7 +68,9 @@ describe('process-instances', () => {
     cy.contains('acceptance-tests-group-one').click();
     cy.contains('Process Group: acceptance-tests-group-one');
     // https://stackoverflow.com/q/51254946/6090676
-    cy.getBySel('process-model-show-link').contains('acceptance-tests-model-1').click()
+    cy.getBySel('process-model-show-link')
+      .contains('acceptance-tests-model-1')
+      .click();
   });
 
   it('can create a new instance and can modify', () => {
@@ -142,7 +144,7 @@ describe('process-instances', () => {
     cy.runPrimaryBpmnFile('Very wonderful');
     cy.runPrimaryBpmnFile('Very wonderful');
 
-    cy.contains('Process Instances').click();
+    cy.getBySel('process-instance-list-link').click();
     cy.basicPaginationTest();
   });
 

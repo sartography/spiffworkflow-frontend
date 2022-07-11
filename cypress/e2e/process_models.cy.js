@@ -111,7 +111,7 @@ describe('process-models', () => {
     cy.contains('Submit').click();
     cy.runPrimaryBpmnFile('champion');
 
-    cy.contains('Process Instances').click();
+    cy.getBySel('process-instance-list-link').click();
     cy.getBySel('process-instance-show-link').click();
     cy.contains('Delete process instance').click();
     cy.contains(`Process Instances for ${modelId}`);
