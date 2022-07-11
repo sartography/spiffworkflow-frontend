@@ -16,7 +16,6 @@ export default function ProcessInstanceReport() {
 
   const [processInstances, setProcessInstances] = useState([]);
   const [pagination, setPagination] = useState(null);
-  const [processGroupId, setProcessGroupId] = useState(null);
 
   useEffect(() => {
     function getProcessInstances() {
@@ -27,7 +26,7 @@ export default function ProcessInstanceReport() {
         10
       );
       fetch(
-        `${BACKEND_BASE_URL}/process-models/${params.process_group_id}/${params.process_model_id}/process-instances/report?per_page=${perPage}&page=${page}`,
+        `${BACKEND_BASE_URL}/process-models/${params.process_group_id}/${params.process_model_id}/process-instances/reports/${params.report_identifier}?per_page=${perPage}&page=${page}`,
         {
           headers: new Headers({
             Authorization: `Bearer ${HOT_AUTH_TOKEN}`,
@@ -40,9 +39,6 @@ export default function ProcessInstanceReport() {
             const processInstancesFromApi = result.results;
             setProcessInstances(processInstancesFromApi);
             setPagination(result.pagination);
-            if (processInstancesFromApi[0]) {
-              setProcessGroupId(processInstancesFromApi[0].process_group_id);
-            }
           },
           (error) => {
             console.log(error);
@@ -58,11 +54,11 @@ export default function ProcessInstanceReport() {
       return (
         <tr key={(row as any).id}>
           <td>{(row as any).id}</td>
-          <td>{(row as any).data.month}</td>
-          <td>{(row as any).data.milestone}</td>
-          <td>{(row as any).data.req_id}</td>
-          <td>{(row as any).data.feature}</td>
-          <td>{(row as any).data.priority}</td>
+          <td>{(row as any).month}</td>
+          <td>{(row as any).milestone}</td>
+          <td>{(row as any).req_id}</td>
+          <td>{(row as any).feature}</td>
+          <td>{(row as any).priority}</td>
         </tr>
       );
     });
@@ -95,8 +91,7 @@ export default function ProcessInstanceReport() {
       <main>
         <ProcessBreadcrumb
           processModelId={params.process_model_id}
-          // @ts-expect-error TS(2322) FIXME: Type 'null' is not assignable to type 'string | un... Remove this comment to see the full error message
-          processGroupId={processGroupId}
+          processGroupId={params.process_group_id}
           // @ts-expect-error TS(2322) FIXME: Type 'string' is not assignable to type 'boolean |... Remove this comment to see the full error message
           linkProcessModel="true"
         />

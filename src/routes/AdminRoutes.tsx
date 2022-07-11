@@ -7,11 +7,12 @@ import ProcessGroupEdit from './ProcessGroupEdit';
 import ProcessModelShow from './ProcessModelShow';
 import ProcessModelEditDiagram from './ProcessModelEditDiagram';
 import ProcessInstanceList from './ProcessInstanceList';
-import ProcessInstanceReport from './ProcessInstanceReport';
+import ProcessInstanceReportShow from './ProcessInstanceReportShow';
 import ProcessModelNew from './ProcessModelNew';
 import ProcessModelEdit from './ProcessModelEdit';
 import ProcessInstanceShow from './ProcessInstanceShow';
 import UserService from '../services/UserService';
+import ProcessInstanceReportList from './ProcessInstanceReportList';
 
 export default function AdminRoutes() {
   if (UserService.hasRole(['admin'])) {
@@ -59,11 +60,6 @@ export default function AdminRoutes() {
           element={<ProcessInstanceList />}
         />
         <Route
-          path="process-models/:process_group_id/:process_model_id/process-instances/report"
-          // @ts-expect-error TS(2786) FIXME: 'ProcessInstanceReport' cannot be used as a JSX co... Remove this comment to see the full error message
-          element={<ProcessInstanceReport />}
-        />
-        <Route
           path="process-models/:process_group_id/:process_model_id/edit"
           // @ts-expect-error TS(2786) FIXME: 'ProcessModelEdit' cannot be used as a JSX compone... Remove this comment to see the full error message
           element={<ProcessModelEdit />}
@@ -72,6 +68,15 @@ export default function AdminRoutes() {
           path="process-models/:process_group_id/:process_model_id/process-instances/:process_instance_id"
           // @ts-expect-error TS(2786) FIXME: 'ProcessInstanceShow' cannot be used as a JSX comp... Remove this comment to see the full error message
           element={<ProcessInstanceShow />}
+        />
+        <Route
+          path="process-models/:process_group_id/:process_model_id/process-instances/reports"
+          element={<ProcessInstanceReportList />}
+        />
+        <Route
+          path="process-models/:process_group_id/:process_model_id/process-instances/reports/:report_identifier"
+          // @ts-expect-error TS(2786) FIXME: 'ProcessInstanceReport' cannot be used as a JSX co... Remove this comment to see the full error message
+          element={<ProcessInstanceReportShow />}
         />
       </Routes>
     );

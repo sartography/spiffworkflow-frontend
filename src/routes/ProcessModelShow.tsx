@@ -172,14 +172,29 @@ export default function ProcessModelShow() {
         </Stack>
         <br />
         <br />
-        <Link
-          to={`/admin/process-models/${
-            (processModel as any).process_group_id
-          }/${(processModel as any).id}/process-instances`}
-          data-qa="process-instance-list-link"
-        >
-          Process Instances
-        </Link>
+        <h3>Process Instances</h3>
+        <ul>
+          <li>
+            <Link
+              to={`/admin/process-models/${
+                (processModel as any).process_group_id
+              }/${(processModel as any).id}/process-instances`}
+              data-qa="process-instance-list-link"
+            >
+              List
+            </Link>
+          </li>
+          <li>
+            <Link
+              to={`/admin/process-models/${
+                (processModel as any).process_group_id
+              }/${(processModel as any).id}/process-instances/reports`}
+              data-qa="process-instance-reports-link"
+            >
+              Reports
+            </Link>
+          </li>
+        </ul>
         <br />
         <br />
         <h3>Files</h3>
