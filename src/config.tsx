@@ -30,4 +30,4 @@ export const PROCESS_STATUSES = [
 
 export const DATE_FORMAT = 'yyyy-MM-dd HH:mm:ss';
 
-export const AUTH_WITH_KEYCLOAK = true;
+export const AUTH_WITH_KEYCLOAK = false;
