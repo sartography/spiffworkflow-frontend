@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 
-import { Table } from 'react-bootstrap';
+import { Button, Table } from 'react-bootstrap';
 import { BACKEND_BASE_URL, HOT_AUTH_TOKEN } from '../config';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 
@@ -46,7 +46,6 @@ export default function ProcessInstanceReport() {
           (result) => {
             const processInstancesFromApi = result.results;
             setProcessInstances(processInstancesFromApi);
-            console.log('result.report_metaadata', result.report_metadata);
             setReportMetadata(result.report_metadata);
             setPagination(result.pagination);
           },
@@ -97,6 +96,11 @@ export default function ProcessInstanceReport() {
           linkProcessModel="true"
         />
         <h2>Process Instance Report: {params.report_identifier}</h2>
+        <Button
+          href={`/admin/process-models/${params.process_group_id}/${params.process_model_id}/process-instances/reports/${params.report_identifier}/edit`}
+        >
+          Edit process instance report
+        </Button>
         <PaginationForTable
           page={page}
           perPage={perPage}

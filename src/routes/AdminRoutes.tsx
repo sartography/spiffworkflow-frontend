@@ -13,6 +13,8 @@ import ProcessModelEdit from './ProcessModelEdit';
 import ProcessInstanceShow from './ProcessInstanceShow';
 import UserService from '../services/UserService';
 import ProcessInstanceReportList from './ProcessInstanceReportList';
+import ProcessInstanceReportNew from './ProcessInstanceReportNew';
+import ProcessInstanceReportEdit from './ProcessInstanceReportEdit';
 
 export default function AdminRoutes() {
   if (UserService.hasRole(['admin'])) {
@@ -77,6 +79,14 @@ export default function AdminRoutes() {
           path="process-models/:process_group_id/:process_model_id/process-instances/reports/:report_identifier"
           // @ts-expect-error TS(2786) FIXME: 'ProcessInstanceReport' cannot be used as a JSX co... Remove this comment to see the full error message
           element={<ProcessInstanceReportShow />}
+        />
+        <Route
+          path="process-models/:process_group_id/:process_model_id/process-instances/reports/new"
+          element={<ProcessInstanceReportNew />}
+        />
+        <Route
+          path="process-models/:process_group_id/:process_model_id/process-instances/reports/:report_identifier/edit"
+          element={<ProcessInstanceReportEdit />}
         />
       </Routes>
     );

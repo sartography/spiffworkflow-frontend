@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table } from 'react-bootstrap';
+import { Button, Table } from 'react-bootstrap';
 import { useParams, Link } from 'react-router-dom';
 import { BACKEND_BASE_URL, HOT_AUTH_TOKEN } from '../config';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
@@ -68,6 +68,11 @@ export default function ProcessInstanceReportList() {
     return (
       <main>
         {headerStuff}
+        <Button
+          href={`/admin/process-models/${params.process_group_id}/${params.process_model_id}/process-instances/reports/new`}
+        >
+          Add a process instance report
+        </Button>
         {buildTable()}
       </main>
     );
