@@ -15,6 +15,7 @@ export default function ProcessInstanceReport() {
   const [searchParams] = useSearchParams();
 
   const [processInstances, setProcessInstances] = useState([]);
+  const [reportMetadata, setReportMetadata] = useState({});
   const [pagination, setPagination] = useState(null);
 
   useEffect(() => {
@@ -38,6 +39,8 @@ export default function ProcessInstanceReport() {
           (result) => {
             const processInstancesFromApi = result.results;
             setProcessInstances(processInstancesFromApi);
+            console.log('result.report_metaadata', result.report_metadata);
+            setReportMetadata(result.report_metadata);
             setPagination(result.pagination);
           },
           (error) => {
@@ -50,29 +53,20 @@ export default function ProcessInstanceReport() {
   }, [searchParams, params]);
 
   const buildTable = () => {
+    const headers = (reportMetadata as any).columns.map((column: any) => {
+      return <th>{(column as any).Header}</th>;
+    });
+
     const rows = processInstances.map((row) => {
-      return (
-        <tr key={(row as any).id}>
-          <td>{(row as any).id}</td>
-          <td>{(row as any).month}</td>
-          <td>{(row as any).milestone}</td>
-          <td>{(row as any).req_id}</td>
-          <td>{(row as any).feature}</td>
-          <td>{(row as any).priority}</td>
-        </tr>
-      );
+      const currentRow = (reportMetadata as any).columns.map((column: any) => {
+        return <td>{(row as any)[column.accessor]}</td>;
+      });
+      return <tr key={(row as any).id}>{currentRow}</tr>;
     });
     return (
       <Table striped bordered>
         <thead>
-          <tr>
-            <th>db id</th>
-            <th>month</th>
-            <th>milestone</th>
-            <th>req_id</th>
-            <th>feature</th>
-            <th>priority</th>
-          </tr>
+          <tr>{headers}</tr>
         </thead>
         <tbody>{rows}</tbody>
       </Table>
