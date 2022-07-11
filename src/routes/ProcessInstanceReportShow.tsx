@@ -6,9 +6,10 @@ import { BACKEND_BASE_URL, HOT_AUTH_TOKEN } from '../config';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 
 import PaginationForTable, {
-  DEFAULT_PER_PAGE,
   DEFAULT_PAGE,
 } from '../components/PaginationForTable';
+
+const PER_PAGE_FOR_PROCESS_INSTANCE_REPORT = 500;
 
 export default function ProcessInstanceReport() {
   const params = useParams();
@@ -23,7 +24,7 @@ export default function ProcessInstanceReport() {
       const page = searchParams.get('page') || DEFAULT_PAGE;
       const perPage = parseInt(
         // @ts-expect-error TS(2345) FIXME: Argument of type 'string | 50' is not assignable t... Remove this comment to see the full error message
-        searchParams.get('per_page') || DEFAULT_PER_PAGE,
+        searchParams.get('per_page') || PER_PAGE_FOR_PROCESS_INSTANCE_REPORT,
         10
       );
       fetch(
@@ -76,7 +77,7 @@ export default function ProcessInstanceReport() {
   if (pagination) {
     const perPage = parseInt(
       // @ts-expect-error TS(2345) FIXME: Argument of type 'string | 50' is not assignable t... Remove this comment to see the full error message
-      searchParams.get('per_page') || DEFAULT_PER_PAGE,
+      searchParams.get('per_page') || PER_PAGE_FOR_PROCESS_INSTANCE_REPORT,
       10
     );
     // @ts-expect-error TS(2345) FIXME: Argument of type 'string | 1' is not assignable to... Remove this comment to see the full error message
@@ -89,7 +90,7 @@ export default function ProcessInstanceReport() {
           // @ts-expect-error TS(2322) FIXME: Type 'string' is not assignable to type 'boolean |... Remove this comment to see the full error message
           linkProcessModel="true"
         />
-        <h2>Process Instances for {params.process_model_id}</h2>
+        <h2>Process Instance Report: {params.report_identifier}</h2>
         <PaginationForTable
           page={page}
           perPage={perPage}

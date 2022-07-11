@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Table } from 'react-bootstrap';
 import { useParams, Link } from 'react-router-dom';
 import { BACKEND_BASE_URL, HOT_AUTH_TOKEN } from '../config';
+import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 
 export default function ProcessInstanceReportList() {
   const params = useParams();
@@ -54,10 +55,19 @@ export default function ProcessInstanceReportList() {
     );
   };
 
+  const headerStuff = (
+    <>
+      <ProcessBreadcrumb
+        processGroupId={params.process_group_id}
+        processModelId={params.process_model_id}
+      />
+      <h2>Reports for Process Model: {params.process_model_id}</h2>
+    </>
+  );
   if (processInstanceReports?.length > 0) {
     return (
       <main>
-        <h1>hello</h1>
+        {headerStuff}
         {buildTable()}
       </main>
     );
