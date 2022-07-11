@@ -1,3 +1,5 @@
+import { AUTH_WITH_KEYCLOAK } from '../../src/config';
+
 // ***********************************************
 // This example commands.js shows you how to
 // create various custom commands and overwrite
@@ -26,9 +28,11 @@
 
 Cypress.Commands.add('signInToAdmin', (selector, ...args) => {
   cy.visit('/admin');
-  // cy.get('#username').type('ciadmin1');
-  // cy.get('#password').type('ciadmin1');
-  // cy.get('#kc-login').click();
+  if (AUTH_WITH_KEYCLOAK) {
+    cy.get('#username').type('ciadmin1');
+    cy.get('#password').type('ciadmin1');
+    cy.get('#kc-login').click();
+  }
 });
 
 Cypress.Commands.add('getBySel', (selector, ...args) => {

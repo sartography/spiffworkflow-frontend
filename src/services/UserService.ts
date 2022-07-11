@@ -1,4 +1,5 @@
 import Keycloak from 'keycloak-js';
+import { AUTH_WITH_KEYCLOAK } from '../config';
 
 const keycloakClient = new Keycloak('/keycloak.json');
 
@@ -15,8 +16,11 @@ const updateToken = (successCallback: any) =>
 
 const getUsername = () => keycloakClient.tokenParsed?.preferred_username;
 
-const hasRole = (_roles: string[]) => {
-  // roles.some((role: string) => keycloakClient.hasRealmRole(role));
+const hasRole = (roles: string[]) => {
+  if (AUTH_WITH_KEYCLOAK) {
+    return roles.some((role: string) => keycloakClient.hasRealmRole(role));
+  }
+
   return true;
 };
 
@@ -26,21 +30,23 @@ const hasRole = (_roles: string[]) => {
  * @param onAuthenticatedCallback
  */
 const initKeycloak = (onAuthenticatedCallback: any) => {
-  // FIXME actually auth
-  onAuthenticatedCallback();
-  // keycloakClient
-  //   .init({
-  //     onLoad: 'check-sso',
-  //     silentCheckSsoRedirectUri: `${window.location.origin}/silent-check-sso.html`,
-  //     pkceMethod: 'S256',
-  //   })
-  //   .then((authenticated: any) => {
-  //     if (!authenticated) {
-  //       doLogin();
-  //     }
-  //     onAuthenticatedCallback();
-  //   })
-  //   .catch(console.error);
+  if (AUTH_WITH_KEYCLOAK) {
+    keycloakClient
+      .init({
+        onLoad: 'check-sso',
+        silentCheckSsoRedirectUri: `${window.location.origin}/silent-check-sso.html`,
+        pkceMethod: 'S256',
+      })
+      .then((authenticated: any) => {
+        if (!authenticated) {
+          doLogin();
+        }
+        onAuthenticatedCallback();
+      })
+      .catch(console.error);
+  } else {
+    onAuthenticatedCallback();
+  }
 };
 
 const UserService = {
