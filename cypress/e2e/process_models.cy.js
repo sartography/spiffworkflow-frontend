@@ -96,6 +96,7 @@ describe('process-models', () => {
     const groupId = 'acceptance-tests-group-one';
     const modelDisplayName = `Test Model 2 ${id}`;
     const modelId = `test-model-2-${id}`;
+    cy.contains('Add a process group');
     cy.contains(groupId).click();
     cy.createModel(groupId, modelId, modelDisplayName);
 
