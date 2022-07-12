@@ -34,8 +34,10 @@ const updateDmnText = (oldText, newText, elementId = 'wonderful_process') => {
 
 const updateBpmnPythonScript = (pythonScript, elementId = 'process_script') => {
   cy.get(`g[data-element-id=${elementId}]`).click().should('exist');
-  cy.contains('SpiffWorkflow Properties').click();
-  cy.get('#bio-properties-panel-pythonScript').clear().type(pythonScript);
+  cy.contains(/^Script$/).click();
+  cy.get('textarea[name="pythonScript_bpmn:script"]')
+    .clear()
+    .type(pythonScript);
 
   // wait for a little bit for the xml to get set before saving
   cy.wait(500);
@@ -47,7 +49,7 @@ const updateBpmnPythonScriptWithMonaco = (
   elementId = 'process_script'
 ) => {
   cy.get(`g[data-element-id=${elementId}]`).click().should('exist');
-  cy.contains('SpiffWorkflow Properties').click();
+  cy.contains(/^Script$/).click();
   cy.contains('Launch Editor').click();
   cy.contains('Loading...').should('not.exist');
   cy.get('.monaco-editor textarea:first')
