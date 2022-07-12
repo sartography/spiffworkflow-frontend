@@ -98,7 +98,13 @@ describe('process-models', () => {
     const modelId = `test-model-2-${id}`;
     cy.contains(groupId).click();
     cy.createModel(groupId, modelId, modelDisplayName);
-    cy.contains(`Process Group: ${groupId}`).click();
+
+    // seeing if getBySel works better, because we are seeing tests fail in CI
+    // when looking for the "Add a process model" link, so it seems like the
+    // click on the breadcrumb element must have failed.
+    cy.getBySel('process-group-breadcrumb-link').click();
+    // cy.contains(`Process Group: ${groupId}`).click();
+
     cy.contains('Add a process model');
 
     cy.contains(modelId).click();

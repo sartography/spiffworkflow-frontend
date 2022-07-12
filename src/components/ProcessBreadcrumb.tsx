@@ -40,6 +40,7 @@ export default function ProcessBreadcrumb({
     processGroupBreadcrumb = (
       <Breadcrumb.Item
         linkAs={Link}
+        data-qa="process-group-breadcrumb-link"
         linkProps={{ to: `/admin/process-groups/${processGroupId}` }}
       >
         Process Group: {processGroupId}
