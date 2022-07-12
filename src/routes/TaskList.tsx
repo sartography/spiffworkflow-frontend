@@ -94,4 +94,5 @@ export default function TaskList() {
       </main>
     );
   }
+  return null;
 }
