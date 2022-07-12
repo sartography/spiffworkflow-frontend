@@ -77,7 +77,9 @@ jobs:
         with:
           working-directory: ./spiffworkflow-frontend
           browser: chrome
-          record: true
+          # only record on push, not pull_request, since we do not have secrets for PRs,
+          # so the required CYPRESS_RECORD_KEY will not be available.
+          record: ${{ github.event_name == 'push' }}
         env:
           # pass the Dashboard record key as an environment variable
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
