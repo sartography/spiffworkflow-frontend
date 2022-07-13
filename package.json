@@ -42,6 +42,11 @@
     "typescript": "^4.7.4",
     "web-vitals": "^2.1.4"
   },
+  "overrides": {
+    "postcss-preset-env": {
+      "autoprefixer": "10.4.5"
+    }
+  },
   "scripts": {
     "start": "ESLINT_NO_DEV_ERRORS=true PORT=7001 craco start",
     "build": "craco build",
