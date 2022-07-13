@@ -4,6 +4,7 @@ import { Button, Stack } from 'react-bootstrap';
 import { BACKEND_BASE_URL, HOT_AUTH_TOKEN } from '../config';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 import FileInput from '../components/FileInput';
+import ReactFormBuilder from '../components/ReactFormBuilder';
 
 export default function ProcessModelShow() {
   const params = useParams();
@@ -202,4 +203,5 @@ export default function ProcessModelShow() {
       </main>
     );
   }
+  // <ReactFormBuilder schema="" uischema="" />
 }
