@@ -60,22 +60,29 @@ export default function ProcessInstanceReportList() {
       <ProcessBreadcrumb
         processGroupId={params.process_group_id}
         processModelId={params.process_model_id}
+        // @ts-expect-error TS(2322) FIXME: Type 'string' is not assignable to type 'boolean |... Remove this comment to see the full error message
+        linkProcessModel="true"
       />
       <h2>Reports for Process Model: {params.process_model_id}</h2>
+      <Button
+        href={`/admin/process-models/${params.process_group_id}/${params.process_model_id}/process-instances/reports/new`}
+      >
+        Add a process instance report
+      </Button>
     </>
   );
   if (processInstanceReports?.length > 0) {
     return (
       <main>
         {headerStuff}
-        <Button
-          href={`/admin/process-models/${params.process_group_id}/${params.process_model_id}/process-instances/reports/new`}
-        >
-          Add a process instance report
-        </Button>
         {buildTable()}
       </main>
     );
   }
-  return <main />;
+  return (
+    <main>
+      {headerStuff}
+      <p>No reports found</p>
+    </main>
+  );
 }

@@ -16,13 +16,7 @@ import {
 } from 'dmn-js-properties-panel';
 
 import React, { useRef, useEffect, useState } from 'react';
-// @ts-expect-error TS(7016) FIXME: Could not find a declaration file for module 'bpmn... Remove this comment to see the full error message
-import spiffworkflowIO from 'bpmn-js-spiffworkflow/app/spiffworkflow/InputOutput';
-// @ts-expect-error TS(7016) FIXME: Could not find a declaration file for module 'bpmn... Remove this comment to see the full error message
-import spiffworkflowPanel from 'bpmn-js-spiffworkflow/app/spiffworkflow/PropertiesPanel';
-
 import Button from 'react-bootstrap/Button';
-import { HOT_AUTH_TOKEN, BACKEND_BASE_URL } from '../config';
 
 import 'bpmn-js/dist/assets/diagram-js.css';
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css';
@@ -39,7 +33,14 @@ import 'dmn-js/dist/assets/dmn-js-shared.css';
 import 'dmn-js/dist/assets/dmn-font/css/dmn-embedded.css';
 import 'dmn-js-properties-panel/dist/assets/properties-panel.css';
 
+// @ts-expect-error TS(7016) FIXME
+import spiffworkflow from 'bpmn-js-spiffworkflow/app/spiffworkflow';
 import 'bpmn-js-spiffworkflow/app/css/app.css';
+
+// @ts-expect-error TS(7016) FIXME
+import spiffModdleExtension from 'bpmn-js-spiffworkflow/app/spiffworkflow/moddle/spiffworkflow.json';
+
+import { HOT_AUTH_TOKEN, BACKEND_BASE_URL } from '../config';
 
 type OwnProps = {
   processModelId: string;
@@ -102,11 +103,13 @@ export default function ReactDiagramEditor({
           parent: '#js-properties-panel',
         },
         additionalModules: [
+          spiffworkflow,
           BpmnPropertiesPanelModule,
           BpmnPropertiesProviderModule,
-          spiffworkflowIO,
-          spiffworkflowPanel,
         ],
+        moddleExtensions: {
+          spiffworkflow: spiffModdleExtension,
+        },
       });
     } else if (diagramType === 'dmn') {
       diagramModeler = new DmnModeler({
