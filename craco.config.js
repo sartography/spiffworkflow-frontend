@@ -17,6 +17,10 @@ module.exports = {
               ],
               '@babel/preset-react',
               '@babel/plugin-transform-typescript',
+              {
+                importSource: '@bpmn-io/properties-panel/preact',
+                runtime: 'automatic',
+              },
             ],
           },
         },

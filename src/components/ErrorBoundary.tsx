@@ -20,6 +20,11 @@ class ErrorBoundary extends React.Component<Props, State> {
   componentDidCatch(error: any, errorInfo: any) {
     // You can also log the error to an error reporting service
     console.log('HELLO: ', error, errorInfo);
+    if (error.constructor.name === 'AggregateError') {
+      console.log(error.message);
+      console.log(error.name);
+      console.log(error.errors);
+    }
   }
 
   render() {
