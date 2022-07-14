@@ -1,5 +1,3 @@
-import React, { Component } from 'react';
-
 // @ts-expect-error TS(7016) FIXME
 import { FormBuilder } from '@ginkgo-bioworks/react-json-schema-form-builder';
 
