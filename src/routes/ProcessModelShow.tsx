@@ -4,7 +4,20 @@ import { Button, Stack } from 'react-bootstrap';
 import { BACKEND_BASE_URL, HOT_AUTH_TOKEN } from '../config';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 import FileInput from '../components/FileInput';
-// import ReactFormBuilder from '../components/ReactFormBuilder';
+import ReactFormBuilder from '../components/ReactFormBuilder';
+
+const formSchema = `
+{
+  "title": "Enter a number to multiply with system number",
+  "description": "Your number will be multiplied with {{system_generated_number}}",
+  "type": "object",
+  "required": ["user_generated_number"],
+  "properties": {
+    "system_generated_number": {"type": "integer", "title": "System Generated Number", "default": 0},
+    "user_generated_number": {"type": "integer", "title": "User Generated Number", "default": 0}
+  }
+}
+`;
 
 export default function ProcessModelShow() {
   const params = useParams();
@@ -203,5 +216,5 @@ export default function ProcessModelShow() {
       </main>
     );
   }
-  // <ReactFormBuilder schema="" uischema="" />
+  <ReactFormBuilder schema={formSchema} uischema="" />;
 }
