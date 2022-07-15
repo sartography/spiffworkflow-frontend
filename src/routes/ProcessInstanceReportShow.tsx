@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 
 import { Button, Table } from 'react-bootstrap';
-import { BACKEND_BASE_URL } from '../config';
-import { HOT_AUTH_TOKEN } from '../services/UserService';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 
 import PaginationForTable, {
   DEFAULT_PAGE,
 } from '../components/PaginationForTable';
+import HttpService from '../services/HttpService';
 
 const PER_PAGE_FOR_PROCESS_INSTANCE_REPORT = 500;
 
@@ -21,6 +20,13 @@ export default function ProcessInstanceReport() {
   const [pagination, setPagination] = useState(null);
 
   useEffect(() => {
+    const processResult = (result: any) => {
+      const processInstancesFromApi = result.results;
+      setProcessInstances(processInstancesFromApi);
+      setReportMetadata(result.report_metadata);
+      setPagination(result.pagination);
+    };
+
     function getProcessInstances() {
       const page = searchParams.get('page') || DEFAULT_PAGE;
       const perPage = parseInt(
@@ -34,26 +40,10 @@ export default function ProcessInstanceReport() {
           query += `&${key}=${value}`;
         }
       });
-      fetch(
-        `${BACKEND_BASE_URL}/process-models/${params.process_group_id}/${params.process_model_id}/process-instances/reports/${params.report_identifier}?${query}`,
-        {
-          headers: new Headers({
-            Authorization: `Bearer ${HOT_AUTH_TOKEN}`,
-          }),
-        }
-      )
-        .then((res) => res.json())
-        .then(
-          (result) => {
-            const processInstancesFromApi = result.results;
-            setProcessInstances(processInstancesFromApi);
-            setReportMetadata(result.report_metadata);
-            setPagination(result.pagination);
-          },
-          (error) => {
-            console.log(error);
-          }
-        );
+      HttpService.makeCallToBackend({
+        path: `/process-models/${params.process_group_id}/${params.process_model_id}/process-instances/reports/${params.report_identifier}?${query}`,
+        successCallback: processResult,
+      });
     }
 
     getProcessInstances();

@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button, Stack } from 'react-bootstrap';
 import { BACKEND_BASE_URL } from '../config';
-import { HOT_AUTH_TOKEN, STANDARD_HEADERS } from '../services/UserService';
+import { HOT_AUTH_TOKEN } from '../services/UserService';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
+import HttpService from '../services/HttpService';
 
 export default function ProcessModelEdit() {
   const [displayName, setDisplayName] = useState('');
@@ -14,19 +15,14 @@ export default function ProcessModelEdit() {
   const processModelPath = `process-models/${params.process_group_id}/${params.process_model_id}`;
 
   useEffect(() => {
-    fetch(`${BACKEND_BASE_URL}/${processModelPath}`, {
-      headers: new Headers(STANDARD_HEADERS),
-    })
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          setProcessModel(result);
-          setDisplayName(result.display_name);
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
+    const processResult = (result: any) => {
+      setProcessModel(result);
+      setDisplayName(result.display_name);
+    };
+    HttpService.makeCallToBackend({
+      path: `/${processModelPath}`,
+      successCallback: processResult,
+    });
   }, [processModelPath]);
 
   const updateProcessModel = (event: any) => {

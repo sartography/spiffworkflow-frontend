@@ -1,32 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, Table } from 'react-bootstrap';
 import { useParams, Link } from 'react-router-dom';
-import { BACKEND_BASE_URL } from '../config';
-import { HOT_AUTH_TOKEN } from '../services/UserService';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
+import HttpService from '../services/HttpService';
 
 export default function ProcessInstanceReportList() {
   const params = useParams();
   const [processInstanceReports, setProcessInstanceReports] = useState([]);
 
   useEffect(() => {
-    fetch(
-      `${BACKEND_BASE_URL}/process-models/${params.process_group_id}/${params.process_model_id}/process-instances/reports`,
-      {
-        headers: new Headers({
-          Authorization: `Bearer ${HOT_AUTH_TOKEN}`,
-        }),
-      }
-    )
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          setProcessInstanceReports(result);
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
+    HttpService.makeCallToBackend({
+      path: `/process-models/${params.process_group_id}/${params.process_model_id}/process-instances/reports`,
+      successCallback: setProcessInstanceReports,
+    });
   }, [params]);
 
   const buildTable = () => {

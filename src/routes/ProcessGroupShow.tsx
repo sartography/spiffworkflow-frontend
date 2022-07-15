@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useSearchParams, useParams } from 'react-router-dom';
 import { Button, Table, Stack } from 'react-bootstrap';
-import { BACKEND_BASE_URL } from '../config';
-import { HOT_AUTH_TOKEN } from '../services/UserService';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 import PaginationForTable, {
   DEFAULT_PER_PAGE,
   DEFAULT_PAGE,
 } from '../components/PaginationForTable';
+import HttpService from '../services/HttpService';
 
 export default function ProcessGroupShow() {
   const params = useParams();
@@ -18,6 +17,17 @@ export default function ProcessGroupShow() {
   const [pagination, setPagination] = useState(null);
 
   useEffect(() => {
+    const setProcessModelFromResult = (result: any) => {
+      setProcessModels(result.results);
+      setPagination(result.pagination);
+    };
+    const processResult = (result: any) => {
+      setProcessGroup(result);
+      HttpService.makeCallToBackend({
+        path: `/process-groups/${params.process_group_id}/process-models?per_page=${perPage}&page=${page}`,
+        successCallback: setProcessModelFromResult,
+      });
+    };
     // @ts-expect-error TS(2345) FIXME: Argument of type 'string | 1' is not assignable to... Remove this comment to see the full error message
     const page = parseInt(searchParams.get('page') || DEFAULT_PAGE, 10);
     const perPage = parseInt(
@@ -25,38 +35,10 @@ export default function ProcessGroupShow() {
       searchParams.get('per_page') || DEFAULT_PER_PAGE,
       10
     );
-    fetch(`${BACKEND_BASE_URL}/process-groups/${params.process_group_id}`, {
-      headers: new Headers({
-        Authorization: `Bearer ${HOT_AUTH_TOKEN}`,
-      }),
-    })
-      .then((res) => res.json())
-      .then(
-        (processGroupResult) => {
-          setProcessGroup(processGroupResult);
-          fetch(
-            `${BACKEND_BASE_URL}/process-groups/${params.process_group_id}/process-models?per_page=${perPage}&page=${page}`,
-            {
-              headers: new Headers({
-                Authorization: `Bearer ${HOT_AUTH_TOKEN}`,
-              }),
-            }
-          )
-            .then((res) => res.json())
-            .then(
-              (processModelResult) => {
-                setProcessModels(processModelResult.results);
-                setPagination(processModelResult.pagination);
-              },
-              (error) => {
-                console.log(error);
-              }
-            );
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
+    HttpService.makeCallToBackend({
+      path: `/process-groups/${params.process_group_id}`,
+      successCallback: processResult,
+    });
   }, [params, searchParams]);
 
   const buildTable = () => {

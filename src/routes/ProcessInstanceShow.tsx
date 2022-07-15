@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import { BACKEND_BASE_URL } from '../config';
 import { HOT_AUTH_TOKEN } from '../services/UserService';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
+import HttpService from '../services/HttpService';
 
 export default function ProcessInstanceShow() {
   const navigate = useNavigate();
@@ -12,23 +13,10 @@ export default function ProcessInstanceShow() {
   const [processInstance, setProcessInstance] = useState(null);
 
   useEffect(() => {
-    fetch(
-      `${BACKEND_BASE_URL}/process-models/${params.process_group_id}/${params.process_model_id}/process-instances/${params.process_instance_id}`,
-      {
-        headers: new Headers({
-          Authorization: `Bearer ${HOT_AUTH_TOKEN}`,
-        }),
-      }
-    )
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          setProcessInstance(result);
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
+    HttpService.makeCallToBackend({
+      path: `/process-models/${params.process_group_id}/${params.process_model_id}/process-instances/${params.process_instance_id}`,
+      successCallback: setProcessInstance,
+    });
   }, [params]);
 
   const deleteProcessInstance = () => {

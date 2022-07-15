@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { Button, Modal } from 'react-bootstrap';
 import Editor from '@monaco-editor/react';
@@ -7,6 +7,7 @@ import { HOT_AUTH_TOKEN } from '../services/UserService';
 
 import ReactDiagramEditor from '../components/ReactDiagramEditor';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
+import HttpService from '../services/HttpService';
 
 export default function ProcessModelEditDiagram() {
   const [showFileNameEditor, setShowFileNameEditor] = useState(false);
@@ -28,26 +29,14 @@ export default function ProcessModelEditDiagram() {
     useState(null);
 
   useEffect(() => {
-    if (params.file_name) {
-      fetch(
-        `${BACKEND_BASE_URL}/process-models/${params.process_group_id}/${params.process_model_id}/file/${params.file_name}`,
-        {
-          headers: new Headers({
-            Authorization: `Bearer ${HOT_AUTH_TOKEN}`,
-          }),
-        }
-      )
-        .then((res) => res.json())
-        .then(
-          (result) => {
-            setProcessModelFile(result);
-            setBpmnXmlForDiagramRendering(result.file_contents);
-          },
-          (error) => {
-            console.log(error);
-          }
-        );
-    }
+    const processResult = (result: any) => {
+      setProcessModelFile(result);
+      setBpmnXmlForDiagramRendering(result.file_contents);
+    };
+    HttpService.makeCallToBackend({
+      path: `/process-models/${params.process_group_id}/${params.process_model_id}/file/${params.file_name}`,
+      successCallback: processResult,
+    });
   }, [params]);
 
   const handleFileNameCancel = () => {

@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Form from '@rjsf/core';
 import { Button } from 'react-bootstrap';
 
 import { BACKEND_BASE_URL } from '../config';
 import { HOT_AUTH_TOKEN } from '../services/UserService';
+import HttpService from '../services/HttpService';
 
 export default function TaskShow() {
   const [task, setTask] = useState(null);
@@ -14,20 +15,10 @@ export default function TaskShow() {
   useEffect(() => {
     // @ts-expect-error TS(2345) FIXME: Argument of type 'string | undefined' is not assig... Remove this comment to see the full error message
     const taskId = parseInt(params.task_id, 10);
-    fetch(`${BACKEND_BASE_URL}/tasks/${taskId}`, {
-      headers: new Headers({
-        Authorization: `Bearer ${HOT_AUTH_TOKEN}`,
-      }),
-    })
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          setTask(result);
-        },
-        (newError) => {
-          console.log(newError);
-        }
-      );
+    HttpService.makeCallToBackend({
+      path: `/tasks/${taskId}`,
+      successCallback: setTask,
+    });
   }, [params.task_id]);
 
   const handleFormSubmit = (event: any) => {
