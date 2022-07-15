@@ -10,12 +10,8 @@ import { Button, Table, Stack, Dropdown } from 'react-bootstrap';
 // @ts-expect-error TS(7016) FIXME: Could not find a declaration file for module 'reac... Remove this comment to see the full error message
 import DatePicker from 'react-datepicker';
 import { format } from 'date-fns';
-import {
-  BACKEND_BASE_URL,
-  PROCESS_STATUSES,
-  DATE_FORMAT,
-  HOT_AUTH_TOKEN,
-} from '../config';
+import { BACKEND_BASE_URL, PROCESS_STATUSES, DATE_FORMAT } from '../config';
+import { HOT_AUTH_TOKEN } from '../services/UserService';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 import { convertDateToSeconds } from '../helpers';
 

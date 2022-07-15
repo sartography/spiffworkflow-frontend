@@ -1,5 +1,6 @@
 import Keycloak from 'keycloak-js';
-import { AUTH_WITH_KEYCLOAK } from '../config';
+
+import { AUTH_WITH_KEYCLOAK, HOST_AND_PORT } from '../config';
 
 const keycloakClient = new Keycloak('/keycloak.json');
 
@@ -61,3 +62,21 @@ const UserService = {
 };
 
 export default UserService;
+
+// FIXME: Clean this up a bit but first figure out if we want to auth with frontend or just use the backend
+let authTokenForEnv =
+  'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOm51bGx9.krsOjlSilPMu_3r7WkkUfKyr-h3HprXr6R4_FXRXz6Y';
+if (HOST_AND_PORT.startsWith('167')) {
+  authTokenForEnv =
+    'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOm51bGx9.8XDyKOmBisGUqtGWwoEHg_Crvp-2YcxTfAFnCb4L6_k';
+}
+if (AUTH_WITH_KEYCLOAK) {
+  authTokenForEnv = UserService.getToken() || '';
+}
+export const HOT_AUTH_TOKEN = authTokenForEnv;
+
+export const STANDARD_HEADERS = {
+  headers: new Headers({
+    Authorization: `Bearer ${HOT_AUTH_TOKEN}`,
+  }),
+};

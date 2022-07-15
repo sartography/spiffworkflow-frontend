@@ -3,7 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Form from '@rjsf/core';
 import { Button } from 'react-bootstrap';
 
-import { BACKEND_BASE_URL, HOT_AUTH_TOKEN } from '../config';
+import { BACKEND_BASE_URL } from '../config';
+import { HOT_AUTH_TOKEN } from '../services/UserService';
 
 export default function TaskShow() {
   const [task, setTask] = useState(null);

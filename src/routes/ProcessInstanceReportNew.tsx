@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { BACKEND_BASE_URL, HOT_AUTH_TOKEN } from '../config';
+import { BACKEND_BASE_URL } from '../config';
+import { HOT_AUTH_TOKEN } from '../services/UserService';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 
 export default function ProcessInstanceReportNew() {

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button, Stack } from 'react-bootstrap';
-import { BACKEND_BASE_URL, HOT_AUTH_TOKEN, STANDARD_HEADERS } from '../config';
+import { BACKEND_BASE_URL } from '../config';
+import { HOT_AUTH_TOKEN, STANDARD_HEADERS } from '../services/UserService';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 
 export default function ProcessModelEdit() {

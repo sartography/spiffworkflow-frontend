@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 
 import { Button, Table } from 'react-bootstrap';
-import { BACKEND_BASE_URL, HOT_AUTH_TOKEN } from '../config';
+import { BACKEND_BASE_URL } from '../config';
+import { HOT_AUTH_TOKEN } from '../services/UserService';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 
 import PaginationForTable, {

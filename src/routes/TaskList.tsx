@@ -5,7 +5,8 @@ import PaginationForTable, {
   DEFAULT_PER_PAGE,
   DEFAULT_PAGE,
 } from '../components/PaginationForTable';
-import { BACKEND_BASE_URL, HOT_AUTH_TOKEN } from '../config';
+import { BACKEND_BASE_URL } from '../config';
+import { HOT_AUTH_TOKEN } from '../services/UserService';
 
 export default function TaskList() {
   const [searchParams] = useSearchParams();

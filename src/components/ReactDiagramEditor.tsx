@@ -40,7 +40,8 @@ import 'bpmn-js-spiffworkflow/app/css/app.css';
 // @ts-expect-error TS(7016) FIXME
 import spiffModdleExtension from 'bpmn-js-spiffworkflow/app/spiffworkflow/moddle/spiffworkflow.json';
 
-import { HOT_AUTH_TOKEN, BACKEND_BASE_URL } from '../config';
+import { BACKEND_BASE_URL } from '../config';
+import { HOT_AUTH_TOKEN } from '../services/UserService';
 
 type OwnProps = {
   processModelId: string;
