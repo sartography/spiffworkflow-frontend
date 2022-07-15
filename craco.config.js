@@ -46,8 +46,6 @@ module.exports = {
   babel: {
     presets: [
       '@babel/preset-env',
-      '@babel/preset-flow',
-
       ['@babel/preset-react', { runtime: 'automatic' }],
       '@babel/preset-typescript',
     ],

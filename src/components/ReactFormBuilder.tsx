@@ -1,5 +1,5 @@
 // @ts-expect-error TS(7016) FIXME
-import { FormBuilder } from '@ginkgo-bioworks/react-json-schema-form-builder/src';
+import { FormBuilder } from '@ginkgo-bioworks/react-json-schema-form-builder';
 
 type OwnProps = {
   schema: string;
@@ -14,6 +14,5 @@ export default function ReactFormBuilder({ schema, uischema }: OwnProps) {
   //   });
   // }}
   // return <main />;
-  // return <FormBuilder schema={schema} uischema={uischema} />;
-  return <FormBuilder schema={schema} />;
+  return <FormBuilder schema={schema} uischema={uischema} />;
 }
