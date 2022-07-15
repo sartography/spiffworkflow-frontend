@@ -4,6 +4,7 @@ import { Button, Stack } from 'react-bootstrap';
 import { BACKEND_BASE_URL } from '../config';
 import { HOT_AUTH_TOKEN, STANDARD_HEADERS } from '../services/UserService';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
+import HttpService from '../services/HttpService';
 
 export default function ProcessGroupEdit() {
   const [displayName, setDisplayName] = useState('');
@@ -12,20 +13,15 @@ export default function ProcessGroupEdit() {
   const [processGroup, setProcessGroup] = useState(null);
 
   useEffect(() => {
-    fetch(
-      `${BACKEND_BASE_URL}/process-groups/${params.process_group_id}`,
-      STANDARD_HEADERS
-    )
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          setProcessGroup(result);
-          setDisplayName(result.display_name);
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
+    const setProcessGroupsFromResult = (result: any) => {
+      setProcessGroup(result);
+      setDisplayName(result.display_name);
+    };
+
+    HttpService.makeCallToBackend({
+      path: `/process-groups/${params.process_group_id}`,
+      successCallback: setProcessGroupsFromResult,
+    });
   }, [params]);
 
   const updateProcessGroup = (event: any) => {

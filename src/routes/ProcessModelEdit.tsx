@@ -14,7 +14,9 @@ export default function ProcessModelEdit() {
   const processModelPath = `process-models/${params.process_group_id}/${params.process_model_id}`;
 
   useEffect(() => {
-    fetch(`${BACKEND_BASE_URL}/${processModelPath}`, STANDARD_HEADERS)
+    fetch(`${BACKEND_BASE_URL}/${processModelPath}`, {
+      headers: new Headers(STANDARD_HEADERS),
+    })
       .then((res) => res.json())
       .then(
         (result) => {

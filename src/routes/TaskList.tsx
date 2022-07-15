@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, Table } from 'react-bootstrap';
 import { Link, useSearchParams } from 'react-router-dom';
 import PaginationForTable, {
   DEFAULT_PER_PAGE,
   DEFAULT_PAGE,
 } from '../components/PaginationForTable';
-import { BACKEND_BASE_URL } from '../config';
-import { HOT_AUTH_TOKEN } from '../services/UserService';
+import HttpService from '../services/HttpService';
 
 export default function TaskList() {
   const [searchParams] = useSearchParams();
@@ -21,24 +20,14 @@ export default function TaskList() {
       searchParams.get('per_page') || DEFAULT_PER_PAGE,
       10
     );
-    fetch(
-      `${BACKEND_BASE_URL}/tasks/my-tasks?per_page=${perPage}&page=${page}`,
-      {
-        headers: new Headers({
-          Authorization: `Bearer ${HOT_AUTH_TOKEN}`,
-        }),
-      }
-    )
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          setTasks(result.results);
-          setPagination(result.pagination);
-        },
-        (newError) => {
-          console.log(newError);
-        }
-      );
+    const setTasksFromResult = (result: any) => {
+      setTasks(result.results);
+      setPagination(result.pagination);
+    };
+    HttpService.makeCallToBackend({
+      path: `/tasks/my-tasks?per_page=${perPage}&page=${page}`,
+      successCallback: setTasksFromResult,
+    });
   }, [searchParams]);
 
   const buildTable = () => {

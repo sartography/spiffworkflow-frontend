@@ -76,7 +76,5 @@ if (AUTH_WITH_KEYCLOAK) {
 export const HOT_AUTH_TOKEN = authTokenForEnv;
 
 export const STANDARD_HEADERS = {
-  headers: new Headers({
-    Authorization: `Bearer ${HOT_AUTH_TOKEN}`,
-  }),
+  Authorization: `Bearer ${HOT_AUTH_TOKEN}`,
 };

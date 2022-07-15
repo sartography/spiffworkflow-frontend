@@ -1,5 +1,6 @@
 import axios from 'axios';
-import UserService from './UserService';
+import { BACKEND_BASE_URL } from '../config';
+import UserService, { STANDARD_HEADERS } from './UserService';
 
 const HttpMethods = {
   GET: 'GET',
@@ -27,10 +28,43 @@ const configure = () => {
 
 const getAxiosClient = () => axiosClient;
 
+type backendCallProps = {
+  path: string;
+  successCallback: Function;
+  httpMethod?: string;
+  extraHeaders?: object;
+};
+
+const makeCallToBackend = ({
+  path,
+  successCallback,
+  httpMethod = 'GET',
+  extraHeaders = {},
+}: backendCallProps) => {
+  const headers = STANDARD_HEADERS;
+  if (extraHeaders) {
+    Object.assign(headers, extraHeaders);
+  }
+  fetch(`${BACKEND_BASE_URL}${path}`, {
+    headers: new Headers(headers),
+    method: httpMethod,
+  })
+    .then((res) => res.json())
+    .then(
+      (result: object) => {
+        successCallback(result);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+};
+
 const HttpService = {
   HttpMethods,
   configure,
   getAxiosClient,
+  makeCallToBackend,
 };
 
 export default HttpService;

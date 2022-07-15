@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Button, Table } from 'react-bootstrap';
-import { BACKEND_BASE_URL } from '../config';
-import { HOT_AUTH_TOKEN } from '../services/UserService';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 import PaginationForTable, {
   DEFAULT_PER_PAGE,
   DEFAULT_PAGE,
 } from '../components/PaginationForTable';
+import HttpService from '../services/HttpService';
 
 // Example process group json
 // {'admin': False, 'display_name': 'Test Workflows', 'display_order': 0, 'id': 'test_process_group'}
@@ -18,6 +17,11 @@ export default function ProcessGroups() {
   const [pagination, setPagination] = useState(null);
 
   useEffect(() => {
+    const setProcessGroupsFromResult = (result: any) => {
+      setProcessGroups(result.results);
+      setPagination(result.pagination);
+    };
+
     // @ts-expect-error TS(2345) FIXME: Argument of type 'string | 1' is not assignable to... Remove this comment to see the full error message
     const page = parseInt(searchParams.get('page') || DEFAULT_PAGE, 10);
     const perPage = parseInt(
@@ -25,24 +29,10 @@ export default function ProcessGroups() {
       searchParams.get('per_page') || DEFAULT_PER_PAGE,
       10
     );
-    fetch(
-      `${BACKEND_BASE_URL}/process-groups?per_page=${perPage}&page=${page}`,
-      {
-        headers: new Headers({
-          Authorization: `Bearer ${HOT_AUTH_TOKEN}`,
-        }),
-      }
-    )
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          setProcessGroups(result.results);
-          setPagination(result.pagination);
-        },
-        (newError) => {
-          console.log(newError);
-        }
-      );
+    HttpService.makeCallToBackend({
+      path: `/process-groups?per_page=${perPage}&page=${page}`,
+      successCallback: setProcessGroupsFromResult,
+    });
   }, [searchParams]);
 
   const buildTable = () => {

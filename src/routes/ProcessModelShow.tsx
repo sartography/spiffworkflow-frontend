@@ -1,92 +1,43 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Button, Stack } from 'react-bootstrap';
-import { BACKEND_BASE_URL } from '../config';
-import { HOT_AUTH_TOKEN } from '../services/UserService';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 import FileInput from '../components/FileInput';
+import HttpService from '../services/HttpService';
 // import ReactFormBuilder from '../components/ReactFormBuilder';
 
 export default function ProcessModelShow() {
   const params = useParams();
 
-  const [processModel, setProcessModel] = useState(null);
+  const [processModel, setProcessModel] = useState({});
   const [processInstanceResult, setProcessInstanceResult] = useState(null);
   const [reloadModel, setReloadModel] = useState(false);
 
   useEffect(() => {
-    fetch(
-      `${BACKEND_BASE_URL}/process-models/${params.process_group_id}/${params.process_model_id}`,
-      {
-        headers: new Headers({
-          Authorization: `Bearer ${HOT_AUTH_TOKEN}`,
-        }),
-      }
-    )
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          setProcessModel(result);
-          setReloadModel(false);
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
+    const processResult = (result: object) => {
+      setProcessModel(result);
+      setReloadModel(false);
+    };
+    HttpService.makeCallToBackend({
+      path: `/process-models/${params.process_group_id}/${params.process_model_id}`,
+      successCallback: processResult,
+    });
   }, [params, reloadModel]);
 
   const processModelRun = (processInstance: any) => {
-    fetch(
-      `${BACKEND_BASE_URL}/process-models/${
-        // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
-        processModel.process_group_id
-      }/${
-        // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
-        processModel.id
-      }/process-instances/${processInstance.id}/run`,
-      {
-        headers: new Headers({
-          Authorization: `Bearer ${HOT_AUTH_TOKEN}`,
-        }),
-        method: 'POST',
-      }
-    )
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          setProcessInstanceResult(result);
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
+    HttpService.makeCallToBackend({
+      path: `/process-models/${params.process_group_id}/${params.process_model_id}/process-instances/${processInstance.id}/run`,
+      successCallback: setProcessInstanceResult,
+      httpMethod: 'POST',
+    });
   };
 
   const processInstanceCreateAndRun = () => {
-    fetch(
-      `${BACKEND_BASE_URL}/process-models/${
-        // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
-        processModel.process_group_id
-      }/${
-        // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
-        processModel.id
-      }`,
-      {
-        headers: new Headers({
-          Authorization: `Bearer ${HOT_AUTH_TOKEN}`,
-        }),
-        method: 'POST',
-      }
-    )
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          processModelRun(result);
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
+    HttpService.makeCallToBackend({
+      path: `/process-models/${params.process_group_id}/${params.process_model_id}`,
+      successCallback: processModelRun,
+      httpMethod: 'POST',
+    });
   };
 
   let processInstanceResultTag = '';
@@ -104,7 +55,7 @@ export default function ProcessModelShow() {
     setReloadModel(true);
   };
 
-  if (processModel) {
+  if (Object.keys(processModel).length > 1) {
     const processModelFilesTag = (processModel as any).files.map(
       (fileBpmn: any) => {
         if (fileBpmn.name.match(/\.(dmn|bpmn)$/)) {

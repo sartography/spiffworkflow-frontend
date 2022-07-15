@@ -40,8 +40,7 @@ import 'bpmn-js-spiffworkflow/app/css/app.css';
 // @ts-expect-error TS(7016) FIXME
 import spiffModdleExtension from 'bpmn-js-spiffworkflow/app/spiffworkflow/moddle/spiffworkflow.json';
 
-import { BACKEND_BASE_URL } from '../config';
-import { HOT_AUTH_TOKEN } from '../services/UserService';
+import HttpService from '../services/HttpService';
 
 type OwnProps = {
   processModelId: string;
@@ -205,18 +204,15 @@ export default function ReactDiagramEditor({
         .catch((err) => handleError(err));
     }
 
+    function setDiagramXMLStringFromResponseJson(result: any) {
+      setDiagramXMLString(result.file_contents);
+    }
+
     function fetchDiagramFromJsonAPI() {
-      fetch(
-        `${BACKEND_BASE_URL}/process-models/${processGroupId}/${processModelId}/file/${fileName}`,
-        {
-          headers: new Headers({
-            Authorization: `Bearer ${HOT_AUTH_TOKEN}`,
-          }),
-        }
-      )
-        .then((response) => response.json())
-        .then((responseJson) => setDiagramXMLString(responseJson.file_contents))
-        .catch((err) => handleError(err));
+      HttpService.makeCallToBackend({
+        path: `/process-models/${processGroupId}/${processModelId}/file/${fileName}`,
+        successCallback: setDiagramXMLStringFromResponseJson,
+      });
     }
 
     const diagramXMLToUse = diagramXML || diagramXMLString;

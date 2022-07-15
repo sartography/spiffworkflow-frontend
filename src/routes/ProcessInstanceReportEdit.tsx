@@ -4,6 +4,7 @@ import { Button } from 'react-bootstrap';
 import { BACKEND_BASE_URL } from '../config';
 import { HOT_AUTH_TOKEN } from '../services/UserService';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
+import HttpService from '../services/HttpService';
 
 type ReportColumn = {
   Header: string;
@@ -25,39 +26,29 @@ export default function ProcessInstanceReportEdit() {
   const [filterBy, setFilterBy] = useState('');
 
   useEffect(() => {
-    function getProcessInstanceReport() {
-      fetch(
-        `${BACKEND_BASE_URL}/process-models/${params.process_group_id}/${params.process_model_id}/process-instances/reports/${params.report_identifier}?per_page=1`,
-        {
-          headers: new Headers({
-            Authorization: `Bearer ${HOT_AUTH_TOKEN}`,
-          }),
-        }
-      )
-        .then((res) => res.json())
-        .then(
-          (result) => {
-            const reportMetadata = result.report_metadata;
-            const columnCsv = reportMetadata.columns
-              .map((column: ReportColumn) => column.accessor)
-              .join(',');
-            setColumns(columnCsv);
+    const processResult = (result: any) => {
+      const reportMetadata = result.report_metadata;
+      const columnCsv = reportMetadata.columns
+        .map((column: ReportColumn) => column.accessor)
+        .join(',');
+      setColumns(columnCsv);
 
-            if (reportMetadata.order_by) {
-              setOrderBy(reportMetadata.order_by.join(','));
-            }
-            const filterByCsv = reportMetadata.filter_by
-              .map(
-                (filterByItem: ReportFilterBy) =>
-                  `${filterByItem.field_name}=${filterByItem.field_value}`
-              )
-              .join(',');
-            setFilterBy(filterByCsv);
-          },
-          (error) => {
-            console.log(error);
-          }
-        );
+      if (reportMetadata.order_by) {
+        setOrderBy(reportMetadata.order_by.join(','));
+      }
+      const filterByCsv = reportMetadata.filter_by
+        .map(
+          (filterByItem: ReportFilterBy) =>
+            `${filterByItem.field_name}=${filterByItem.field_value}`
+        )
+        .join(',');
+      setFilterBy(filterByCsv);
+    };
+    function getProcessInstanceReport() {
+      HttpService.makeCallToBackend({
+        path: `/process-models/${params.process_group_id}/${params.process_model_id}/process-instances/reports/${params.report_identifier}?per_page=1`,
+        successCallback: processResult,
+      });
     }
 
     getProcessInstanceReport();

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import {
   Link,
   useNavigate,
@@ -10,8 +10,7 @@ import { Button, Table, Stack, Dropdown } from 'react-bootstrap';
 // @ts-expect-error TS(7016) FIXME: Could not find a declaration file for module 'reac... Remove this comment to see the full error message
 import DatePicker from 'react-datepicker';
 import { format } from 'date-fns';
-import { BACKEND_BASE_URL, PROCESS_STATUSES, DATE_FORMAT } from '../config';
-import { HOT_AUTH_TOKEN } from '../services/UserService';
+import { PROCESS_STATUSES, DATE_FORMAT } from '../config';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 import { convertDateToSeconds } from '../helpers';
 
@@ -22,6 +21,7 @@ import PaginationForTable, {
 import 'react-datepicker/dist/react-datepicker.css';
 
 import ErrorContext from '../contexts/ErrorContext';
+import HttpService from '../services/HttpService';
 
 export default function ProcessInstanceList() {
   const params = useParams();
@@ -51,6 +51,11 @@ export default function ProcessInstanceList() {
   }, [setStartFrom, setStartTill, setEndFrom, setEndTill]);
 
   useEffect(() => {
+    function setProcessInstancesFromResult(result: any) {
+      const processInstancesFromApi = result.results;
+      setProcessInstances(processInstancesFromApi);
+      setPagination(result.pagination);
+    }
     function getProcessInstances() {
       const page = searchParams.get('page') || DEFAULT_PAGE;
       const perPage = parseInt(
@@ -78,25 +83,10 @@ export default function ProcessInstanceList() {
         setProcessStatus(searchParams.get('process_status'));
       }
 
-      fetch(
-        `${BACKEND_BASE_URL}/process-models/${params.process_group_id}/${params.process_model_id}/process-instances?${queryParamString}`,
-        {
-          headers: new Headers({
-            Authorization: `Bearer ${HOT_AUTH_TOKEN}`,
-          }),
-        }
-      )
-        .then((res) => res.json())
-        .then(
-          (result) => {
-            const processInstancesFromApi = result.results;
-            setProcessInstances(processInstancesFromApi);
-            setPagination(result.pagination);
-          },
-          (error) => {
-            console.log(error);
-          }
-        );
+      HttpService.makeCallToBackend({
+        path: `/process-models/${params.process_group_id}/${params.process_model_id}/process-instances?${queryParamString}`,
+        successCallback: setProcessInstancesFromResult,
+      });
     }
 
     getProcessInstances();
