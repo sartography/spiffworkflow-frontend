@@ -68,7 +68,7 @@ const makeCallToBackend = ({
   });
 
   fetch(`${BACKEND_BASE_URL}${path}`, httpArgs)
-    .then((res) => res.json())
+    .then((response) => response.json())
     .then(
       (result: object) => {
         successCallback(result);
