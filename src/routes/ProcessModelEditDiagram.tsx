@@ -2,8 +2,6 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { Button, Modal } from 'react-bootstrap';
 import Editor from '@monaco-editor/react';
-import { BACKEND_BASE_URL } from '../config';
-import { HOT_AUTH_TOKEN } from '../services/UserService';
 
 import ReactDiagramEditor from '../components/ReactDiagramEditor';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';

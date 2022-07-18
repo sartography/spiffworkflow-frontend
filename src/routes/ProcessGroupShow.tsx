@@ -17,6 +17,14 @@ export default function ProcessGroupShow() {
   const [pagination, setPagination] = useState(null);
 
   useEffect(() => {
+    // @ts-expect-error TS(2345) FIXME: Argument of type 'string | 1' is not assignable to... Remove this comment to see the full error message
+    const page = parseInt(searchParams.get('page') || DEFAULT_PAGE, 10);
+    const perPage = parseInt(
+      // @ts-expect-error TS(2345) FIXME: Argument of type 'string | 50' is not assignable t... Remove this comment to see the full error message
+      searchParams.get('per_page') || DEFAULT_PER_PAGE,
+      10
+    );
+
     const setProcessModelFromResult = (result: any) => {
       setProcessModels(result.results);
       setPagination(result.pagination);
@@ -28,13 +36,6 @@ export default function ProcessGroupShow() {
         successCallback: setProcessModelFromResult,
       });
     };
-    // @ts-expect-error TS(2345) FIXME: Argument of type 'string | 1' is not assignable to... Remove this comment to see the full error message
-    const page = parseInt(searchParams.get('page') || DEFAULT_PAGE, 10);
-    const perPage = parseInt(
-      // @ts-expect-error TS(2345) FIXME: Argument of type 'string | 50' is not assignable t... Remove this comment to see the full error message
-      searchParams.get('per_page') || DEFAULT_PER_PAGE,
-      10
-    );
     HttpService.makeCallToBackend({
       path: `/process-groups/${params.process_group_id}`,
       successCallback: processResult,
