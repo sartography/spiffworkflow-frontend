@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { BACKEND_BASE_URL } from '../config';
+import { objectIsEmpty } from '../helpers';
 import UserService, { STANDARD_HEADERS } from './UserService';
 
 const HttpMethods = {
@@ -33,6 +34,7 @@ type backendCallProps = {
   successCallback: Function;
   httpMethod?: string;
   extraHeaders?: object;
+  postBody?: any;
 };
 
 const makeCallToBackend = ({
@@ -40,15 +42,32 @@ const makeCallToBackend = ({
   successCallback,
   httpMethod = 'GET',
   extraHeaders = {},
+  postBody = {},
 }: backendCallProps) => {
   const headers = STANDARD_HEADERS;
-  if (extraHeaders) {
+  if (!objectIsEmpty(extraHeaders)) {
     Object.assign(headers, extraHeaders);
   }
-  fetch(`${BACKEND_BASE_URL}${path}`, {
+
+  const httpArgs = {};
+
+  if (postBody instanceof FormData) {
+    Object.assign(httpArgs, { body: postBody });
+  } else if (typeof postBody === 'object') {
+    if (!objectIsEmpty(postBody)) {
+      Object.assign(httpArgs, { body: JSON.stringify(postBody) });
+      Object.assign(headers, { 'Content-Type': 'application/json' });
+    }
+  } else {
+    Object.assign(httpArgs, { body: postBody });
+  }
+
+  Object.assign(httpArgs, {
     headers: new Headers(headers),
     method: httpMethod,
-  })
+  });
+
+  fetch(`${BACKEND_BASE_URL}${path}`, httpArgs)
     .then((res) => res.json())
     .then(
       (result: object) => {

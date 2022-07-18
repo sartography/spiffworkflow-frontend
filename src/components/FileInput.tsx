@@ -58,8 +58,7 @@ export default class FileInput extends React.Component<Props> {
         Authorization: `Bearer ${HOT_AUTH_TOKEN}`,
       },
     };
-    axios.post(url, formData, config).then((response) => {
-      console.log(response.data);
+    axios.post(url, formData, config).then((_response) => {
       if (this.onUploadedCallback) {
         this.onUploadedCallback();
       }

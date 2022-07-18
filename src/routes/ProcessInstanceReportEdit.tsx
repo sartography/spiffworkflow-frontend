@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
-import { BACKEND_BASE_URL } from '../config';
-import { HOT_AUTH_TOKEN } from '../services/UserService';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 import HttpService from '../services/HttpService';
 
@@ -24,6 +22,18 @@ export default function ProcessInstanceReportEdit() {
   const [columns, setColumns] = useState('');
   const [orderBy, setOrderBy] = useState('');
   const [filterBy, setFilterBy] = useState('');
+
+  const navigateToProcessInstanceReport = (_result: any) => {
+    navigate(
+      `/admin/process-models/${params.process_group_id}/${params.process_model_id}/process-instances/reports/${params.report_identifier}`
+    );
+  };
+
+  const navigateToProcessInstanceReports = (_result: any) => {
+    navigate(
+      `/admin/process-models/${params.process_group_id}/${params.process_model_id}/process-instances/reports`
+    );
+  };
 
   useEffect(() => {
     const processResult = (result: any) => {
@@ -77,56 +87,26 @@ export default function ProcessInstanceReportEdit() {
       })
       .filter((n) => n);
 
-    fetch(
-      `${BACKEND_BASE_URL}/process-models/${params.process_group_id}/${params.process_model_id}/process-instances/reports/${params.report_identifier}`,
-      {
-        headers: new Headers({
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${HOT_AUTH_TOKEN}`,
-        }),
-        method: 'PUT',
-        body: JSON.stringify({
-          report_metadata: {
-            columns: columnArray,
-            order_by: orderByArray,
-            filter_by: filterByArray,
-          },
-        }),
-      }
-    ).then(
-      () => {
-        navigate(
-          `/admin/process-models/${params.process_group_id}/${params.process_model_id}/process-instances/reports/${params.report_identifier}`
-        );
+    HttpService.makeCallToBackend({
+      path: `/process-models/${params.process_group_id}/${params.process_model_id}/process-instances/reports/${params.report_identifier}`,
+      successCallback: navigateToProcessInstanceReport,
+      httpMethod: 'PUT',
+      postBody: {
+        report_metadata: {
+          columns: columnArray,
+          order_by: orderByArray,
+          filter_by: filterByArray,
+        },
       },
-      // Note: it's important to handle errors here
-      // instead of a catch() block so that we don't swallow
-      // exceptions from actual bugs in components.
-      (newError) => {
-        console.log(newError);
-      }
-    );
+    });
   };
 
   const deleteProcessInstanceReport = () => {
-    fetch(
-      `${BACKEND_BASE_URL}/process-models/${params.process_group_id}/${params.process_model_id}/process-instances/reports/${params.report_identifier}`,
-      {
-        headers: new Headers({
-          Authorization: `Bearer ${HOT_AUTH_TOKEN}`,
-        }),
-        method: 'DELETE',
-      }
-    ).then(
-      () => {
-        navigate(
-          `/admin/process-models/${params.process_group_id}/${params.process_model_id}/process-instances/reports`
-        );
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
+    HttpService.makeCallToBackend({
+      path: `/process-models/${params.process_group_id}/${params.process_model_id}/process-instances/reports/${params.report_identifier}`,
+      successCallback: navigateToProcessInstanceReports,
+      httpMethod: 'DELETE',
+    });
   };
 
   return (

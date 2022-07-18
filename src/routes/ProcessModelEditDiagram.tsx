@@ -33,10 +33,13 @@ export default function ProcessModelEditDiagram() {
       setProcessModelFile(result);
       setBpmnXmlForDiagramRendering(result.file_contents);
     };
-    HttpService.makeCallToBackend({
-      path: `/process-models/${params.process_group_id}/${params.process_model_id}/file/${params.file_name}`,
-      successCallback: processResult,
-    });
+
+    if (params.file_name) {
+      HttpService.makeCallToBackend({
+        path: `/process-models/${params.process_group_id}/${params.process_model_id}/file/${params.file_name}`,
+        successCallback: processResult,
+      });
+    }
   }, [params]);
 
   const handleFileNameCancel = () => {
@@ -44,10 +47,21 @@ export default function ProcessModelEditDiagram() {
     setNewFileName('');
   };
 
+  const navigateToProcessModelFile = (_result: any) => {
+    if (!params.file_name) {
+      const fileNameWithExtension = `${newFileName}.${searchParams.get(
+        'file_type'
+      )}`;
+      navigate(
+        `/admin/process-models/${params.process_group_id}/${params.process_model_id}/file/${fileNameWithExtension}`
+      );
+    }
+  };
+
   const saveDiagram = (bpmnXML: any, fileName = params.file_name) => {
     setBpmnXmlForDiagramRendering(bpmnXML);
 
-    let url = `${BACKEND_BASE_URL}/process-models/${params.process_group_id}/${params.process_model_id}/file`;
+    let url = `/process-models/${params.process_group_id}/${params.process_model_id}/file`;
     let httpMethod = 'PUT';
     let fileNameWithExtension = fileName;
 
@@ -66,24 +80,13 @@ export default function ProcessModelEditDiagram() {
     const formData = new FormData();
     formData.append('file', bpmnFile);
     formData.append('fileName', bpmnFile.name);
-    fetch(url, {
-      headers: new Headers({
-        Authorization: `Bearer ${HOT_AUTH_TOKEN}`,
-      }),
-      method: httpMethod,
-      body: formData,
-    }).then(
-      () => {
-        if (!params.file_name) {
-          navigate(
-            `/admin/process-models/${params.process_group_id}/${params.process_model_id}/file/${fileNameWithExtension}`
-          );
-        }
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
+
+    HttpService.makeCallToBackend({
+      path: url,
+      successCallback: navigateToProcessModelFile,
+      httpMethod,
+      postBody: formData,
+    });
   };
 
   const handleFileNameSave = (event: any) => {

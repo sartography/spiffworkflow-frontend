@@ -31,3 +31,7 @@ export const convertDateToSeconds = (date: any, onChangeFunction: any) => {
 
   return undefined;
 };
+
+export const objectIsEmpty = (obj: object) => {
+  return Object.keys(obj).length === 0;
+};

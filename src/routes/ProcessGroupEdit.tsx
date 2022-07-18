@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button, Stack } from 'react-bootstrap';
-import { BACKEND_BASE_URL } from '../config';
-import { HOT_AUTH_TOKEN, STANDARD_HEADERS } from '../services/UserService';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 import HttpService from '../services/HttpService';
 
@@ -24,50 +22,37 @@ export default function ProcessGroupEdit() {
     });
   }, [params]);
 
+  const navigateToProcessGroup = (_result: any) => {
+    // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
+    navigate(`/admin/process-groups/${processGroup.id}`);
+  };
+
+  const navigateToProcessGroups = (_result: any) => {
+    navigate(`/admin/process-groups`);
+  };
+
   const updateProcessGroup = (event: any) => {
     event.preventDefault();
-
-    // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
-    fetch(`${BACKEND_BASE_URL}/process-groups/${processGroup.id}`, {
-      headers: new Headers({
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${HOT_AUTH_TOKEN}`,
-      }),
-      method: 'PUT',
-      body: JSON.stringify({
+    HttpService.makeCallToBackend({
+      // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
+      path: `/process-groups/${processGroup.id}`,
+      successCallback: navigateToProcessGroup,
+      httpMethod: 'PUT',
+      postBody: {
         display_name: displayName,
         // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
         id: processGroup.id,
-      }),
-    }).then(
-      () => {
-        // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
-        navigate(`/admin/process-groups/${processGroup.id}`);
       },
-      // Note: it's important to handle errors here
-      // instead of a catch() block so that we don't swallow
-      // exceptions from actual bugs in components.
-      (newError) => {
-        console.log(newError);
-      }
-    );
+    });
   };
 
   const deleteProcessGroup = () => {
-    // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
-    fetch(`${BACKEND_BASE_URL}/process-groups/${processGroup.id}`, {
-      headers: new Headers({
-        Authorization: `Bearer ${HOT_AUTH_TOKEN}`,
-      }),
-      method: 'DELETE',
-    }).then(
-      () => {
-        navigate(`/process-groups`);
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
+    HttpService.makeCallToBackend({
+      // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
+      path: `/process-groups/${processGroup.id}`,
+      successCallback: navigateToProcessGroups,
+      httpMethod: 'DELETE',
+    });
   };
 
   const onDisplayNameChanged = (newDisplayName: any) => {

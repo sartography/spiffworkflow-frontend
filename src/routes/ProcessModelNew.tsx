@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { BACKEND_BASE_URL } from '../config';
-import { HOT_AUTH_TOKEN } from '../services/UserService';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 import { slugifyString } from '../helpers';
+import HttpService from '../services/HttpService';
 
 export default function ProcessModelNew() {
   const params = useParams();
@@ -13,16 +12,17 @@ export default function ProcessModelNew() {
   const [displayName, setDisplayName] = useState('');
   const navigate = useNavigate();
 
+  const navigateToNewProcessModel = (_result: any) => {
+    navigate(`/admin/process-models/${params.process_group_id}/${identifier}`);
+  };
+
   const addProcessModel = (event: any) => {
     event.preventDefault();
-
-    fetch(`${BACKEND_BASE_URL}/process-models`, {
-      headers: new Headers({
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${HOT_AUTH_TOKEN}`,
-      }),
-      method: 'POST',
-      body: JSON.stringify({
+    HttpService.makeCallToBackend({
+      path: `/process-models`,
+      successCallback: navigateToNewProcessModel,
+      httpMethod: 'POST',
+      postBody: {
         id: identifier,
         display_name: displayName,
         description: displayName,
@@ -30,20 +30,8 @@ export default function ProcessModelNew() {
         is_master_spec: false,
         standalone: false,
         library: false,
-      }),
-    }).then(
-      () => {
-        navigate(
-          `/admin/process-models/${params.process_group_id}/${identifier}`
-        );
       },
-      // Note: it's important to handle errors here
-      // instead of a catch() block so that we don't swallow
-      // exceptions from actual bugs in components.
-      (newError) => {
-        console.log(newError);
-      }
-    );
+    });
   };
 
   const onDisplayNameChanged = (newDisplayName: any) => {

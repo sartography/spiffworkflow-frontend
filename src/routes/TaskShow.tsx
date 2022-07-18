@@ -3,8 +3,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Form from '@rjsf/core';
 import { Button } from 'react-bootstrap';
 
-import { BACKEND_BASE_URL } from '../config';
-import { HOT_AUTH_TOKEN } from '../services/UserService';
 import HttpService from '../services/HttpService';
 
 export default function TaskShow() {
@@ -21,27 +19,21 @@ export default function TaskShow() {
     });
   }, [params.task_id]);
 
+  const navigateToTasks = (_result: any) => {
+    navigate(`/tasks`);
+  };
+
   const handleFormSubmit = (event: any) => {
-    // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
-    fetch(`${BACKEND_BASE_URL}/tasks/${task.id}/submit`, {
-      headers: new Headers({
-        Authorization: `Bearer ${HOT_AUTH_TOKEN}`,
-        'Content-Type': 'application/json',
-      }),
-      method: 'POST',
-      body: JSON.stringify(event.formData),
-    }).then(
-      () => {
-        navigate('/tasks');
-      },
-      (newError) => {
-        console.log(newError);
-      }
-    );
+    HttpService.makeCallToBackend({
+      // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
+      path: `/tasks/${task.id}/submit`,
+      successCallback: navigateToTasks,
+      httpMethod: 'POST',
+      postBody: event.formData,
+    });
   };
 
   if (task) {
-    // <JSONSchemaForm schema={JSON.parse(task.form_json)} />
     return (
       <main>
         <Button href="/tasks">Go Back</Button>

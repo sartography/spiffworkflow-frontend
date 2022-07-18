@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BACKEND_BASE_URL } from '../config';
-import { HOT_AUTH_TOKEN } from '../services/UserService';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 import { slugifyString } from '../helpers';
+import HttpService from '../services/HttpService';
 
 export default function ProcessGroupNew() {
   const [identifier, setIdentifier] = useState('');
@@ -11,30 +10,21 @@ export default function ProcessGroupNew() {
   const [displayName, setDisplayName] = useState('');
   const navigate = useNavigate();
 
+  const navigateToProcessGroup = (_result: any) => {
+    navigate(`/admin/process-groups/${identifier}`);
+  };
+
   const addProcessGroup = (event: any) => {
     event.preventDefault();
-
-    fetch(`${BACKEND_BASE_URL}/process-groups`, {
-      headers: new Headers({
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${HOT_AUTH_TOKEN}`,
-      }),
-      method: 'POST',
-      body: JSON.stringify({
+    HttpService.makeCallToBackend({
+      path: `/process-groups`,
+      successCallback: navigateToProcessGroup,
+      httpMethod: 'POST',
+      postBody: {
         id: identifier,
         display_name: displayName,
-      }),
-    }).then(
-      () => {
-        navigate(`/admin/process-groups/${identifier}`);
       },
-      // Note: it's important to handle errors here
-      // instead of a catch() block so that we don't swallow
-      // exceptions from actual bugs in components.
-      (newError) => {
-        console.log(newError);
-      }
-    );
+    });
   };
 
   const onDisplayNameChanged = (newDisplayName: any) => {

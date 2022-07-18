@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { BACKEND_BASE_URL } from '../config';
-import { HOT_AUTH_TOKEN } from '../services/UserService';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
+import HttpService from '../services/HttpService';
 
 export default function ProcessInstanceReportNew() {
   const params = useParams();
@@ -12,6 +11,12 @@ export default function ProcessInstanceReportNew() {
   const [columns, setColumns] = useState('');
   const [orderBy, setOrderBy] = useState('');
   const [filterBy, setFilterBy] = useState('');
+
+  const navigateToNewProcessInstance = (_result: any) => {
+    navigate(
+      `/admin/process-models/${params.process_group_id}/${params.process_model_id}/process-instances/reports/${identifier}`
+    );
+  };
 
   const addProcessInstanceReport = (event: any) => {
     event.preventDefault();
@@ -36,36 +41,19 @@ export default function ProcessInstanceReportNew() {
       })
       .filter((n) => n);
 
-    fetch(
-      `${BACKEND_BASE_URL}/process-models/${params.process_group_id}/${params.process_model_id}/process-instances/reports`,
-      {
-        headers: new Headers({
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${HOT_AUTH_TOKEN}`,
-        }),
-        method: 'POST',
-        body: JSON.stringify({
-          identifier,
-          report_metadata: {
-            columns: columnArray,
-            order_by: orderByArray,
-            filter_by: filterByArray,
-          },
-        }),
-      }
-    ).then(
-      () => {
-        navigate(
-          `/admin/process-models/${params.process_group_id}/${params.process_model_id}/process-instances/reports/${identifier}`
-        );
+    HttpService.makeCallToBackend({
+      path: `/process-models/${params.process_group_id}/${params.process_model_id}/process-instances/reports`,
+      successCallback: navigateToNewProcessInstance,
+      httpMethod: 'POST',
+      postBody: {
+        identifier,
+        report_metadata: {
+          columns: columnArray,
+          order_by: orderByArray,
+          filter_by: filterByArray,
+        },
       },
-      // Note: it's important to handle errors here
-      // instead of a catch() block so that we don't swallow
-      // exceptions from actual bugs in components.
-      (newError) => {
-        console.log(newError);
-      }
-    );
+    });
   };
 
   return (
