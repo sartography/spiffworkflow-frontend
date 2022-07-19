@@ -94,4 +94,18 @@ jobs:
         uses: "actions/upload-artifact@v3.0.0"
         with:
           name: spiffworkflow-backend-logs
-          path: "./spiffworkflow-backend/log/*.log"
+
+      #  https://github.com/cypress-io/github-action#artifacts
+      - name: upload_screenshots
+        uses: actions/upload-artifact@v2
+        if: failure() && ${{ github.event_name == 'push' }}
+        with:
+          name: cypress-screenshots
+          path: ./spiffworkflow-frontend/cypress/screenshots
+      # Test run video was always captured, so this action uses "always()" condition
+      - name: upload_videos
+        uses: actions/upload-artifact@v2
+        if: failure() && ${{ github.event_name == 'push' }}
+        with:
+          name: cypress-videos
+          path: ./spiffworkflow-frontend/cypress/videos
