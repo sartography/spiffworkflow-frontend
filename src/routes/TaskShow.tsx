@@ -11,23 +11,25 @@ export default function TaskShow() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // @ts-expect-error TS(2345) FIXME: Argument of type 'string | undefined' is not assig... Remove this comment to see the full error message
-    const taskId = parseInt(params.task_id, 10);
+    const taskId = parseInt(params.task_id || '', 10);
     HttpService.makeCallToBackend({
       path: `/tasks/${taskId}`,
       successCallback: setTask,
     });
   }, [params.task_id]);
 
-  const navigateToTasks = (_result: any) => {
-    navigate(`/tasks`);
+  const processResult = (result: any) => {
+    if (result.ok) {
+      navigate(`/tasks`);
+    } else {
+      navigate(`/tasks/${result.id}`);
+    }
   };
 
   const handleFormSubmit = (event: any) => {
     HttpService.makeCallToBackend({
-      // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
-      path: `/tasks/${task.id}/submit`,
-      successCallback: navigateToTasks,
+      path: `/tasks/${(task as any).id}/submit`,
+      successCallback: processResult,
       httpMethod: 'POST',
       postBody: event.formData,
     });
