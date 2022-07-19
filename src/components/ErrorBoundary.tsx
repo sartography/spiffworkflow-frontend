@@ -13,13 +13,11 @@ class ErrorBoundary extends React.Component<Props, State> {
   }
 
   static getDerivedStateFromError(error: any) {
-    // Update state so the next render will show the fallback UI.
     return { hasError: true, error };
   }
 
   componentDidCatch(error: any, errorInfo: any) {
-    // You can also log the error to an error reporting service
-    console.log('HELLO: ', error, errorInfo);
+    console.log(error, errorInfo);
     if (error.constructor.name === 'AggregateError') {
       console.log(error.message);
       console.log(error.name);
@@ -32,7 +30,6 @@ class ErrorBoundary extends React.Component<Props, State> {
     const { children } = this.props;
 
     if (hasError) {
-      // You can render any custom fallback UI
       return <h1>Something went wrong.</h1>;
     }
 
