@@ -15,6 +15,7 @@ import UserService from '../services/UserService';
 import ProcessInstanceReportList from './ProcessInstanceReportList';
 import ProcessInstanceReportNew from './ProcessInstanceReportNew';
 import ProcessInstanceReportEdit from './ProcessInstanceReportEdit';
+import ReactFormEditor from './ReactFormEditor';
 
 export default function AdminRoutes() {
   if (UserService.hasRole(['admin'])) {
@@ -87,6 +88,10 @@ export default function AdminRoutes() {
         <Route
           path="process-models/:process_group_id/:process_model_id/process-instances/reports/:report_identifier/edit"
           element={<ProcessInstanceReportEdit />}
+        />
+        <Route
+          path="/admin/process-models/:process_group_id/:process_model_id/form/:file_name"
+          element={<ReactFormEditor />}
         />
       </Routes>
     );
