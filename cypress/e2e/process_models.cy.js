@@ -35,14 +35,16 @@ describe('process-models', () => {
     cy.contains(modelId).should('not.exist');
   });
 
-  it('can create new bpmn and dmn files', () => {
+  it('can create new bpmn, dmn, and json files', () => {
     const uuid = () => Cypress._.random(0, 1e6);
     const id = uuid();
     const groupId = 'acceptance-tests-group-one';
     const modelDisplayName = `Test Model 2 ${id}`;
     const modelId = `test-model-2-${id}`;
+
     const bpmnFileName = `bpmn_test_file_${id}`;
     const dmnFileName = `dmn_test_file_${id}`;
+    const jsonFileName = `json_test_file_${id}`;
 
     cy.contains(groupId).click();
     cy.createModel(groupId, modelId, modelDisplayName);
@@ -54,6 +56,7 @@ describe('process-models', () => {
     cy.contains(`Process Model: ${modelId}`);
     cy.contains(`${bpmnFileName}.bpmn`).should('not.exist');
     cy.contains(`${dmnFileName}.dmn`).should('not.exist');
+    cy.contains(`${jsonFileName}.json`).should('not.exist');
 
     // add new bpmn file
     cy.contains('Add New BPMN File').click();
@@ -83,6 +86,19 @@ describe('process-models', () => {
     cy.contains(modelId).click();
     cy.contains(`Process Model: ${modelId}`);
     cy.contains(`${dmnFileName}.dmn`).should('exist');
+
+    // add new json file
+    cy.contains('Add New JSON File').click();
+    cy.contains(/^Process Model File$/);
+    // Some reason, cypress evals json strings so we have to escape it it with '{{}'
+    cy.get('.view-line').type('{{} "test_key": "test_value" }');
+    cy.contains('Save').click();
+    cy.get('input[name=file_name]').type(jsonFileName);
+    cy.contains('Save Changes').click();
+    cy.contains(`Process Model File: ${jsonFileName}`);
+    cy.contains(modelId).click();
+    cy.contains(`Process Model: ${modelId}`);
+    cy.contains(`${jsonFileName}.json`).should('exist');
 
     cy.contains('Edit process model').click();
     cy.contains('Delete process model').click();

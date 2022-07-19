@@ -4,7 +4,6 @@ import { Button, Stack } from 'react-bootstrap';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 import FileInput from '../components/FileInput';
 import HttpService from '../services/HttpService';
-// import ReactFormBuilder from '../components/ReactFormBuilder';
 
 export default function ProcessModelShow() {
   const params = useParams();
@@ -55,31 +54,119 @@ export default function ProcessModelShow() {
     setReloadModel(true);
   };
 
-  if (Object.keys(processModel).length > 1) {
-    const processModelFilesTag = (processModel as any).files.map(
-      (fileBpmn: any) => {
-        if (fileBpmn.name.match(/\.(dmn|bpmn)$/)) {
-          let primarySuffix = '';
-          if (fileBpmn.name === (processModel as any).primary_file_name) {
-            primarySuffix = '- Primary File';
-          }
-          return (
-            <li key={fileBpmn.name}>
-              <Link
-                to={`/admin/process-models/${
-                  (processModel as any).process_group_id
-                }/${(processModel as any).id}/file/${fileBpmn.name}`}
-              >
-                {fileBpmn.name}
-              </Link>
-              {primarySuffix}
-            </li>
-          );
+  const processModelFileList = () => {
+    let constructedTag;
+    const tags = (processModel as any).files.map((processModelFile: any) => {
+      if (processModelFile.name.match(/\.(dmn|bpmn)$/)) {
+        let primarySuffix = '';
+        if (processModelFile.name === (processModel as any).primary_file_name) {
+          primarySuffix = '- Primary File';
         }
-        return <li key={fileBpmn.name}>{fileBpmn.name}</li>;
+        constructedTag = (
+          <li key={processModelFile.name}>
+            <Link
+              to={`/admin/process-models/${
+                (processModel as any).process_group_id
+              }/${(processModel as any).id}/file/${processModelFile.name}`}
+            >
+              {processModelFile.name}
+            </Link>
+            {primarySuffix}
+          </li>
+        );
+      } else if (processModelFile.name.match(/\.(json)$/)) {
+        constructedTag = (
+          <li key={processModelFile.name}>
+            <Link
+              to={`/admin/process-models/${
+                (processModel as any).process_group_id
+              }/${(processModel as any).id}/form/${processModelFile.name}`}
+            >
+              {processModelFile.name}
+            </Link>
+          </li>
+        );
+      } else {
+        constructedTag = (
+          <li key={processModelFile.name}>{processModelFile.name}</li>
+        );
       }
-    );
+      return constructedTag;
+    });
 
+    return <ul>{tags}</ul>;
+  };
+
+  const processInstancesUl = () => {
+    return (
+      <ul>
+        <li>
+          <Link
+            to={`/admin/process-models/${
+              (processModel as any).process_group_id
+            }/${(processModel as any).id}/process-instances`}
+            data-qa="process-instance-list-link"
+          >
+            List
+          </Link>
+        </li>
+        <li>
+          <Link
+            to={`/admin/process-models/${
+              (processModel as any).process_group_id
+            }/${(processModel as any).id}/process-instances/reports`}
+            data-qa="process-instance-reports-link"
+          >
+            Reports
+          </Link>
+        </li>
+      </ul>
+    );
+  };
+
+  const processModelButtons = () => {
+    return (
+      <Stack direction="horizontal" gap={3}>
+        <Button onClick={processInstanceCreateAndRun} variant="primary">
+          Run
+        </Button>
+        <Button
+          href={`/admin/process-models/${
+            (processModel as any).process_group_id
+          }/${(processModel as any).id}/edit`}
+          variant="secondary"
+        >
+          Edit process model
+        </Button>
+        <Button
+          href={`/admin/process-models/${
+            (processModel as any).process_group_id
+          }/${(processModel as any).id}/file?file_type=bpmn`}
+          variant="warning"
+        >
+          Add New BPMN File
+        </Button>
+        <Button
+          href={`/admin/process-models/${
+            (processModel as any).process_group_id
+          }/${(processModel as any).id}/file?file_type=dmn`}
+          variant="success"
+        >
+          Add New DMN File
+        </Button>
+        <Button
+          href={`/admin/process-models/${
+            (processModel as any).process_group_id
+          }/${(processModel as any).id}/form`}
+          variant="info"
+        >
+          Add New JSON File
+        </Button>
+      </Stack>
+    );
+  };
+
+  if (Object.keys(processModel).length > 1) {
     return (
       <main style={{ padding: '1rem 0' }}>
         <ProcessBreadcrumb
@@ -94,66 +181,16 @@ export default function ProcessModelShow() {
           onUploadedCallback={onUploadedCallback}
         />
         <br />
-        <Stack direction="horizontal" gap={3}>
-          <Button onClick={processInstanceCreateAndRun} variant="primary">
-            Run
-          </Button>
-          <Button
-            href={`/admin/process-models/${
-              (processModel as any).process_group_id
-            }/${(processModel as any).id}/edit`}
-            variant="secondary"
-          >
-            Edit process model
-          </Button>
-          <Button
-            href={`/admin/process-models/${
-              (processModel as any).process_group_id
-            }/${(processModel as any).id}/file?file_type=bpmn`}
-            variant="warning"
-          >
-            Add New BPMN File
-          </Button>
-          <Button
-            href={`/admin/process-models/${
-              (processModel as any).process_group_id
-            }/${(processModel as any).id}/file?file_type=dmn`}
-            variant="success"
-          >
-            Add New DMN File
-          </Button>
-        </Stack>
+        {processModelButtons()}
         <br />
         <br />
         <h3>Process Instances</h3>
-        <ul>
-          <li>
-            <Link
-              to={`/admin/process-models/${
-                (processModel as any).process_group_id
-              }/${(processModel as any).id}/process-instances`}
-              data-qa="process-instance-list-link"
-            >
-              List
-            </Link>
-          </li>
-          <li>
-            <Link
-              to={`/admin/process-models/${
-                (processModel as any).process_group_id
-              }/${(processModel as any).id}/process-instances/reports`}
-              data-qa="process-instance-reports-link"
-            >
-              Reports
-            </Link>
-          </li>
-        </ul>
+        {processInstancesUl()}
         <br />
         <br />
         <h3>Files</h3>
-        <ul>{processModelFilesTag}</ul>
+        {processModelFileList()}
       </main>
     );
   }
-  // <ReactFormBuilder schema="" uischema="" />
 }

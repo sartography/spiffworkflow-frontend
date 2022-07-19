@@ -90,7 +90,11 @@ export default function AdminRoutes() {
           element={<ProcessInstanceReportEdit />}
         />
         <Route
-          path="/admin/process-models/:process_group_id/:process_model_id/form/:file_name"
+          path="/process-models/:process_group_id/:process_model_id/form"
+          element={<ReactFormEditor />}
+        />
+        <Route
+          path="/process-models/:process_group_id/:process_model_id/form/:file_name"
           element={<ReactFormEditor />}
         />
       </Routes>
