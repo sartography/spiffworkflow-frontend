@@ -40,6 +40,10 @@ export default function App() {
               <Route path="/admin/*" element={<AdminRoutes />} />
               <Route path="/tasks" element={<TaskList />} />
               <Route path="/tasks/:task_id" element={<TaskShow />} />
+              <Route
+                path="/tasks/:task_id/:process_instance_id"
+                element={<TaskShow />}
+              />
             </Routes>
           </BrowserRouter>
         </ErrorBoundary>
