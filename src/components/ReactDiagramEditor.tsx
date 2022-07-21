@@ -1,6 +1,8 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 // @ts-expect-error TS(7016) FIXME: Could not find a declaration file for module 'bpmn... Remove this comment to see the full error message
 import BpmnModeler from 'bpmn-js/lib/Modeler';
+// @ts-expect-error TS(7016) FIXME: Could not find a declaration file for module 'bpmn... Remove this comment to see the full error message
+import BpmnViewer from 'bpmn-js/lib/Viewer';
 import {
   BpmnPropertiesPanelModule,
   BpmnPropertiesProviderModule,
@@ -40,13 +42,24 @@ import 'bpmn-js-spiffworkflow/app/css/app.css';
 // @ts-expect-error TS(7016) FIXME
 import spiffModdleExtension from 'bpmn-js-spiffworkflow/app/spiffworkflow/moddle/spiffworkflow.json';
 
+// @ts-expect-error TS(7016) FIXME
+import KeyboardMoveModule from 'diagram-js/lib/navigation/keyboard-move';
+// @ts-expect-error TS(7016) FIXME
+import MoveCanvasModule from 'diagram-js/lib/navigation/movecanvas';
+// @ts-expect-error TS(7016) FIXME
+import TouchModule from 'diagram-js/lib/navigation/touch';
+// @ts-expect-error TS(7016) FIXME
+import ZoomScrollModule from 'diagram-js/lib/navigation/zoomscroll';
+
 import HttpService from '../services/HttpService';
 
 type OwnProps = {
   processModelId: string;
   processGroupId: string;
-  saveDiagram: (..._args: any[]) => any;
   diagramType: string;
+  activeTaskBpmnId?: string | null;
+  completedTasksBpmnIds?: string[] | null;
+  saveDiagram?: (..._args: any[]) => any;
   diagramXML?: string;
   fileName?: string;
   onLaunchScriptEditor?: (..._args: any[]) => any;
@@ -57,8 +70,10 @@ type OwnProps = {
 export default function ReactDiagramEditor({
   processModelId,
   processGroupId,
-  saveDiagram,
   diagramType,
+  activeTaskBpmnId,
+  completedTasksBpmnIds,
+  saveDiagram,
   diagramXML,
   fileName,
   onLaunchScriptEditor,
@@ -79,10 +94,15 @@ export default function ReactDiagramEditor({
     document.getElementById('diagram-container').innerHTML = '';
     const temp = document.createElement('template');
 
+    let canvasClass = 'diagram-editor-canvas';
+    if (diagramType === 'readonly') {
+      canvasClass = 'diagram-viewer-canvas';
+    }
+
     temp.innerHTML = `
       <div class="content with-diagram" id="js-drop-zone">
-        <div class="canvas" id="canvas"
-                            style="border:1px solid #000000; height:90vh; width:90vw; margin:auto;"></div>
+        <div class="canvas ${canvasClass}" id="canvas"
+                            ></div>
         <div class="properties-panel-parent" id="js-properties-panel"></div>
       </div>
     `;
@@ -126,6 +146,22 @@ export default function ReactDiagramEditor({
             DmnPropertiesProviderModule,
           ],
         },
+      });
+    } else if (diagramType === 'readonly') {
+      diagramModeler = new BpmnViewer({
+        container: '#canvas',
+        keyboard: {
+          bindTo: document,
+        },
+
+        // taken from the non-modeling components at
+        //  bpmn-js/lib/Modeler.js
+        additionalModules: [
+          KeyboardMoveModule,
+          MoveCanvasModule,
+          TouchModule,
+          ZoomScrollModule,
+        ],
       });
     }
 
@@ -174,13 +210,26 @@ export default function ReactDiagramEditor({
         modeler = diagramModelerState.getActiveViewer();
       }
 
+      const canvas = (modeler as any).get('canvas');
+
       // only get the canvas if the dmn active viewer is actually
       // a Modeler and not an Editor which is what it will when we are
       // actively editing a decision table
       // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
       if (modeler.constructor.name === 'Modeler') {
-        // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
-        modeler.get('canvas').zoom('fit-viewport');
+        canvas.zoom('fit-viewport');
+      }
+
+      // highlighting a field
+      // Option 3 at:
+      //  https://github.com/bpmn-io/bpmn-js-examples/tree/master/colors
+      if (activeTaskBpmnId) {
+        canvas.addMarker(activeTaskBpmnId, 'active-task-highlight');
+      }
+      if (completedTasksBpmnIds) {
+        completedTasksBpmnIds.forEach((completedTaskBpmnId) => {
+          canvas.addMarker(completedTaskBpmnId, 'completed-task-highlight');
+        });
       }
     }
 
@@ -221,6 +270,7 @@ export default function ReactDiagramEditor({
         setDiagramXMLString(diagramXMLToUse);
       }
       displayDiagram(diagramModelerState, diagramXMLToUse);
+
       return undefined;
     }
 
@@ -249,6 +299,7 @@ export default function ReactDiagramEditor({
     diagramType,
     diagramXML,
     diagramXMLString,
+    activeTaskBpmnId,
     fileName,
     performingXmlUpdates,
     processGroupId,
@@ -257,17 +308,23 @@ export default function ReactDiagramEditor({
   ]);
 
   function handleSave() {
-    // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
-    diagramModelerState.saveXML({ format: true }).then((xmlObject: any) => {
-      saveDiagram(xmlObject.xml);
-    });
+    if (saveDiagram) {
+      // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
+      diagramModelerState.saveXML({ format: true }).then((xmlObject: any) => {
+        saveDiagram(xmlObject.xml);
+      });
+    }
   }
 
-  return (
-    <div>
-      <Button onClick={handleSave} variant="danger">
-        Save
-      </Button>
-    </div>
-  );
+  const saveButton = () => {
+    if (diagramType !== 'readonly') {
+      return (
+        <Button onClick={handleSave} variant="danger">
+          Save
+        </Button>
+      );
+    }
+  };
+
+  return <div>{saveButton()}</div>;
 }

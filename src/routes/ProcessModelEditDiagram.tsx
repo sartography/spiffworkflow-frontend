@@ -177,8 +177,8 @@ export default function ProcessModelEditDiagram() {
     if (isDmn()) {
       return (
         <ReactDiagramEditor
-          process_model_id={params.process_model_id}
-          process_group_id={params.process_group_id}
+          processModelId={params.process_model_id || ''}
+          processGroupId={params.process_group_id || ''}
           saveDiagram={saveDiagram}
           // @ts-expect-error TS(2322) FIXME: Type 'null' is not assignable to type 'string | un... Remove this comment to see the full error message
           diagramXML={bpmnXmlForDiagramRendering}
@@ -189,8 +189,8 @@ export default function ProcessModelEditDiagram() {
     }
     return (
       <ReactDiagramEditor
-        process_model_id={params.process_model_id}
-        process_group_id={params.process_group_id}
+        processModelId={params.process_model_id || ''}
+        processGroupId={params.process_group_id || ''}
         saveDiagram={saveDiagram}
         // @ts-expect-error TS(2322) FIXME: Type 'null' is not assignable to type 'string | un... Remove this comment to see the full error message
         diagramXML={bpmnXmlForDiagramRendering}
