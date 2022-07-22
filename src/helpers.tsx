@@ -32,12 +32,15 @@ export const convertDateToSeconds = (date: any, onChangeFunction: any) => {
     return dateInSeconds;
   }
 
-  return undefined;
+  return null;
 };
 
 export const convertSecondsToFormattedDate = (seconds: number) => {
-  const startDate = new Date(seconds * 1000);
-  return format(startDate, DATE_FORMAT);
+  if (seconds) {
+    const startDate = new Date(seconds * 1000);
+    return format(startDate, DATE_FORMAT);
+  }
+  return null;
 };
 
 export const objectIsEmpty = (obj: object) => {

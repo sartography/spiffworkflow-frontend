@@ -267,18 +267,10 @@ export default function ProcessInstanceList() {
 
   const buildTable = () => {
     const rows = processInstances.map((row) => {
-      let formattedStartDate = '-';
-      if ((row as any).start_in_seconds) {
-        formattedStartDate = convertSecondsToFormattedDate(
-          (row as any).start_in_seconds
-        );
-      }
-      let formattedEndDate = '-';
-      if ((row as any).end_in_seconds) {
-        formattedEndDate = convertSecondsToFormattedDate(
-          (row as any).end_in_seconds
-        );
-      }
+      const formattedStartDate =
+        convertSecondsToFormattedDate((row as any).start_in_seconds) || '-';
+      const formattedEndDate =
+        convertSecondsToFormattedDate((row as any).end_in_seconds) || '-';
 
       return (
         <tr key={(row as any).id}>

@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Button } from 'react-bootstrap';
+import { Button, Stack } from 'react-bootstrap';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 import HttpService from '../services/HttpService';
 import ReactDiagramEditor from '../components/ReactDiagramEditor';
+import { convertSecondsToFormattedDate } from '../helpers';
 
 export default function ProcessInstanceShow() {
   const navigate = useNavigate();
@@ -32,9 +33,7 @@ export default function ProcessInstanceShow() {
     });
   };
 
-  const getActiveTaskBpmnId = (
-    processInstanceToUse: any
-  ): [string, any] | null => {
+  const getActiveTask = (processInstanceToUse: any): any | null => {
     if (
       processInstanceToUse.bpmn_json &&
       processInstanceToUse.spiffworkflow_active_task_id
@@ -44,7 +43,7 @@ export default function ProcessInstanceShow() {
       ];
 
       if (activeTask) {
-        return [activeTask.task_spec, activeTask.data];
+        return activeTask;
       }
     }
     return null;
@@ -74,15 +73,54 @@ export default function ProcessInstanceShow() {
     return null;
   };
 
+  const getInfoTag = (processInstanceToUse: any, activeTask: any) => {
+    let activeTaskBpmnId;
+    if (activeTask) {
+      activeTaskBpmnId = activeTask.task_spec;
+    }
+
+    const currentEndDate = convertSecondsToFormattedDate(
+      processInstanceToUse.end_in_seconds
+    );
+    let currentEndDateTag;
+    if (currentEndDate) {
+      currentEndDateTag = (
+        <li>
+          Completed:{' '}
+          {convertSecondsToFormattedDate(processInstanceToUse.end_in_seconds) ||
+            'N/A'}
+        </li>
+      );
+    }
+
+    let currentTaskTag;
+    if (activeTaskBpmnId) {
+      currentTaskTag = <li>Current Task: {activeTaskBpmnId}</li>;
+    }
+
+    return (
+      <ul>
+        <li>
+          Started:{' '}
+          {convertSecondsToFormattedDate(processInstanceToUse.start_in_seconds)}
+        </li>
+        {currentEndDateTag}
+        {currentTaskTag}
+        <li>Status: {processInstanceToUse.status}</li>
+      </ul>
+    );
+  };
+
   if (processInstance) {
     const processInstanceToUse = processInstance as any;
-    const result = getActiveTaskBpmnId(processInstanceToUse);
-
+    const activeTask = getActiveTask(processInstanceToUse);
     let activeTaskBpmnId;
     let activeTaskData;
-    if (result) {
-      [activeTaskBpmnId, activeTaskData] = result;
+    if (activeTask) {
+      activeTaskBpmnId = activeTask.task_spec;
+      activeTaskData = activeTask.data;
     }
+
     const completedTasksBpmnIds =
       getCompletedTasksBpmnIds(processInstanceToUse);
 
@@ -96,10 +134,13 @@ export default function ProcessInstanceShow() {
           // @ts-expect-error TS(2322) FIXME: Type 'string' is not assignable to type 'boolean |... Remove this comment to see the full error message
           linkProcessModel="true"
         />
-        <h2>Process Instance Id: {processInstanceToUse.id}</h2>
-        <Button onClick={deleteProcessInstance} variant="danger">
-          Delete process instance
-        </Button>
+        <Stack direction="horizontal" gap={3}>
+          <h2>Process Instance Id: {processInstanceToUse.id}</h2>
+          <Button onClick={deleteProcessInstance} variant="danger">
+            Delete process instance
+          </Button>
+        </Stack>
+        {getInfoTag(processInstanceToUse, activeTask)}
         <h2>Data</h2>
         <div>
           <pre>{JSON.stringify(taskData, null, 2)}</pre>
