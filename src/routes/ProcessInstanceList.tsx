@@ -9,10 +9,12 @@ import {
 import { Button, Table, Stack, Dropdown } from 'react-bootstrap';
 // @ts-expect-error TS(7016) FIXME: Could not find a declaration file for module 'reac... Remove this comment to see the full error message
 import DatePicker from 'react-datepicker';
-import { format } from 'date-fns';
 import { PROCESS_STATUSES, DATE_FORMAT } from '../config';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
-import { convertDateToSeconds } from '../helpers';
+import {
+  convertDateToSeconds,
+  convertSecondsToFormattedDate,
+} from '../helpers';
 
 import PaginationForTable, {
   DEFAULT_PER_PAGE,
@@ -267,13 +269,15 @@ export default function ProcessInstanceList() {
     const rows = processInstances.map((row) => {
       let formattedStartDate = '-';
       if ((row as any).start_in_seconds) {
-        const startDate = new Date((row as any).start_in_seconds * 1000);
-        formattedStartDate = format(startDate, DATE_FORMAT);
+        formattedStartDate = convertSecondsToFormattedDate(
+          (row as any).start_in_seconds
+        );
       }
       let formattedEndDate = '-';
       if ((row as any).end_in_seconds) {
-        const endDate = new Date((row as any).end_in_seconds * 1000);
-        formattedEndDate = format(endDate, DATE_FORMAT);
+        formattedEndDate = convertSecondsToFormattedDate(
+          (row as any).end_in_seconds
+        );
       }
 
       return (

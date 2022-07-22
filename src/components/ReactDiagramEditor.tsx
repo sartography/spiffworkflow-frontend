@@ -300,6 +300,7 @@ export default function ReactDiagramEditor({
     diagramXML,
     diagramXMLString,
     activeTaskBpmnId,
+    completedTasksBpmnIds,
     fileName,
     performingXmlUpdates,
     processGroupId,
@@ -324,6 +325,7 @@ export default function ReactDiagramEditor({
         </Button>
       );
     }
+    return null;
   };
 
   return <div>{saveButton()}</div>;
