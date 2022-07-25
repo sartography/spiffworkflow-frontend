@@ -11,6 +11,7 @@ export default function ProcessInstanceShow() {
   const params = useParams();
 
   const [processInstance, setProcessInstance] = useState(null);
+  const [tasks, setTasks] = useState(null);
 
   const navigateToProcessInstances = (_result: any) => {
     navigate(
@@ -23,6 +24,10 @@ export default function ProcessInstanceShow() {
       path: `/process-models/${params.process_group_id}/${params.process_model_id}/process-instances/${params.process_instance_id}`,
       successCallback: setProcessInstance,
     });
+    HttpService.makeCallToBackend({
+      path: `/process-instance/${params.process_instance_id}/tasks?all_tasks=true`,
+      successCallback: setTasks,
+    });
   }, [params]);
 
   const deleteProcessInstance = () => {
@@ -33,52 +38,37 @@ export default function ProcessInstanceShow() {
     });
   };
 
-  const getActiveTask = (processInstanceToUse: any): any | null => {
-    if (
-      processInstanceToUse.bpmn_json &&
-      processInstanceToUse.spiffworkflow_active_task_id
-    ) {
-      const activeTask = JSON.parse(processInstanceToUse.bpmn_json).tasks[
-        processInstanceToUse.spiffworkflow_active_task_id
-      ];
-
-      if (activeTask) {
-        return activeTask;
-      }
+  const getTaskIds = () => {
+    const taskIds = { completed: [], active: [] };
+    if (tasks) {
+      (tasks as any).forEach(function getUserTasksElement(task: any) {
+        if (task.state === 'COMPLETED') {
+          (taskIds.completed as any).push(task.name);
+        }
+        if (task.state === 'READY') {
+          (taskIds.active as any).push(task.name);
+        }
+      });
     }
-    return null;
+    return taskIds;
   };
 
-  const getCompletedTasksBpmnIds = (
-    processInstanceToUse: any
-  ): string[] | null => {
-    const taskSpecsThatCannotBeHighlighted = ['Root', 'Start', 'End'];
-
-    if (processInstanceToUse.bpmn_json) {
-      const { tasks } = JSON.parse(processInstanceToUse.bpmn_json);
-      return Object.keys(tasks)
-        .map((spiffworkflowTaskId: any) => {
-          const taskProps = tasks[spiffworkflowTaskId];
-          if (
-            taskProps.state === 32 &&
-            !taskSpecsThatCannotBeHighlighted.includes(taskProps.task_spec) &&
-            !taskProps.task_spec.match(/EndJoin/)
-          ) {
-            return taskProps.task_spec;
-          }
-          return null;
-        })
-        .filter((n) => n);
+  const getTaskData = () => {
+    let taskData = null;
+    if (tasks) {
+      (tasks as any).forEach(function getUserTasksElement(task: any) {
+        if (task.state === 'COMPLETED') {
+          taskData = task.data;
+        }
+        if (task.state === 'READY') {
+          taskData = task.data;
+        }
+      });
     }
-    return null;
+    return taskData;
   };
 
-  const getInfoTag = (processInstanceToUse: any, activeTask: any) => {
-    let activeTaskBpmnId;
-    if (activeTask) {
-      activeTaskBpmnId = activeTask.task_spec;
-    }
-
+  const getInfoTag = (processInstanceToUse: any) => {
     const currentEndDate = convertSecondsToFormattedDate(
       processInstanceToUse.end_in_seconds
     );
@@ -93,11 +83,6 @@ export default function ProcessInstanceShow() {
       );
     }
 
-    let currentTaskTag;
-    if (activeTaskBpmnId) {
-      currentTaskTag = <li>Current Task: {activeTaskBpmnId}</li>;
-    }
-
     return (
       <ul>
         <li>
@@ -105,7 +90,6 @@ export default function ProcessInstanceShow() {
           {convertSecondsToFormattedDate(processInstanceToUse.start_in_seconds)}
         </li>
         {currentEndDateTag}
-        {currentTaskTag}
         <li>Status: {processInstanceToUse.status}</li>
       </ul>
     );
@@ -113,18 +97,8 @@ export default function ProcessInstanceShow() {
 
   if (processInstance) {
     const processInstanceToUse = processInstance as any;
-    const activeTask = getActiveTask(processInstanceToUse);
-    let activeTaskBpmnId;
-    let activeTaskData;
-    if (activeTask) {
-      activeTaskBpmnId = activeTask.task_spec;
-      activeTaskData = activeTask.data;
-    }
-
-    const completedTasksBpmnIds =
-      getCompletedTasksBpmnIds(processInstanceToUse);
-
-    const taskData = activeTaskData || processInstanceToUse.data;
+    const taskData = getTaskData();
+    const taskIds = getTaskIds();
 
     return (
       <main style={{ padding: '1rem 0' }}>
@@ -140,7 +114,7 @@ export default function ProcessInstanceShow() {
             Delete process instance
           </Button>
         </Stack>
-        {getInfoTag(processInstanceToUse, activeTask)}
+        {getInfoTag(processInstanceToUse)}
         <h2>Data</h2>
         <div>
           <pre>{JSON.stringify(taskData, null, 2)}</pre>
@@ -150,8 +124,8 @@ export default function ProcessInstanceShow() {
           processGroupId={params.process_group_id || ''}
           diagramXML={processInstanceToUse.bpmn_xml_file_contents || ''}
           fileName={processInstanceToUse.bpmn_xml_file_contents || ''}
-          activeTaskBpmnId={activeTaskBpmnId}
-          completedTasksBpmnIds={completedTasksBpmnIds}
+          activeTaskBpmnIds={taskIds.active}
+          completedTasksBpmnIds={taskIds.completed}
           diagramType="readonly"
         />
 

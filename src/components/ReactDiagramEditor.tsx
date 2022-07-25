@@ -57,7 +57,7 @@ type OwnProps = {
   processModelId: string;
   processGroupId: string;
   diagramType: string;
-  activeTaskBpmnId?: string | null;
+  activeTaskBpmnIds?: string[] | null;
   completedTasksBpmnIds?: string[] | null;
   saveDiagram?: (..._args: any[]) => any;
   diagramXML?: string;
@@ -71,7 +71,7 @@ export default function ReactDiagramEditor({
   processModelId,
   processGroupId,
   diagramType,
-  activeTaskBpmnId,
+  activeTaskBpmnIds,
   completedTasksBpmnIds,
   saveDiagram,
   diagramXML,
@@ -185,6 +185,9 @@ export default function ReactDiagramEditor({
   }, [diagramModelerState, diagramType, onLaunchScriptEditor]);
 
   useEffect(() => {
+    // These seem to be system tasks that cannot be highlighted
+    const taskSpecsThatCannotBeHighlighted = ['Root', 'Start', 'End'];
+
     if (!diagramModelerState) {
       return undefined;
     }
@@ -223,12 +226,19 @@ export default function ReactDiagramEditor({
       // highlighting a field
       // Option 3 at:
       //  https://github.com/bpmn-io/bpmn-js-examples/tree/master/colors
-      if (activeTaskBpmnId) {
-        canvas.addMarker(activeTaskBpmnId, 'active-task-highlight');
+      if (activeTaskBpmnIds) {
+        activeTaskBpmnIds.forEach((activeTaskBpmnId) => {
+          canvas.addMarker(activeTaskBpmnId, 'active-task-highlight');
+        });
       }
       if (completedTasksBpmnIds) {
         completedTasksBpmnIds.forEach((completedTaskBpmnId) => {
-          canvas.addMarker(completedTaskBpmnId, 'completed-task-highlight');
+          if (
+            !taskSpecsThatCannotBeHighlighted.includes(completedTaskBpmnId) &&
+            !completedTaskBpmnId.match(/EndJoin/)
+          ) {
+            canvas.addMarker(completedTaskBpmnId, 'completed-task-highlight');
+          }
         });
       }
     }
@@ -299,7 +309,7 @@ export default function ReactDiagramEditor({
     diagramType,
     diagramXML,
     diagramXMLString,
-    activeTaskBpmnId,
+    activeTaskBpmnIds,
     completedTasksBpmnIds,
     fileName,
     performingXmlUpdates,
