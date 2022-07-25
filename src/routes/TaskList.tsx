@@ -13,11 +13,12 @@ export default function TaskList() {
   const [pagination, setPagination] = useState(null);
 
   useEffect(() => {
-    // @ts-expect-error TS(2345) FIXME: Argument of type 'string | 1' is not assignable to... Remove this comment to see the full error message
-    const page = parseInt(searchParams.get('page') || DEFAULT_PAGE, 10);
+    const page = parseInt(
+      searchParams.get('page') || DEFAULT_PAGE.toString(),
+      10
+    );
     const perPage = parseInt(
-      // @ts-expect-error TS(2345) FIXME: Argument of type 'string | 50' is not assignable t... Remove this comment to see the full error message
-      searchParams.get('per_page') || DEFAULT_PER_PAGE,
+      searchParams.get('per_page') || DEFAULT_PER_PAGE.toString(),
       10
     );
     const setTasksFromResult = (result: any) => {
@@ -25,22 +26,24 @@ export default function TaskList() {
       setPagination(result.pagination);
     };
     HttpService.makeCallToBackend({
-      path: `/tasks/my-tasks?per_page=${perPage}&page=${page}`,
+      path: `/tasks?per_page=${perPage}&page=${page}`,
       successCallback: setTasksFromResult,
     });
   }, [searchParams]);
 
   const buildTable = () => {
     const rows = tasks.map((row) => {
+      const rowToUse = row as any;
+      const taskUrl = `/tasks/${rowToUse.process_instance_id}/${rowToUse.id}`;
       return (
-        <tr key={(row as any).id}>
+        <tr key={rowToUse.id}>
           <td>
-            <Link to={`/tasks/${(row as any).id}`}>{(row as any).id}</Link>
+            <Link to={taskUrl}>{rowToUse.id}</Link>
           </td>
-          <td>{(row as any).process_instance_id}</td>
-          <td>{(row as any).status}</td>
+          <td>{rowToUse.process_instance_id}</td>
+          <td>{rowToUse.state}</td>
           <td>
-            <Button variant="primary" href={`/tasks/${(row as any).id}`}>
+            <Button variant="primary" href={taskUrl}>
               Start
             </Button>
           </td>
@@ -64,12 +67,13 @@ export default function TaskList() {
 
   if (pagination) {
     const perPage = parseInt(
-      // @ts-expect-error TS(2345) FIXME: Argument of type 'string | 50' is not assignable t... Remove this comment to see the full error message
-      searchParams.get('per_page') || DEFAULT_PER_PAGE,
+      searchParams.get('per_page') || DEFAULT_PER_PAGE.toString(),
       10
     );
-    // @ts-expect-error TS(2345) FIXME: Argument of type 'string | 1' is not assignable to... Remove this comment to see the full error message
-    const page = parseInt(searchParams.get('page') || DEFAULT_PAGE, 10);
+    const page = parseInt(
+      searchParams.get('page') || DEFAULT_PAGE.toString(),
+      10
+    );
     return (
       <main>
         <h2>Tasks</h2>
