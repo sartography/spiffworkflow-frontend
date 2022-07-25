@@ -39,9 +39,12 @@ export default function App() {
               <Route path="/" element={<TaskList />} />
               <Route path="/admin/*" element={<AdminRoutes />} />
               <Route path="/tasks" element={<TaskList />} />
-              <Route path="/tasks/:task_id" element={<TaskShow />} />
               <Route
-                path="/tasks/:task_id/:process_instance_id"
+                path="/tasks/:process_instance_id/:task_id"
+                element={<TaskShow />}
+              />
+              <Route
+                path="/tasks/:process_instance_id/:task_id"
                 element={<TaskShow />}
               />
             </Routes>
