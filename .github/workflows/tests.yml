@@ -94,6 +94,7 @@ jobs:
         uses: "actions/upload-artifact@v3.0.0"
         with:
           name: spiffworkflow-backend-logs
+          path: "./spiffworkflow-backend/log/*.log"
 
       #  https://github.com/cypress-io/github-action#artifacts
       - name: upload_screenshots
