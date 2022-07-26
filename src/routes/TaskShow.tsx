@@ -62,7 +62,7 @@ export default function TaskShow() {
           return <span style={{ color: 'red' }}>{userTask.name}</span>;
         }
         if (userTask.state === 'READY') {
-          return <Link to={taskUrl}>{userTask.name}</Link>;
+          return <Link to={taskUrl}>{userTask.name} - Current</Link>;
         }
         return null;
       });
