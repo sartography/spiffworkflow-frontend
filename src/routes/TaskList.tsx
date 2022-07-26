@@ -44,7 +44,7 @@ export default function TaskList() {
           <td>{rowToUse.state}</td>
           <td>
             <Button variant="primary" href={taskUrl}>
-              Start
+              Complete {rowToUse.name}
             </Button>
           </td>
         </tr>
