@@ -1,3 +1,6 @@
+import { format } from 'date-fns';
+import { DATE_FORMAT } from './config';
+
 // https://www.30secondsofcode.org/js/s/slugify
 export const slugifyString = (str: any) => {
   return str
@@ -29,7 +32,15 @@ export const convertDateToSeconds = (date: any, onChangeFunction: any) => {
     return dateInSeconds;
   }
 
-  return undefined;
+  return null;
+};
+
+export const convertSecondsToFormattedDate = (seconds: number) => {
+  if (seconds) {
+    const startDate = new Date(seconds * 1000);
+    return format(startDate, DATE_FORMAT);
+  }
+  return null;
 };
 
 export const objectIsEmpty = (obj: object) => {
