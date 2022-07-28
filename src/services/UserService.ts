@@ -41,8 +41,8 @@ const getUsername = () => 'tmpuser';
 // and then could use useSearchParams here instead
 const getAuthTokenFromParams = () => {
   const queryParams = window.location.search;
-  const accessTokenMatch = queryParams.match(/.*\baccess_token=([^=]+).*/);
-  const idTokenMatch = queryParams.match(/.*\bid_token=([^=]+).*/);
+  const accessTokenMatch = queryParams.match(/.*\baccess_token=([^&]+).*/);
+  const idTokenMatch = queryParams.match(/.*\bid_token=([^&]+).*/);
   if (accessTokenMatch) {
     const accessToken = accessTokenMatch[1];
     localStorage.setItem('jwtAccessToken', accessToken);
