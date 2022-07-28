@@ -65,8 +65,7 @@ const makeCallToBackend = ({
 
   fetch(`${BACKEND_BASE_URL}${path}`, httpArgs)
     .then((response) => {
-      // if (response.status === 401) {
-      if (response.status !== 200) {
+      if (response.status === 401) {
         UserService.doLogin();
         throw new UnauthenticatedError('You must be authenticated to do this.');
       }

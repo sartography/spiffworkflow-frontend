@@ -56,6 +56,9 @@ export default function ProcessInstanceShow() {
   const getTaskData = () => {
     let taskData = null;
     if (tasks) {
+      // FIXME: The READY task should be the last in the task list so should contain the data we want
+      // this may not be accurate though if there are parallell tasks and such so we'll probably need
+      // a better way to find the most recent task data at some point
       (tasks as any).forEach(function getUserTasksElement(task: any) {
         if (task.state === 'COMPLETED') {
           taskData = task.data;

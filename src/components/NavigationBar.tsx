@@ -34,34 +34,33 @@ export default function NavigationBar() {
   };
 
   const loginLink = () => {
-    return (
-      <Navbar.Collapse className="justify-content-end">
-        <Navbar.Text>
-          <Button variant="link" onClick={handleLogin}>
-            Login
-          </Button>
-        </Navbar.Text>
-      </Navbar.Collapse>
-    );
+    if (!UserService.isLoggedIn()) {
+      return (
+        <Navbar.Collapse className="justify-content-end">
+          <Navbar.Text>
+            <Button variant="link" onClick={handleLogin}>
+              Login
+            </Button>
+          </Navbar.Text>
+        </Navbar.Collapse>
+      );
+    }
+    return null;
   };
 
   const logoutLink = () => {
     if (UserService.isLoggedIn()) {
       return (
-        <>
-          <Navbar.Collapse className="justify-content-end">
-            <Navbar.Text>
-              Signed in as: <strong>{UserService.getUsername()}</strong>
-            </Navbar.Text>
-          </Navbar.Collapse>
-          <Navbar.Collapse className="justify-content-end">
-            <Navbar.Text>
-              <Button variant="link" onClick={handleLogout}>
-                Logout
-              </Button>
-            </Navbar.Text>
-          </Navbar.Collapse>
-        </>
+        <Navbar.Collapse className="justify-content-end">
+          <Navbar.Text>
+            Signed in as: <strong>{UserService.getUsername()}</strong>
+          </Navbar.Text>
+          <Navbar.Text>
+            <Button variant="link" onClick={handleLogout}>
+              Logout
+            </Button>
+          </Navbar.Text>
+        </Navbar.Collapse>
       );
     }
     return null;
