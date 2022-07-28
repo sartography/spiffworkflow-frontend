@@ -5,18 +5,21 @@ const doLogin = () => {
   const url = `${BACKEND_BASE_URL}/login?redirect_url=${redirctUrl}`;
   window.location.href = url;
 };
+const getIdToken = () => {
+  return sessionStorage.getItem('jwtIdToken');
+};
 
 const doLogout = () => {
-  // TODO: call backend to remove from keycloak as well
+  const idToken = getIdToken();
+  sessionStorage.removeItem('jwtAccessToken');
+  sessionStorage.removeItem('jwtIdToken');
   const redirctUrl = `${window.location.origin}/`;
-  const url = `${BACKEND_BASE_URL}/logout?redirect_url=${redirctUrl}`;
+  const url = `${BACKEND_BASE_URL}/logout?redirect_url=${redirctUrl}&id_token=${idToken}`;
   window.location.href = url;
-  sessionStorage.removeItem('jwtToken');
-  // window.location.href = `${window.location.origin}/`;
 };
 
 const getAuthToken = () => {
-  return sessionStorage.getItem('jwtToken');
+  return sessionStorage.getItem('jwtAccessToken');
 };
 const isLoggedIn = () => {
   return !!getAuthToken();
@@ -27,10 +30,15 @@ const getUsername = () => 'tmpuser';
 // and then could use useSearchParams here instead
 const getAuthTokenFromParams = () => {
   const queryParams = window.location.search;
-  const token = queryParams.match(/.*\btoken=([^=]+).*/);
-  if (token) {
-    const authToken = token[1];
-    sessionStorage.setItem('jwtToken', authToken);
+  const access_token = queryParams.match(/.*\baccess_token=([^=]+).*/);
+  const id_token = queryParams.match(/.*\bid_token=([^=]+).*/);
+  if (access_token) {
+    const authToken = access_token[1];
+    sessionStorage.setItem('jwtAccessToken', authToken);
+  }
+  if (id_token) {
+    const authToken = id_token[1];
+    sessionStorage.setItem('jwtIdToken', authToken);
   }
 };
 
