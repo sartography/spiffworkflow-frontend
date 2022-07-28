@@ -1,25 +1,36 @@
 import { BACKEND_BASE_URL } from '../config';
 
+// NOTE: this currently stores the jwt token in local storage
+// which is considered insecure. Server set cookies seem to be considered
+// the most secure but they require both frontend and backend to be on the same
+// domain which we probably can't guarantee. We could also use cookies directly
+// but they have the same XSS issues as local storage.
+//
+// Some explanation:
+// https://dev.to/nilanth/how-to-secure-jwt-in-a-single-page-application-cko
+
+// to trim off any query params
+const currentLocation = `${window.location.origin}${window.location.pathname}`;
+
 const doLogin = () => {
-  const redirctUrl = `${window.location.origin}${window.location.pathname}`;
-  const url = `${BACKEND_BASE_URL}/login?redirect_url=${redirctUrl}`;
+  const url = `${BACKEND_BASE_URL}/login?redirect_url=${currentLocation}`;
   window.location.href = url;
 };
 const getIdToken = () => {
-  return sessionStorage.getItem('jwtIdToken');
+  return localStorage.getItem('jwtIdToken');
 };
 
 const doLogout = () => {
   const idToken = getIdToken();
-  sessionStorage.removeItem('jwtAccessToken');
-  sessionStorage.removeItem('jwtIdToken');
+  localStorage.removeItem('jwtAccessToken');
+  localStorage.removeItem('jwtIdToken');
   const redirctUrl = `${window.location.origin}/`;
   const url = `${BACKEND_BASE_URL}/logout?redirect_url=${redirctUrl}&id_token=${idToken}`;
   window.location.href = url;
 };
 
 const getAuthToken = () => {
-  return sessionStorage.getItem('jwtAccessToken');
+  return localStorage.getItem('jwtAccessToken');
 };
 const isLoggedIn = () => {
   return !!getAuthToken();
@@ -30,15 +41,17 @@ const getUsername = () => 'tmpuser';
 // and then could use useSearchParams here instead
 const getAuthTokenFromParams = () => {
   const queryParams = window.location.search;
-  const accessToken = queryParams.match(/.*\baccess_token=([^=]+).*/);
-  const idToken = queryParams.match(/.*\bid_token=([^=]+).*/);
-  if (accessToken) {
-    const authToken = accessToken[1];
-    sessionStorage.setItem('jwtAccessToken', authToken);
-  }
-  if (idToken) {
-    const authToken = idToken[1];
-    sessionStorage.setItem('jwtIdToken', authToken);
+  const accessTokenMatch = queryParams.match(/.*\baccess_token=([^=]+).*/);
+  const idTokenMatch = queryParams.match(/.*\bid_token=([^=]+).*/);
+  if (accessTokenMatch) {
+    const accessToken = accessTokenMatch[1];
+    localStorage.setItem('jwtAccessToken', accessToken);
+    if (idTokenMatch) {
+      const idToken = idTokenMatch[1];
+      localStorage.setItem('jwtIdToken', idToken);
+    }
+    // to remove token query param
+    window.location.href = currentLocation;
   }
 };
 
