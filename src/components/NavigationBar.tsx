@@ -7,9 +7,9 @@ import UserService from '../services/UserService';
 // for ref: https://react-bootstrap.github.io/components/navbar/
 export default function NavigationBar() {
   const navItems: string[] = [];
-  if (UserService.hasRole(['admin'])) {
-    navItems.push('/admin');
-  }
+  // if (UserService.hasRole(['admin'])) {
+  navItems.push('/admin');
+  // }
   navItems.push('/tasks');
 
   const navElements = navItems.map((navItem) => {
@@ -29,6 +29,44 @@ export default function NavigationBar() {
     UserService.doLogout();
   };
 
+  const handleLogin = () => {
+    UserService.doLogin();
+  };
+
+  const loginLink = () => {
+    return (
+      <Navbar.Collapse className="justify-content-end">
+        <Navbar.Text>
+          <Button variant="link" onClick={handleLogin}>
+            Login
+          </Button>
+        </Navbar.Text>
+      </Navbar.Collapse>
+    );
+  };
+
+  const logoutLink = () => {
+    if (UserService.isLoggedIn()) {
+      return (
+        <>
+          <Navbar.Collapse className="justify-content-end">
+            <Navbar.Text>
+              Signed in as: <strong>{UserService.getUsername()}</strong>
+            </Navbar.Text>
+          </Navbar.Collapse>
+          <Navbar.Collapse className="justify-content-end">
+            <Navbar.Text>
+              <Button variant="link" onClick={handleLogout}>
+                Logout
+              </Button>
+            </Navbar.Text>
+          </Navbar.Collapse>
+        </>
+      );
+    }
+    return null;
+  };
+
   return (
     <Navbar bg="dark" expand="lg" variant="dark">
       <Container>
@@ -39,18 +77,8 @@ export default function NavigationBar() {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">{navElements}</Nav>
         </Navbar.Collapse>
-        <Navbar.Collapse className="justify-content-end">
-          <Navbar.Text>
-            Signed in as: <strong>{UserService.getUsername()}</strong>
-          </Navbar.Text>
-        </Navbar.Collapse>
-        <Navbar.Collapse className="justify-content-end">
-          <Navbar.Text>
-            <Button variant="link" onClick={handleLogout}>
-              Logout
-            </Button>
-          </Navbar.Text>
-        </Navbar.Collapse>
+        {loginLink()}
+        {logoutLink()}
       </Container>
     </Navbar>
   );

@@ -1,7 +1,6 @@
-import axios from 'axios';
 import { BACKEND_BASE_URL } from '../config';
 import { objectIsEmpty } from '../helpers';
-import UserService, { STANDARD_HEADERS } from './UserService';
+import UserService from './UserService';
 
 const HttpMethods = {
   GET: 'GET',
@@ -9,24 +8,14 @@ const HttpMethods = {
   DELETE: 'DELETE',
 };
 
-const axiosClient = axios.create();
-
-const configure = () => {
-  axiosClient.interceptors.request.use((config) => {
-    if (UserService.isLoggedIn()) {
-      const cb = () => {
-        // @ts-expect-error TS(2532) FIXME: Object is possibly 'undefined'.
-        // eslint-disable-next-line no-param-reassign
-        config.headers.Authorization = `Bearer ${UserService.getToken()}`;
-        return Promise.resolve(config);
-      };
-      return UserService.updateToken(cb);
-    }
-    return null;
-  });
+const getBasicHeaders = (): object => {
+  if (UserService.isLoggedIn()) {
+    return {
+      Authorization: `Bearer ${UserService.getAuthToken()}`,
+    };
+  }
+  return {};
 };
-
-const getAxiosClient = () => axiosClient;
 
 type backendCallProps = {
   path: string;
@@ -36,6 +25,13 @@ type backendCallProps = {
   postBody?: any;
 };
 
+class UnauthenticatedError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'UnauthenticatedError';
+  }
+}
+
 const makeCallToBackend = ({
   path,
   successCallback,
@@ -43,7 +39,8 @@ const makeCallToBackend = ({
   extraHeaders = {},
   postBody = {},
 }: backendCallProps) => {
-  const headers = STANDARD_HEADERS;
+  const headers = getBasicHeaders();
+
   if (!objectIsEmpty(extraHeaders)) {
     Object.assign(headers, extraHeaders);
   }
@@ -62,26 +59,31 @@ const makeCallToBackend = ({
   }
 
   Object.assign(httpArgs, {
-    headers: new Headers(headers),
+    headers: new Headers(headers as any),
     method: httpMethod,
   });
 
   fetch(`${BACKEND_BASE_URL}${path}`, httpArgs)
-    .then((response) => response.json())
-    .then(
-      (result: object) => {
-        successCallback(result);
-      },
-      (error) => {
-        console.log(error);
+    .then((response) => {
+      // if (response.status === 401) {
+      if (response.status !== 200) {
+        UserService.doLogin();
+        throw new UnauthenticatedError('You must be authenticated to do this.');
       }
-    );
+      return response.json();
+    })
+    .then((result: object) => {
+      successCallback(result);
+    })
+    .catch((error) => {
+      if (error.name !== 'UnauthenticatedError') {
+        console.log(error.message);
+      }
+    });
 };
 
 const HttpService = {
   HttpMethods,
-  configure,
-  getAxiosClient,
   makeCallToBackend,
 };
 

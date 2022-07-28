@@ -1,7 +1,5 @@
 import React from 'react';
-import axios from 'axios';
-import { BACKEND_BASE_URL } from '../config';
-import { HOT_AUTH_TOKEN } from '../services/UserService';
+import HttpService from '../services/HttpService';
 
 type Props = {
   processGroupId: string;
@@ -29,40 +27,22 @@ export default class FileInput extends React.Component<Props> {
 
   handleSubmit(event: any) {
     event.preventDefault();
-    const url = `${BACKEND_BASE_URL}/process-models/${this.processGroupId}/${this.processModelId}/file`;
+    const url = `/process-models/${this.processGroupId}/${this.processModelId}/file`;
     const formData = new FormData();
     formData.append('file', this.fileInput.current.files[0]);
     formData.append('fileName', this.fileInput.current.files[0].name);
-
-    // this might work if we remove the content-type header
-    // const headers = {
-    //   'Authorization': `Bearer ${HOT_AUTH_TOKEN}`,
-    //     'content-type': 'multipart/form-data',
-    // };
-    // fetch(url, {
-    //   headers: new Headers(headers),
-    //   method: 'POST',
-    //   body: formData
-    // })
-    //   .then((response) => response.json())
-    //   .then((result) => {
-    //     console.log('Success:', result);
-    //   })
-    //   .catch((error) => {
-    //     console.error('Error:', error);
-    // });
-
-    const config = {
-      headers: {
-        'content-type': 'multipart/form-data',
-        Authorization: `Bearer ${HOT_AUTH_TOKEN}`,
-      },
-    };
-    axios.post(url, formData, config).then((_response) => {
-      if (this.onUploadedCallback) {
-        this.onUploadedCallback();
-      }
+    HttpService.makeCallToBackend({
+      path: url,
+      successCallback: this.processSubmitResult,
+      httpMethod: 'POST',
+      postBody: formData,
     });
+  }
+
+  processSubmitResult(_result: any) {
+    if (this.onUploadedCallback) {
+      this.onUploadedCallback();
+    }
   }
 
   render() {
