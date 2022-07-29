@@ -17,9 +17,14 @@ export default function NavigationBar() {
     if (window.location.pathname.startsWith(navItem)) {
       className = 'active';
     }
-    const title = capitalizeFirstLetter(navItem.replace(/\/*/, ''));
+    const navItemWithoutSlash = navItem.replace(/\/*/, '');
+    const title = capitalizeFirstLetter(navItemWithoutSlash);
     return (
-      <Nav.Link href={navItem} className={className}>
+      <Nav.Link
+        href={navItem}
+        className={className}
+        data-qa={`nav-item-${navItemWithoutSlash}`}
+      >
         {title}
       </Nav.Link>
     );

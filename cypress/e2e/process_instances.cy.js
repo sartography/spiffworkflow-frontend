@@ -9,17 +9,6 @@ const filterByDate = (fromDate) => {
   cy.contains('Filter').click();
 };
 
-const assertAtLeastOneItemInPaginatedResults = () => {
-  cy.getBySel('total-paginated-items')
-    .invoke('text')
-    .then(parseFloat)
-    .should('be.gt', 0);
-};
-
-const assertNoItemInPaginatedResults = () => {
-  cy.getBySel('total-paginated-items').contains('0');
-};
-
 const updateDmnText = (oldText, newText, elementId = 'wonderful_process') => {
   // this will break if there are more elements added to the drd
   cy.get(`g[data-element-id=${elementId}]`).click().should('exist');
@@ -67,12 +56,10 @@ const updateBpmnPythonScriptWithMonaco = (
 describe('process-instances', () => {
   beforeEach(() => {
     cy.signInToAdmin();
-    cy.contains('acceptance-tests-group-one').click();
-    cy.contains('Process Group: acceptance-tests-group-one');
-    // https://stackoverflow.com/q/51254946/6090676
-    cy.getBySel('process-model-show-link')
-      .contains('acceptance-tests-model-1')
-      .click();
+    cy.navigateToProcessModel(
+      'acceptance-tests-group-one',
+      'acceptance-tests-model-1'
+    );
   });
 
   it('can create a new instance and can modify', () => {
@@ -152,7 +139,7 @@ describe('process-instances', () => {
 
   it('can filter', () => {
     cy.getBySel('process-instance-list-link').click();
-    assertAtLeastOneItemInPaginatedResults();
+    cy.assertAtLeastOneItemInPaginatedResults();
 
     PROCESS_STATUSES.forEach((processStatus) => {
       if (processStatus !== 'all') {
@@ -162,7 +149,7 @@ describe('process-instances', () => {
           .contains(new RegExp(`^${processStatus}$`))
           .click();
         cy.contains('Filter').click();
-        assertAtLeastOneItemInPaginatedResults();
+        cy.assertAtLeastOneItemInPaginatedResults();
         cy.getBySel(`process-instance-status-${processStatus}`).contains(
           processStatus
         );
@@ -177,10 +164,10 @@ describe('process-instances', () => {
     const date = new Date();
     date.setHours(date.getHours() - 1);
     filterByDate(date);
-    assertAtLeastOneItemInPaginatedResults();
+    cy.assertAtLeastOneItemInPaginatedResults();
 
     date.setHours(date.getHours() + 2);
     filterByDate(date);
-    assertNoItemInPaginatedResults();
+    cy.assertNoItemInPaginatedResults();
   });
 });
