@@ -32,32 +32,27 @@ export default function ProcessModelEdit() {
   };
 
   const updateProcessModel = (event: any) => {
+    const processModelToUse = processModel as any;
     event.preventDefault();
     HttpService.makeCallToBackend({
       path: `/${processModelPath}`,
       successCallback: navigateToProcessModel,
       httpMethod: 'PUT',
       postBody: {
-        // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
-        id: processModel.id,
+        id: processModelToUse.id,
         display_name: displayName,
-        // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
-        description: processModel.description,
-        // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
-        process_group_id: processModel.process_group_id,
-        // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
-        is_master_spec: processModel.is_master_spec,
-        // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
-        standalone: processModel.standalone,
-        // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
-        library: processModel.library,
+        description: processModelToUse.description,
+        process_group_id: processModelToUse.process_group_id,
+        is_master_spec: processModelToUse.is_master_spec,
+        standalone: processModelToUse.standalone,
+        library: processModelToUse.library,
       },
     });
   };
 
   const deleteProcessModel = () => {
-    // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
-    const processModelShowPath = `/process-models/${processModel.process_group_id}/${processModel.id}`;
+    const processModelToUse = processModel as any;
+    const processModelShowPath = `/process-models/${processModelToUse.process_group_id}/${processModelToUse.id}`;
     HttpService.makeCallToBackend({
       path: `${processModelShowPath}`,
       successCallback: navigateToProcessModels,
@@ -97,4 +92,5 @@ export default function ProcessModelEdit() {
       </main>
     );
   }
+  return null;
 }

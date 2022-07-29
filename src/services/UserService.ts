@@ -9,11 +9,13 @@ import { BACKEND_BASE_URL } from '../config';
 // Some explanation:
 // https://dev.to/nilanth/how-to-secure-jwt-in-a-single-page-application-cko
 
-// to trim off any query params
-const currentLocation = `${window.location.origin}${window.location.pathname}`;
+const getCurrentLocation = () => {
+  // to trim off any query params
+  return `${window.location.origin}${window.location.pathname}`;
+};
 
 const doLogin = () => {
-  const url = `${BACKEND_BASE_URL}/login?redirect_url=${currentLocation}`;
+  const url = `${BACKEND_BASE_URL}/login?redirect_url=${getCurrentLocation()}`;
   window.location.href = url;
 };
 const getIdToken = () => {
@@ -51,7 +53,7 @@ const getAuthTokenFromParams = () => {
       localStorage.setItem('jwtIdToken', idToken);
     }
     // to remove token query param
-    window.location.href = currentLocation;
+    window.location.href = getCurrentLocation();
   } else if (!isLoggedIn()) {
     doLogin();
   }

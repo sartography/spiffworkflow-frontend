@@ -136,8 +136,7 @@ export default function ProcessModelEditDiagram() {
   };
   const handleEditorChange = (value: any) => {
     setScriptText(value);
-    // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
-    scriptModeling.updateProperties(scriptElement, {
+    (scriptModeling as any).updateProperties(scriptElement, {
       scriptFormat: 'python',
       script: value,
     });
@@ -180,7 +179,6 @@ export default function ProcessModelEditDiagram() {
           processModelId={params.process_model_id || ''}
           processGroupId={params.process_group_id || ''}
           saveDiagram={saveDiagram}
-          // @ts-expect-error TS(2322) FIXME: Type 'null' is not assignable to type 'string | un... Remove this comment to see the full error message
           diagramXML={bpmnXmlForDiagramRendering}
           fileName={processModelFile ? (processModelFile as any).name : null}
           diagramType="dmn"
@@ -192,7 +190,6 @@ export default function ProcessModelEditDiagram() {
         processModelId={params.process_model_id || ''}
         processGroupId={params.process_group_id || ''}
         saveDiagram={saveDiagram}
-        // @ts-expect-error TS(2322) FIXME: Type 'null' is not assignable to type 'string | un... Remove this comment to see the full error message
         diagramXML={bpmnXmlForDiagramRendering}
         fileName={processModelFile ? (processModelFile as any).name : null}
         diagramType="bpmn"
@@ -208,8 +205,7 @@ export default function ProcessModelEditDiagram() {
         <ProcessBreadcrumb
           processGroupId={params.process_group_id}
           processModelId={params.process_model_id}
-          // @ts-expect-error TS(2322) FIXME: Type 'string' is not assignable to type 'boolean |... Remove this comment to see the full error message
-          linkProcessModel="true"
+          linkProcessModel
         />
         <h2>
           Process Model File
@@ -223,4 +219,5 @@ export default function ProcessModelEditDiagram() {
       </main>
     );
   }
+  return null;
 }

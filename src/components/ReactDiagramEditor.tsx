@@ -60,7 +60,7 @@ type OwnProps = {
   activeTaskBpmnIds?: string[] | null;
   completedTasksBpmnIds?: string[] | null;
   saveDiagram?: (..._args: any[]) => any;
-  diagramXML?: string;
+  diagramXML?: string | null;
   fileName?: string;
   onLaunchScriptEditor?: (..._args: any[]) => any;
   url?: string;
@@ -90,15 +90,12 @@ export default function ReactDiagramEditor({
       return;
     }
 
-    // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
-    document.getElementById('diagram-container').innerHTML = '';
-    const temp = document.createElement('template');
-
     let canvasClass = 'diagram-editor-canvas';
     if (diagramType === 'readonly') {
       canvasClass = 'diagram-viewer-canvas';
     }
 
+    const temp = document.createElement('template');
     temp.innerHTML = `
       <div class="content with-diagram" id="js-drop-zone">
         <div class="canvas ${canvasClass}" id="canvas"
@@ -106,10 +103,14 @@ export default function ReactDiagramEditor({
         <div class="properties-panel-parent" id="js-properties-panel"></div>
       </div>
     `;
-
     const frag = temp.content;
-    // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
-    document.getElementById('diagram-container').appendChild(frag);
+
+    const diagramContainerElement =
+      document.getElementById('diagram-container');
+    if (diagramContainerElement) {
+      diagramContainerElement.innerHTML = '';
+      diagramContainerElement.appendChild(frag);
+    }
 
     let diagramModeler: any = null;
 
@@ -209,8 +210,7 @@ export default function ReactDiagramEditor({
 
       let modeler = diagramModelerState;
       if (diagramType === 'dmn') {
-        // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
-        modeler = diagramModelerState.getActiveViewer();
+        modeler = (diagramModelerState as any).getActiveViewer();
       }
 
       const canvas = (modeler as any).get('canvas');
@@ -218,8 +218,7 @@ export default function ReactDiagramEditor({
       // only get the canvas if the dmn active viewer is actually
       // a Modeler and not an Editor which is what it will when we are
       // actively editing a decision table
-      // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
-      if (modeler.constructor.name === 'Modeler') {
+      if ((modeler as any).constructor.name === 'Modeler') {
         canvas.zoom('fit-viewport');
       }
 
@@ -320,10 +319,11 @@ export default function ReactDiagramEditor({
 
   function handleSave() {
     if (saveDiagram) {
-      // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
-      diagramModelerState.saveXML({ format: true }).then((xmlObject: any) => {
-        saveDiagram(xmlObject.xml);
-      });
+      (diagramModelerState as any)
+        .saveXML({ format: true })
+        .then((xmlObject: any) => {
+          saveDiagram(xmlObject.xml);
+        });
     }
   }
 

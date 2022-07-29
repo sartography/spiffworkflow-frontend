@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Button, Table } from 'react-bootstrap';
 import { Link, useSearchParams } from 'react-router-dom';
-import PaginationForTable, {
-  DEFAULT_PER_PAGE,
-  DEFAULT_PAGE,
-} from '../components/PaginationForTable';
+import PaginationForTable from '../components/PaginationForTable';
+import { getPageInfoFromSearchParams } from '../helpers';
 import HttpService from '../services/HttpService';
 
 export default function TaskList() {
@@ -13,14 +11,7 @@ export default function TaskList() {
   const [pagination, setPagination] = useState(null);
 
   useEffect(() => {
-    const page = parseInt(
-      searchParams.get('page') || DEFAULT_PAGE.toString(),
-      10
-    );
-    const perPage = parseInt(
-      searchParams.get('per_page') || DEFAULT_PER_PAGE.toString(),
-      10
-    );
+    const { page, perPage } = getPageInfoFromSearchParams(searchParams);
     const setTasksFromResult = (result: any) => {
       setTasks(result.results);
       setPagination(result.pagination);
@@ -66,14 +57,7 @@ export default function TaskList() {
   };
 
   if (pagination) {
-    const perPage = parseInt(
-      searchParams.get('per_page') || DEFAULT_PER_PAGE.toString(),
-      10
-    );
-    const page = parseInt(
-      searchParams.get('page') || DEFAULT_PAGE.toString(),
-      10
-    );
+    const { page, perPage } = getPageInfoFromSearchParams(searchParams);
     return (
       <main>
         <h2>Tasks</h2>
@@ -81,7 +65,6 @@ export default function TaskList() {
           page={page}
           perPage={perPage}
           pagination={pagination}
-          // @ts-expect-error TS(2322) FIXME: Type 'Element' is not assignable to type 'string'.
           tableToDisplay={buildTable()}
           path="/tasks"
         />
