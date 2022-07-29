@@ -15,7 +15,10 @@ const checkTaskHasClass = (taskName, className) => {
 
 describe('process-models', () => {
   beforeEach(() => {
-    cy.signInToAdmin();
+    cy.login();
+  });
+  afterEach(() => {
+    cy.logout();
   });
 
   it('can complete and navigate a form', () => {

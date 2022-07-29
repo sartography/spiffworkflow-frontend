@@ -7,9 +7,9 @@ import UserService from '../services/UserService';
 // for ref: https://react-bootstrap.github.io/components/navbar/
 export default function NavigationBar() {
   const navItems: string[] = [];
-  // if (UserService.hasRole(['admin'])) {
-  navItems.push('/admin');
-  // }
+  if (UserService.hasRole(['admin'])) {
+    navItems.push('/admin');
+  }
   navItems.push('/tasks');
 
   const navElements = navItems.map((navItem) => {
@@ -61,7 +61,11 @@ export default function NavigationBar() {
             Signed in as: <strong>{UserService.getUsername()}</strong>
           </Navbar.Text>
           <Navbar.Text>
-            <Button variant="link" onClick={handleLogout}>
+            <Button
+              variant="link"
+              onClick={handleLogout}
+              data-qa="logout-button"
+            >
               Logout
             </Button>
           </Navbar.Text>

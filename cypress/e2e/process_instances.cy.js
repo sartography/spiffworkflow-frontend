@@ -55,11 +55,14 @@ const updateBpmnPythonScriptWithMonaco = (
 
 describe('process-instances', () => {
   beforeEach(() => {
-    cy.signInToAdmin();
+    cy.login();
     cy.navigateToProcessModel(
       'acceptance-tests-group-one',
       'acceptance-tests-model-1'
     );
+  });
+  afterEach(() => {
+    cy.logout();
   });
 
   it('can create a new instance and can modify', () => {

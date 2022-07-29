@@ -21,10 +21,7 @@ export default function AdminRoutes() {
   if (UserService.hasRole(['admin'])) {
     return (
       <Routes>
-        {/* @ts-expect-error TS(2786) FIXME: 'ProcessGroups' cannot be used as a JSX component. */}
         <Route path="/" element={<ProcessGroups />} />
-
-        {/* @ts-expect-error TS(2786) FIXME: 'ProcessGroups' cannot be used as a JSX component. */}
         <Route path="process-groups" element={<ProcessGroups />} />
         <Route
           path="process-groups/:process_group_id"

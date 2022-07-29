@@ -52,6 +52,8 @@ const getAuthTokenFromParams = () => {
     }
     // to remove token query param
     window.location.href = currentLocation;
+  } else if (!isLoggedIn()) {
+    doLogin();
   }
 };
 

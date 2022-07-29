@@ -22,11 +22,12 @@ export default function ProcessGroups() {
       setPagination(result.pagination);
     };
 
-    // @ts-expect-error TS(2345) FIXME: Argument of type 'string | 1' is not assignable to... Remove this comment to see the full error message
-    const page = parseInt(searchParams.get('page') || DEFAULT_PAGE, 10);
+    const page = parseInt(
+      searchParams.get('page') || DEFAULT_PAGE.toString(),
+      10
+    );
     const perPage = parseInt(
-      // @ts-expect-error TS(2345) FIXME: Argument of type 'string | 50' is not assignable t... Remove this comment to see the full error message
-      searchParams.get('per_page') || DEFAULT_PER_PAGE,
+      searchParams.get('per_page') || DEFAULT_PER_PAGE.toString(),
       10
     );
     HttpService.makeCallToBackend({
@@ -63,12 +64,13 @@ export default function ProcessGroups() {
 
   const processGroupsDisplayArea = () => {
     const perPage = parseInt(
-      // @ts-expect-error TS(2345) FIXME: Argument of type 'string | 50' is not assignable t... Remove this comment to see the full error message
-      searchParams.get('per_page') || DEFAULT_PER_PAGE,
+      searchParams.get('per_page') || DEFAULT_PER_PAGE.toString(),
       10
     );
-    // @ts-expect-error TS(2345) FIXME: Argument of type 'string | 1' is not assignable to... Remove this comment to see the full error message
-    const page = parseInt(searchParams.get('page') || DEFAULT_PAGE, 10);
+    const page = parseInt(
+      searchParams.get('page') || DEFAULT_PAGE.toString(),
+      10
+    );
     let displayText = '';
     if (processGroups?.length > 0) {
       // @ts-expect-error TS(2322) FIXME: Type 'Element' is not assignable to type 'string'.
@@ -102,4 +104,5 @@ export default function ProcessGroups() {
       </main>
     );
   }
+  return null;
 }
