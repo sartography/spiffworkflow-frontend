@@ -95,7 +95,7 @@ export default function ProcessInstanceShow() {
     );
   };
 
-  if (processInstance) {
+  if (processInstance && tasks) {
     const processInstanceToUse = processInstance as any;
     const taskData = getTaskData();
     const taskIds = getTaskIds();

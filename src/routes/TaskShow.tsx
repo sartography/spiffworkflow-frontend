@@ -56,13 +56,21 @@ export default function TaskShow() {
           return <span>{userTask.name}</span>;
         }
         if (userTask.state === 'COMPLETED') {
-          return <Link to={taskUrl}>{userTask.name}</Link>;
+          return (
+            <Link to={taskUrl} data-qa={`form-nav-${userTask.name}`}>
+              {userTask.name}
+            </Link>
+          );
         }
         if (userTask.state === 'FUTURE') {
           return <span style={{ color: 'red' }}>{userTask.name}</span>;
         }
         if (userTask.state === 'READY') {
-          return <Link to={taskUrl}>{userTask.name} - Current</Link>;
+          return (
+            <Link to={taskUrl} data-qa={`form-nav-${userTask.name}`}>
+              {userTask.name} - Current
+            </Link>
+          );
         }
         return null;
       });

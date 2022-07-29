@@ -1,3 +1,4 @@
+import { string } from 'prop-types';
 import { AUTH_WITH_KEYCLOAK } from '../../src/config';
 
 // ***********************************************
@@ -26,6 +27,18 @@ import { AUTH_WITH_KEYCLOAK } from '../../src/config';
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
+Cypress.Commands.add('getBySel', (selector, ...args) => {
+  return cy.get(`[data-qa=${selector}]`, ...args);
+});
+
+Cypress.Commands.add('navigateToTasks', () => {
+  cy.getBySel('nav-item-tasks').click();
+});
+
+Cypress.Commands.add('navigateToAdmin', () => {
+  cy.getBySel('nav-item-admin').click();
+});
+
 Cypress.Commands.add('signInToAdmin', (selector, ...args) => {
   cy.visit('/admin');
   if (AUTH_WITH_KEYCLOAK) {
@@ -33,10 +46,6 @@ Cypress.Commands.add('signInToAdmin', (selector, ...args) => {
     cy.get('#password').type('ciadmin1');
     cy.get('#kc-login').click();
   }
-});
-
-Cypress.Commands.add('getBySel', (selector, ...args) => {
-  return cy.get(`[data-qa=${selector}]`, ...args);
 });
 
 Cypress.Commands.add('createGroup', (groupId, groupDisplayName) => {
@@ -71,6 +80,16 @@ Cypress.Commands.add('runPrimaryBpmnFile', (expectedText) => {
   cy.contains(expectedText).should('not.exist');
 });
 
+Cypress.Commands.add('navigateToProcessModel', (groupId, modelId) => {
+  cy.navigateToAdmin();
+  cy.contains(groupId).click();
+  cy.contains(`Process Group: ${groupId}`);
+  // https://stackoverflow.com/q/51254946/6090676
+  cy.getBySel('process-model-show-link').contains(modelId).click();
+  cy.url().should('include', `process-models/${groupId}/${modelId}`);
+  cy.contains(`Process Model: ${modelId}`);
+});
+
 Cypress.Commands.add('basicPaginationTest', () => {
   cy.get('#pagination-page-dropdown')
     .type('typing_to_open_dropdown_box....FIXME')
@@ -84,4 +103,15 @@ Cypress.Commands.add('basicPaginationTest', () => {
   cy.contains(/^3-4 of \d+$/);
   cy.getBySel('pagination-previous-button').click();
   cy.contains(/^1-2 of \d+$/);
+});
+
+Cypress.Commands.add('assertAtLeastOneItemInPaginatedResults', () => {
+  cy.getBySel('total-paginated-items')
+    .invoke('text')
+    .then(parseFloat)
+    .should('be.gt', 0);
+});
+
+Cypress.Commands.add('assertNoItemInPaginatedResults', () => {
+  cy.getBySel('total-paginated-items').contains('0');
 });
