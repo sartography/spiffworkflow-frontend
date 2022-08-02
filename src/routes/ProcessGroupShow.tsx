@@ -2,11 +2,9 @@ import { useEffect, useState } from 'react';
 import { Link, useSearchParams, useParams } from 'react-router-dom';
 import { Button, Table, Stack } from 'react-bootstrap';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
-import PaginationForTable, {
-  DEFAULT_PER_PAGE,
-  DEFAULT_PAGE,
-} from '../components/PaginationForTable';
+import PaginationForTable from '../components/PaginationForTable';
 import HttpService from '../services/HttpService';
+import { getPageInfoFromSearchParams } from '../helpers';
 
 export default function ProcessGroupShow() {
   const params = useParams();
@@ -17,13 +15,7 @@ export default function ProcessGroupShow() {
   const [pagination, setPagination] = useState(null);
 
   useEffect(() => {
-    // @ts-expect-error TS(2345) FIXME: Argument of type 'string | 1' is not assignable to... Remove this comment to see the full error message
-    const page = parseInt(searchParams.get('page') || DEFAULT_PAGE, 10);
-    const perPage = parseInt(
-      // @ts-expect-error TS(2345) FIXME: Argument of type 'string | 50' is not assignable t... Remove this comment to see the full error message
-      searchParams.get('per_page') || DEFAULT_PER_PAGE,
-      10
-    );
+    const { page, perPage } = getPageInfoFromSearchParams(searchParams);
 
     const setProcessModelFromResult = (result: any) => {
       setProcessModels(result.results);
@@ -48,8 +40,9 @@ export default function ProcessGroupShow() {
         <tr key={(row as any).id}>
           <td>
             <Link
-              // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
-              to={`/admin/process-models/${processGroup.id}/${(row as any).id}`}
+              to={`/admin/process-models/${(processGroup as any).id}/${
+                (row as any).id
+              }`}
               data-qa="process-model-show-link"
             >
               {(row as any).id}
@@ -76,13 +69,7 @@ export default function ProcessGroupShow() {
   };
 
   if (processGroup && pagination) {
-    const perPage = parseInt(
-      // @ts-expect-error TS(2345) FIXME: Argument of type 'string | 50' is not assignable t... Remove this comment to see the full error message
-      searchParams.get('per_page') || DEFAULT_PER_PAGE,
-      10
-    );
-    // @ts-expect-error TS(2345) FIXME: Argument of type 'string | 1' is not assignable to... Remove this comment to see the full error message
-    const page = parseInt(searchParams.get('page') || DEFAULT_PAGE, 10);
+    const { page, perPage } = getPageInfoFromSearchParams(searchParams);
     return (
       <main style={{ padding: '1rem 0' }}>
         <ProcessBreadcrumb processGroupId={(processGroup as any).id} />
@@ -107,7 +94,6 @@ export default function ProcessGroupShow() {
             page={page}
             perPage={perPage}
             pagination={pagination}
-            // @ts-expect-error TS(2322) FIXME: Type 'Element' is not assignable to type 'string'.
             tableToDisplay={buildTable()}
             path={`/admin/process-groups/${(processGroup as any).id}`}
           />
@@ -115,4 +101,5 @@ export default function ProcessGroupShow() {
       </main>
     );
   }
+  return null;
 }

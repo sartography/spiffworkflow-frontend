@@ -1,5 +1,4 @@
 import { string } from 'prop-types';
-import { AUTH_WITH_KEYCLOAK } from '../../src/config';
 
 // ***********************************************
 // This example commands.js shows you how to
@@ -39,13 +38,15 @@ Cypress.Commands.add('navigateToAdmin', () => {
   cy.getBySel('nav-item-admin').click();
 });
 
-Cypress.Commands.add('signInToAdmin', (selector, ...args) => {
+Cypress.Commands.add('login', (selector, ...args) => {
   cy.visit('/admin');
-  if (AUTH_WITH_KEYCLOAK) {
-    cy.get('#username').type('ciadmin1');
-    cy.get('#password').type('ciadmin1');
-    cy.get('#kc-login').click();
-  }
+  cy.get('#username').type('ciadmin1');
+  cy.get('#password').type('ciadmin1');
+  cy.get('#kc-login').click();
+});
+
+Cypress.Commands.add('logout', (selector, ...args) => {
+  cy.getBySel('logout-button').click();
 });
 
 Cypress.Commands.add('createGroup', (groupId, groupDisplayName) => {

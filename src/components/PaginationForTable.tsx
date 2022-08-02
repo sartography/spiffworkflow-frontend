@@ -12,7 +12,7 @@ type OwnProps = {
   pagination: {
     [key: string]: number;
   };
-  tableToDisplay: string;
+  tableToDisplay: any;
   queryParamString?: string;
   path: string;
 };
@@ -66,9 +66,8 @@ export default function PaginationForTable({
   };
 
   const buildPaginationNav = () => {
-    let previousPageTag = '';
+    let previousPageTag = null;
     if (page === 1) {
-      // @ts-expect-error TS(2322) FIXME: Type 'Element' is not assignable to type 'string'.
       previousPageTag = (
         <li
           data-qa="pagination-previous-button-inactive"
@@ -81,7 +80,6 @@ export default function PaginationForTable({
         </li>
       );
     } else {
-      // @ts-expect-error TS(2322) FIXME: Type 'Element' is not assignable to type 'string'.
       previousPageTag = (
         <li className="page-item" key="previous">
           <Link
@@ -98,9 +96,8 @@ export default function PaginationForTable({
       );
     }
 
-    let nextPageTag = '';
+    let nextPageTag = null;
     if (page >= pagination.pages) {
-      // @ts-expect-error TS(2322) FIXME: Type 'Element' is not assignable to type 'string'.
       nextPageTag = (
         <li
           data-qa="pagination-next-button-inactive"
@@ -113,7 +110,6 @@ export default function PaginationForTable({
         </li>
       );
     } else {
-      // @ts-expect-error TS(2322) FIXME: Type 'Element' is not assignable to type 'string'.
       nextPageTag = (
         <li className="page-item" key="next">
           <Link

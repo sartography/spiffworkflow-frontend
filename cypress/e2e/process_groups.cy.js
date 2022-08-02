@@ -1,6 +1,9 @@
 describe('process-groups', () => {
   beforeEach(() => {
-    cy.signInToAdmin();
+    cy.login();
+  });
+  afterEach(() => {
+    cy.logout();
   });
 
   it('can perform crud operations', () => {

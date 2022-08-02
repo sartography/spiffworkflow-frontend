@@ -3,8 +3,6 @@ export const HOST_AND_PORT = `${host}:7000`;
 
 export const BACKEND_BASE_URL = `http://${HOST_AND_PORT}/v1.0`;
 
-export const AUTH_WITH_KEYCLOAK = false;
-
 export const PROCESS_STATUSES = [
   'all',
   'not_started',

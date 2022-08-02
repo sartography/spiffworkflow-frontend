@@ -1,80 +1,76 @@
-import Keycloak from 'keycloak-js';
+import { BACKEND_BASE_URL } from '../config';
 
-import { AUTH_WITH_KEYCLOAK, HOST_AND_PORT } from '../config';
+// NOTE: this currently stores the jwt token in local storage
+// which is considered insecure. Server set cookies seem to be considered
+// the most secure but they require both frontend and backend to be on the same
+// domain which we probably can't guarantee. We could also use cookies directly
+// but they have the same XSS issues as local storage.
+//
+// Some explanation:
+// https://dev.to/nilanth/how-to-secure-jwt-in-a-single-page-application-cko
 
-const keycloakClient = new Keycloak('/keycloak.json');
-
-const doLogin = keycloakClient.login;
-
-const doLogout = keycloakClient.logout;
-
-const getToken = () => keycloakClient.token;
-
-const isLoggedIn = () => !!keycloakClient.token;
-
-const updateToken = (successCallback: any) =>
-  keycloakClient.updateToken(5).then(successCallback).catch(doLogin);
-
-const getUsername = () => keycloakClient.tokenParsed?.preferred_username;
-
-const hasRole = (roles: string[]) => {
-  if (AUTH_WITH_KEYCLOAK) {
-    return roles.some((role: string) => keycloakClient.hasRealmRole(role));
-  }
-
-  return true;
+const getCurrentLocation = () => {
+  // to trim off any query params
+  return `${window.location.origin}${window.location.pathname}`;
 };
 
-/**
- * Initializes Keycloak instance and calls the provided callback function if successfully authenticated.
- *
- * @param onAuthenticatedCallback
- */
-const initKeycloak = (onAuthenticatedCallback: any) => {
-  if (AUTH_WITH_KEYCLOAK) {
-    keycloakClient
-      .init({
-        onLoad: 'check-sso',
-        silentCheckSsoRedirectUri: `${window.location.origin}/silent-check-sso.html`,
-        pkceMethod: 'S256',
-      })
-      .then((authenticated: any) => {
-        if (!authenticated) {
-          doLogin();
-        }
-        onAuthenticatedCallback();
-      })
-      .catch(console.error);
-  } else {
-    onAuthenticatedCallback();
+const doLogin = () => {
+  const url = `${BACKEND_BASE_URL}/login?redirect_url=${getCurrentLocation()}`;
+  window.location.href = url;
+};
+const getIdToken = () => {
+  return localStorage.getItem('jwtIdToken');
+};
+
+const doLogout = () => {
+  const idToken = getIdToken();
+  localStorage.removeItem('jwtAccessToken');
+  localStorage.removeItem('jwtIdToken');
+  const redirctUrl = `${window.location.origin}/`;
+  const url = `${BACKEND_BASE_URL}/logout?redirect_url=${redirctUrl}&id_token=${idToken}`;
+  window.location.href = url;
+};
+
+const getAuthToken = () => {
+  return localStorage.getItem('jwtAccessToken');
+};
+const isLoggedIn = () => {
+  return !!getAuthToken();
+};
+const getUsername = () => 'tmpuser';
+
+// FIXME: we could probably change this search to a hook
+// and then could use useSearchParams here instead
+const getAuthTokenFromParams = () => {
+  const queryParams = window.location.search;
+  const accessTokenMatch = queryParams.match(/.*\baccess_token=([^&]+).*/);
+  const idTokenMatch = queryParams.match(/.*\bid_token=([^&]+).*/);
+  if (accessTokenMatch) {
+    const accessToken = accessTokenMatch[1];
+    localStorage.setItem('jwtAccessToken', accessToken);
+    if (idTokenMatch) {
+      const idToken = idTokenMatch[1];
+      localStorage.setItem('jwtIdToken', idToken);
+    }
+    // to remove token query param
+    window.location.href = getCurrentLocation();
+  } else if (!isLoggedIn()) {
+    doLogin();
   }
+};
+
+const hasRole = (_roles: string[]): boolean => {
+  return isLoggedIn();
 };
 
 const UserService = {
-  initKeycloak,
   doLogin,
   doLogout,
   isLoggedIn,
-  getToken,
-  updateToken,
+  getAuthToken,
+  getAuthTokenFromParams,
   getUsername,
   hasRole,
 };
 
 export default UserService;
-
-// FIXME: Clean this up a bit but first figure out if we want to auth with frontend or just use the backend
-let authTokenForEnv =
-  'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOm51bGx9.krsOjlSilPMu_3r7WkkUfKyr-h3HprXr6R4_FXRXz6Y';
-if (HOST_AND_PORT.startsWith('167')) {
-  authTokenForEnv =
-    'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOm51bGx9.8XDyKOmBisGUqtGWwoEHg_Crvp-2YcxTfAFnCb4L6_k';
-}
-if (AUTH_WITH_KEYCLOAK) {
-  authTokenForEnv = UserService.getToken() || '';
-}
-export const HOT_AUTH_TOKEN = authTokenForEnv;
-
-export const STANDARD_HEADERS = {
-  Authorization: `Bearer ${HOT_AUTH_TOKEN}`,
-};

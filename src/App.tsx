@@ -18,9 +18,8 @@ export default function App() {
     [errorMessage]
   );
 
-  let errorTag = '';
+  let errorTag = null;
   if (errorMessage !== '') {
-    // @ts-expect-error TS(2322) FIXME: Type 'Element' is not assignable to type 'string'.
     errorTag = (
       <div id="filter-errors" className="mt-4 alert alert-danger" role="alert">
         {errorMessage}

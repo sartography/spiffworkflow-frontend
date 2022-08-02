@@ -56,6 +56,9 @@ export default function ProcessInstanceShow() {
   const getTaskData = () => {
     let taskData = null;
     if (tasks) {
+      // FIXME: The READY task should be the last in the task list so should contain the data we want
+      // this may not be accurate though if there are parallell tasks and such so we'll probably need
+      // a better way to find the most recent task data at some point
       (tasks as any).forEach(function getUserTasksElement(task: any) {
         if (task.state === 'COMPLETED') {
           taskData = task.data;
@@ -105,8 +108,7 @@ export default function ProcessInstanceShow() {
         <ProcessBreadcrumb
           processModelId={params.process_model_id}
           processGroupId={params.process_group_id}
-          // @ts-expect-error TS(2322) FIXME: Type 'string' is not assignable to type 'boolean |... Remove this comment to see the full error message
-          linkProcessModel="true"
+          linkProcessModel
         />
         <Stack direction="horizontal" gap={3}>
           <h2>Process Instance Id: {processInstanceToUse.id}</h2>
@@ -133,4 +135,5 @@ export default function ProcessInstanceShow() {
       </main>
     );
   }
+  return null;
 }

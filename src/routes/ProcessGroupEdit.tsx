@@ -23,8 +23,7 @@ export default function ProcessGroupEdit() {
   }, [params]);
 
   const navigateToProcessGroup = (_result: any) => {
-    // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
-    navigate(`/admin/process-groups/${processGroup.id}`);
+    navigate(`/admin/process-groups/${(processGroup as any).id}`);
   };
 
   const navigateToProcessGroups = (_result: any) => {
@@ -34,22 +33,19 @@ export default function ProcessGroupEdit() {
   const updateProcessGroup = (event: any) => {
     event.preventDefault();
     HttpService.makeCallToBackend({
-      // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
-      path: `/process-groups/${processGroup.id}`,
+      path: `/process-groups/${(processGroup as any).id}`,
       successCallback: navigateToProcessGroup,
       httpMethod: 'PUT',
       postBody: {
         display_name: displayName,
-        // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
-        id: processGroup.id,
+        id: (processGroup as any).id,
       },
     });
   };
 
   const deleteProcessGroup = () => {
     HttpService.makeCallToBackend({
-      // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
-      path: `/process-groups/${processGroup.id}`,
+      path: `/process-groups/${(processGroup as any).id}`,
       successCallback: navigateToProcessGroups,
       httpMethod: 'DELETE',
     });
@@ -90,4 +86,5 @@ export default function ProcessGroupEdit() {
       </main>
     );
   }
+  return null;
 }

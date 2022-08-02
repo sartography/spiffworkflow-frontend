@@ -39,9 +39,8 @@ export default function ProcessModelShow() {
     });
   };
 
-  let processInstanceResultTag = '';
+  let processInstanceResultTag = null;
   if (processInstanceResult) {
-    // @ts-expect-error TS(2322) FIXME: Type 'Element' is not assignable to type 'string'.
     processInstanceResultTag = (
       <pre>
         {(processInstanceResult as any).status}:{' '}
@@ -193,4 +192,5 @@ export default function ProcessModelShow() {
       </main>
     );
   }
+  return null;
 }

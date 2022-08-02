@@ -12,12 +12,11 @@ export default function ProcessBreadcrumb({
   processGroupId,
   linkProcessModel = false,
 }: OwnProps) {
-  let processGroupBreadcrumb = '';
-  let processModelBreadcrumb = '';
+  let processGroupBreadcrumb = null;
+  let processModelBreadcrumb = null;
 
   if (processModelId) {
     if (linkProcessModel) {
-      // @ts-expect-error TS(2322) FIXME: Type 'Element' is not assignable to type 'string'.
       processModelBreadcrumb = (
         <Breadcrumb.Item
           linkAs={Link}
@@ -29,14 +28,12 @@ export default function ProcessBreadcrumb({
         </Breadcrumb.Item>
       );
     } else {
-      // @ts-expect-error TS(2322) FIXME: Type 'Element' is not assignable to type 'string'.
       processModelBreadcrumb = (
         <Breadcrumb.Item active>
           Process Model: {processModelId}
         </Breadcrumb.Item>
       );
     }
-    // @ts-expect-error TS(2322) FIXME: Type 'Element' is not assignable to type 'string'.
     processGroupBreadcrumb = (
       <Breadcrumb.Item
         linkAs={Link}
@@ -47,7 +44,6 @@ export default function ProcessBreadcrumb({
       </Breadcrumb.Item>
     );
   } else if (processGroupId) {
-    // @ts-expect-error TS(2322) FIXME: Type 'Element' is not assignable to type 'string'.
     processGroupBreadcrumb = (
       <Breadcrumb.Item active>Process Group: {processGroupId}</Breadcrumb.Item>
     );

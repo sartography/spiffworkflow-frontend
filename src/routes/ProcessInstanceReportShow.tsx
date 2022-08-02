@@ -4,10 +4,9 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import { Button, Table } from 'react-bootstrap';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 
-import PaginationForTable, {
-  DEFAULT_PAGE,
-} from '../components/PaginationForTable';
+import PaginationForTable from '../components/PaginationForTable';
 import HttpService from '../services/HttpService';
+import { getPageInfoFromSearchParams } from '../helpers';
 
 const PER_PAGE_FOR_PROCESS_INSTANCE_REPORT = 500;
 
@@ -28,11 +27,9 @@ export default function ProcessInstanceReport() {
     };
 
     function getProcessInstances() {
-      const page = searchParams.get('page') || DEFAULT_PAGE;
-      const perPage = parseInt(
-        // @ts-expect-error TS(2345) FIXME: Argument of type 'string | 50' is not assignable t... Remove this comment to see the full error message
-        searchParams.get('per_page') || PER_PAGE_FOR_PROCESS_INSTANCE_REPORT,
-        10
+      const { page, perPage } = getPageInfoFromSearchParams(
+        searchParams,
+        PER_PAGE_FOR_PROCESS_INSTANCE_REPORT
       );
       let query = `?page=${page}&per_page=${perPage}`;
       searchParams.forEach((value, key) => {
@@ -71,20 +68,16 @@ export default function ProcessInstanceReport() {
   };
 
   if (pagination) {
-    const perPage = parseInt(
-      // @ts-expect-error TS(2345) FIXME: Argument of type 'string | 50' is not assignable t... Remove this comment to see the full error message
-      searchParams.get('per_page') || PER_PAGE_FOR_PROCESS_INSTANCE_REPORT,
-      10
+    const { page, perPage } = getPageInfoFromSearchParams(
+      searchParams,
+      PER_PAGE_FOR_PROCESS_INSTANCE_REPORT
     );
-    // @ts-expect-error TS(2345) FIXME: Argument of type 'string | 1' is not assignable to... Remove this comment to see the full error message
-    const page = parseInt(searchParams.get('page') || DEFAULT_PAGE, 10);
     return (
       <main>
         <ProcessBreadcrumb
           processModelId={params.process_model_id}
           processGroupId={params.process_group_id}
-          // @ts-expect-error TS(2322) FIXME: Type 'string' is not assignable to type 'boolean |... Remove this comment to see the full error message
-          linkProcessModel="true"
+          linkProcessModel
         />
         <h2>Process Instance Report: {params.report_identifier}</h2>
         <Button
@@ -96,11 +89,11 @@ export default function ProcessInstanceReport() {
           page={page}
           perPage={perPage}
           pagination={pagination}
-          // @ts-expect-error TS(2322) FIXME: Type 'Element' is not assignable to type 'string'.
           tableToDisplay={buildTable()}
           path={`/admin/process-models/${params.process_group_id}/${params.process_model_id}/process-instances/report`}
         />
       </main>
     );
   }
+  return null;
 }

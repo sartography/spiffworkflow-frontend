@@ -1,5 +1,9 @@
 import { format } from 'date-fns';
 import { DATE_FORMAT } from './config';
+import {
+  DEFAULT_PER_PAGE,
+  DEFAULT_PAGE,
+} from './components/PaginationForTable';
 
 // https://www.30secondsofcode.org/js/s/slugify
 export const slugifyString = (str: any) => {
@@ -45,4 +49,18 @@ export const convertSecondsToFormattedDate = (seconds: number) => {
 
 export const objectIsEmpty = (obj: object) => {
   return Object.keys(obj).length === 0;
+};
+
+export const getPageInfoFromSearchParams = (
+  searchParams: any,
+  defaultPerPage: string | number = DEFAULT_PER_PAGE,
+  defaultPage: string | number = DEFAULT_PAGE
+) => {
+  const page = parseInt(searchParams.get('page') || defaultPage.toString(), 10);
+  const perPage = parseInt(
+    searchParams.get('per_page') || defaultPerPage.toString(),
+    10
+  );
+
+  return { page, perPage };
 };
