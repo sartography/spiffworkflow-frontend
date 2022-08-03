@@ -33,16 +33,10 @@ export default class FileInput extends React.Component<Props> {
     formData.append('fileName', this.fileInput.current.files[0].name);
     HttpService.makeCallToBackend({
       path: url,
-      successCallback: this.processSubmitResult,
+      successCallback: this.onUploadedCallback,
       httpMethod: 'POST',
       postBody: formData,
     });
-  }
-
-  processSubmitResult(_result: any) {
-    if (this.onUploadedCallback) {
-      this.onUploadedCallback();
-    }
   }
 
   render() {
