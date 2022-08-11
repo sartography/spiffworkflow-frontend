@@ -200,6 +200,13 @@ export default function ReactDiagramEditor({
       console.log('ERROR:', err);
     }
 
+    function checkTaskCanBeHighlighted(taskBpmnId: string) {
+      return (
+        !taskSpecsThatCannotBeHighlighted.includes(taskBpmnId) &&
+        !taskBpmnId.match(/EndJoin/)
+      );
+    }
+
     function onImportDone(event: any) {
       const { error } = event;
 
@@ -227,22 +234,19 @@ export default function ReactDiagramEditor({
       //  https://github.com/bpmn-io/bpmn-js-examples/tree/master/colors
       if (activeTaskBpmnIds) {
         activeTaskBpmnIds.forEach((activeTaskBpmnId) => {
-          canvas.addMarker(activeTaskBpmnId, 'active-task-highlight');
+          if (checkTaskCanBeHighlighted(activeTaskBpmnId)) {
+            canvas.addMarker(activeTaskBpmnId, 'active-task-highlight');
+          }
         });
       }
       if (completedTasksBpmnIds) {
         completedTasksBpmnIds.forEach((completedTaskBpmnId) => {
-          if (
-            !taskSpecsThatCannotBeHighlighted.includes(completedTaskBpmnId) &&
-            !completedTaskBpmnId.match(/EndJoin/)
-          ) {
+          if (checkTaskCanBeHighlighted(completedTaskBpmnId)) {
             canvas.addMarker(completedTaskBpmnId, 'completed-task-highlight');
           }
         });
       }
     }
-
-    (diagramModelerState as any).on('import.done', onImportDone);
 
     function displayDiagram(
       diagramModelerToUse: any,
@@ -272,6 +276,8 @@ export default function ReactDiagramEditor({
         successCallback: setDiagramXMLStringFromResponseJson,
       });
     }
+
+    (diagramModelerState as any).on('import.done', onImportDone);
 
     const diagramXMLToUse = diagramXML || diagramXMLString;
     if (diagramXMLToUse) {
