@@ -85,6 +85,10 @@ export default function ProcessModelEditDiagram() {
       httpMethod,
       postBody: formData,
     });
+
+    // after saving the file, make sure we null out newFileName
+    // so it does not get used over the params
+    setNewFileName('');
   };
 
   const handleFileNameSave = (event: any) => {
