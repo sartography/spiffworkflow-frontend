@@ -55,7 +55,7 @@
   "scripts": {
     "start": "ESLINT_NO_DEV_ERRORS=true PORT=7001 craco start",
     "build": "craco build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --coverage",
     "t": "npm test -- --watchAll=false",
     "eject": "craco eject",
     "format": "prettier --write src/**/*.js{,x}",
