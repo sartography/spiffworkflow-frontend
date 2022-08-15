@@ -12,6 +12,9 @@ jobs:
     steps:
       - name: Development Code
         uses: actions/checkout@v3
+        with:
+          # Disabling shallow clone is recommended for improving relevancy of reporting in sonarcloud
+          fetch-depth: 0
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
