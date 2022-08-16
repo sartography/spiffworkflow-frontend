@@ -333,12 +333,30 @@ export default function ReactDiagramEditor({
     }
   }
 
+  const downloadXmlFile = () => {
+    (diagramModelerState as any)
+      .saveXML({ format: true })
+      .then((xmlObject: any) => {
+        const element = document.createElement('a');
+        const file = new Blob([xmlObject.xml], {
+          type: 'application/xml',
+        });
+        element.href = URL.createObjectURL(file);
+        element.download = `${processModelId}.xml`;
+        document.body.appendChild(element);
+        element.click();
+      });
+  };
+
   const saveButton = () => {
     if (diagramType !== 'readonly') {
       return (
-        <Button onClick={handleSave} variant="danger">
-          Save
-        </Button>
+        <>
+          <Button onClick={handleSave} variant="danger">
+            Save
+          </Button>
+          <Button onClick={downloadXmlFile}>Download xml</Button>
+        </>
       );
     }
     return null;
