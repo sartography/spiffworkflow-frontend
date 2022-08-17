@@ -172,7 +172,10 @@ export default function ProcessModelShow() {
           processGroupId={(processModel as any).process_group_id}
           processModelId={(processModel as any).id}
         />
-        <h2>Process Model: {(processModel as any).id}</h2>
+        <Stack direction="horizontal" gap={3}>
+          <h2>Process Model: {(processModel as any).display_name}</h2>
+          <span>({(processModel as any).id})</span>
+        </Stack>
         {processInstanceResultTag}
         <FileInput
           processModelId={(processModel as any).id}
