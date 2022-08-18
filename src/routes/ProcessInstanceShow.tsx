@@ -45,7 +45,7 @@ export default function ProcessInstanceShow() {
         if (task.state === 'COMPLETED') {
           (taskIds.completed as any).push(task.name);
         }
-        if (task.state === 'READY') {
+        if (task.state === 'READY' || task.state === 'WAITING') {
           (taskIds.active as any).push(task.name);
         }
       });
