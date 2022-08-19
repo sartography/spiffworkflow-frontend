@@ -51,6 +51,9 @@
     "@ginkgo-bioworks/react-json-schema-form-builder": {
       "react": "^18.2.0",
       "bootstrap": "^5.2.0-beta1"
+    },
+    "dmn-js-properties-panel": {
+      "@bpmn-io/properties-panel": "^0.18.0"
     }
   },
   "scripts": {
