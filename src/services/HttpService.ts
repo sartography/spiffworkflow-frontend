@@ -40,7 +40,8 @@ const makeCallToBackend = ({
   httpMethod = 'GET',
   extraHeaders = {},
   postBody = {},
-}: backendCallProps) => {
+}: // eslint-disable-next-line sonarjs/cognitive-complexity
+backendCallProps) => {
   const headers = getBasicHeaders();
 
   if (!objectIsEmpty(extraHeaders)) {
