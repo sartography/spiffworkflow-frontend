@@ -342,7 +342,7 @@ export default function ReactDiagramEditor({
           type: 'application/xml',
         });
         element.href = URL.createObjectURL(file);
-        element.download = `${processModelId}.xml`;
+        element.download = `${processModelId}.bpmn`;
         document.body.appendChild(element);
         element.click();
       });
