@@ -20,6 +20,7 @@ const getBasicHeaders = (): object => {
 type backendCallProps = {
   path: string;
   successCallback: Function;
+  failureCallback?: Function;
   httpMethod?: string;
   extraHeaders?: object;
   postBody?: any;
@@ -35,6 +36,7 @@ class UnauthenticatedError extends Error {
 const makeCallToBackend = ({
   path,
   successCallback,
+  failureCallback,
   httpMethod = 'GET',
   extraHeaders = {},
   postBody = {},
@@ -63,20 +65,33 @@ const makeCallToBackend = ({
     method: httpMethod,
   });
 
+  let isSuccessful = true;
   fetch(`${BACKEND_BASE_URL}${path}`, httpArgs)
     .then((response) => {
       if (response.status === 401) {
         UserService.doLogin();
         throw new UnauthenticatedError('You must be authenticated to do this.');
+      } else if (!response.ok) {
+        isSuccessful = false;
       }
       return response.json();
     })
-    .then((result: object) => {
-      successCallback(result);
+    .then((result: any) => {
+      if (isSuccessful) {
+        successCallback(result);
+      } else if (failureCallback) {
+        failureCallback(result.message);
+      } else {
+        console.log(result.message);
+      }
     })
     .catch((error) => {
       if (error.name !== 'UnauthenticatedError') {
-        console.log(error.message);
+        if (failureCallback) {
+          failureCallback(error.message);
+        } else {
+          console.log(error.message);
+        }
       }
     });
 };

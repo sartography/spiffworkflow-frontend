@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Button, Stack } from 'react-bootstrap';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
@@ -8,6 +8,7 @@ import ErrorContext from '../contexts/ErrorContext';
 
 export default function ProcessModelShow() {
   const params = useParams();
+  const setErrorMessage = (useContext as any)(ErrorContext)[1];
 
   const [processModel, setProcessModel] = useState({});
   const [processInstanceResult, setProcessInstanceResult] = useState(null);
@@ -25,9 +26,11 @@ export default function ProcessModelShow() {
   }, [params, reloadModel]);
 
   const processModelRun = (processInstance: any) => {
+    setErrorMessage('');
     HttpService.makeCallToBackend({
       path: `/process-models/${params.process_group_id}/${params.process_model_id}/process-instances/${processInstance.id}/run`,
       successCallback: setProcessInstanceResult,
+      failureCallback: setErrorMessage,
       httpMethod: 'POST',
     });
   };
