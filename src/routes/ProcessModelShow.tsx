@@ -4,6 +4,7 @@ import { Button, Stack } from 'react-bootstrap';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 import FileInput from '../components/FileInput';
 import HttpService from '../services/HttpService';
+import ErrorContext from '../contexts/ErrorContext';
 
 export default function ProcessModelShow() {
   const params = useParams();
@@ -41,11 +42,36 @@ export default function ProcessModelShow() {
 
   let processInstanceResultTag = null;
   if (processInstanceResult) {
+    let takeMeToMyTaskBlurb = null;
+    // FIXME: ensure that the task is actually for the current user as well
+    const processInstanceId = (processInstanceResult as any).id;
+    const nextTask = (processInstanceResult as any).next_task;
+    if (nextTask && nextTask.state === 'READY') {
+      takeMeToMyTaskBlurb = (
+        <span>
+          You have a task to complete. Go to{' '}
+          <Link to={`/tasks/${processInstanceId}/${nextTask.id}`}>my task</Link>
+          .
+        </span>
+      );
+    }
     processInstanceResultTag = (
-      <pre>
-        {(processInstanceResult as any).status}:{' '}
-        {JSON.stringify((processInstanceResult as any).data)}
-      </pre>
+      <div className="alert alert-success" role="alert">
+        <p>
+          Process Instance {processInstanceId} kicked off (
+          <Link
+            to={`/admin/process-models/${
+              (processModel as any).process_group_id
+            }/${
+              (processModel as any).id
+            }/process-instances/${processInstanceId}`}
+            data-qa="process-instance-show-link"
+          >
+            view
+          </Link>
+          ). {takeMeToMyTaskBlurb}
+        </p>
+      </div>
     );
   }
 

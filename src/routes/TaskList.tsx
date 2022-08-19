@@ -28,6 +28,7 @@ export default function TaskList() {
       const taskUrl = `/tasks/${rowToUse.process_instance_id}/${rowToUse.id}`;
       return (
         <tr key={rowToUse.id}>
+          <td>{rowToUse.task_name}</td>
           <td>
             <Link to={taskUrl}>{rowToUse.id}</Link>
           </td>
@@ -45,6 +46,7 @@ export default function TaskList() {
       <Table striped bordered>
         <thead>
           <tr>
+            <th>Task Name</th>
             <th>Id</th>
             <th>Process Instance Id</th>
             <th>Status</th>
