@@ -79,10 +79,16 @@ const makeCallToBackend = ({
     .then((result: any) => {
       if (isSuccessful) {
         successCallback(result);
-      } else if (failureCallback) {
-        failureCallback(result.message);
       } else {
-        console.log(result.message);
+        let message = 'A server error occurred.';
+        if (result.message) {
+          message = result.message;
+        }
+        if (failureCallback) {
+          failureCallback(message);
+        } else {
+          console.log(message);
+        }
       }
     })
     .catch((error) => {
