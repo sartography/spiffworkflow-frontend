@@ -1,5 +1,6 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 
+import { useContext, useEffect } from 'react';
 import ProcessGroups from './ProcessGroups';
 import ProcessGroupShow from './ProcessGroupShow';
 import ProcessGroupNew from './ProcessGroupNew';
@@ -16,8 +17,16 @@ import ProcessInstanceReportList from './ProcessInstanceReportList';
 import ProcessInstanceReportNew from './ProcessInstanceReportNew';
 import ProcessInstanceReportEdit from './ProcessInstanceReportEdit';
 import ReactFormEditor from './ReactFormEditor';
+import ErrorContext from '../contexts/ErrorContext';
 
 export default function AdminRoutes() {
+  const location = useLocation();
+  const setErrorMessage = (useContext as any)(ErrorContext)[1];
+
+  useEffect(() => {
+    setErrorMessage('');
+  }, [location]);
+
   if (UserService.hasRole(['admin'])) {
     return (
       <Routes>
