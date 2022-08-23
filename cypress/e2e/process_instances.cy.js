@@ -77,7 +77,7 @@ describe('process-instances', () => {
     const bpmnFile = 'process_model_one.bpmn';
 
     cy.contains(originalDmnOutputForKevin).should('not.exist');
-    cy.runPrimaryBpmnFile(originalDmnOutputForKevin);
+    cy.runPrimaryBpmnFile();
 
     // Change dmn
     cy.contains(dmnFile).click();
@@ -85,26 +85,26 @@ describe('process-instances', () => {
     updateDmnText(originalDmnOutputForKevin, newDmnOutputForKevin);
 
     cy.contains('acceptance-tests-model-1').click();
-    cy.runPrimaryBpmnFile(newDmnOutputForKevin);
+    cy.runPrimaryBpmnFile();
 
     cy.contains(dmnFile).click();
     cy.contains(`Process Model File: ${dmnFile}`);
     updateDmnText(newDmnOutputForKevin, originalDmnOutputForKevin);
     cy.contains('acceptance-tests-model-1').click();
-    cy.runPrimaryBpmnFile(originalDmnOutputForKevin);
+    cy.runPrimaryBpmnFile();
 
     // Change bpmn
     cy.contains(bpmnFile).click();
     cy.contains(`Process Model File: ${bpmnFile}`);
     updateBpmnPythonScript(newPythonScript);
     cy.contains('acceptance-tests-model-1').click();
-    cy.runPrimaryBpmnFile(dmnOutputForDan);
+    cy.runPrimaryBpmnFile();
 
     cy.contains(bpmnFile).click();
     cy.contains(`Process Model File: ${bpmnFile}`);
     updateBpmnPythonScript(originalPythonScript);
     cy.contains('acceptance-tests-model-1').click();
-    cy.runPrimaryBpmnFile(originalDmnOutputForKevin);
+    cy.runPrimaryBpmnFile();
   });
 
   it('can create a new instance and can modify with monaco text editor', () => {
@@ -119,22 +119,22 @@ describe('process-instances', () => {
     cy.contains(`Process Model File: ${bpmnFile}`);
     updateBpmnPythonScriptWithMonaco(newPythonScript);
     cy.contains('acceptance-tests-model-1').click();
-    cy.runPrimaryBpmnFile(dmnOutputForMike);
+    cy.runPrimaryBpmnFile();
 
     cy.contains(bpmnFile).click();
     cy.contains(`Process Model File: ${bpmnFile}`);
     updateBpmnPythonScriptWithMonaco(originalPythonScript);
     cy.contains('acceptance-tests-model-1').click();
-    cy.runPrimaryBpmnFile(dmnOutputForKevin);
+    cy.runPrimaryBpmnFile();
   });
 
   it('can paginate items', () => {
     // make sure we have some process instances
-    cy.runPrimaryBpmnFile('Very wonderful');
-    cy.runPrimaryBpmnFile('Very wonderful');
-    cy.runPrimaryBpmnFile('Very wonderful');
-    cy.runPrimaryBpmnFile('Very wonderful');
-    cy.runPrimaryBpmnFile('Very wonderful');
+    cy.runPrimaryBpmnFile();
+    cy.runPrimaryBpmnFile();
+    cy.runPrimaryBpmnFile();
+    cy.runPrimaryBpmnFile();
+    cy.runPrimaryBpmnFile();
 
     cy.getBySel('process-instance-list-link').click();
     cy.basicPaginationTest();

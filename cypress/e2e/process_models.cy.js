@@ -135,7 +135,7 @@ describe('process-models', () => {
       'cypress/fixtures/test_bpmn_file_upload.bpmn'
     );
     cy.contains('Submit').click();
-    cy.runPrimaryBpmnFile('champion');
+    cy.runPrimaryBpmnFile();
 
     cy.getBySel('process-instance-list-link').click();
     cy.getBySel('process-instance-show-link').click();

@@ -30,7 +30,7 @@ describe('process-models', () => {
     cy.navigateToProcessModel(groupId, modelId);
 
     // create a bunch to test pagination as well
-    cy.runPrimaryBpmnFile('validate_only');
+    cy.runPrimaryBpmnFile();
     cy.navigateToTasks();
     cy.url().should('include', '/tasks');
 
@@ -98,11 +98,11 @@ describe('process-models', () => {
     );
 
     // make sure we have some tasks
-    cy.runPrimaryBpmnFile('validate_only');
-    cy.runPrimaryBpmnFile('validate_only');
-    cy.runPrimaryBpmnFile('validate_only');
-    cy.runPrimaryBpmnFile('validate_only');
-    cy.runPrimaryBpmnFile('validate_only');
+    cy.runPrimaryBpmnFile();
+    cy.runPrimaryBpmnFile();
+    cy.runPrimaryBpmnFile();
+    cy.runPrimaryBpmnFile();
+    cy.runPrimaryBpmnFile();
 
     cy.navigateToTasks();
     cy.basicPaginationTest();
