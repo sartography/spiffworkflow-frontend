@@ -1,7 +1,7 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Container } from 'react-bootstrap';
 
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import ErrorContext from './contexts/ErrorContext';
 import NavigationBar from './components/NavigationBar';
 

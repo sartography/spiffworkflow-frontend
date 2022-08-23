@@ -25,7 +25,7 @@ export default function AdminRoutes() {
 
   useEffect(() => {
     setErrorMessage('');
-  }, [location]);
+  }, [location, setErrorMessage]);
 
   if (UserService.hasRole(['admin'])) {
     return (
