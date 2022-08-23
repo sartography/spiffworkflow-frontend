@@ -37,11 +37,13 @@ export default function TaskShow() {
   };
 
   const handleFormSubmit = (event: any) => {
+    const dataToSubmit = event.formData;
+    delete dataToSubmit.isManualTask;
     HttpService.makeCallToBackend({
       path: `/tasks/${params.process_instance_id}/${params.task_id}`,
       successCallback: processSubmitResult,
       httpMethod: 'PUT',
-      postBody: event.formData,
+      postBody: dataToSubmit,
     });
   };
 
@@ -83,15 +85,35 @@ export default function TaskShow() {
     );
   };
 
-  if (task) {
-    const taskToUse = task as any;
-
+  const formElement = (taskToUse: any) => {
     let formUiSchema;
-    if (taskToUse.form_ui_schema) {
+    let taskData = taskToUse.data;
+    let jsonSchema = JSON.parse(taskToUse.form_schema);
+    let reactFragmentToHideSubmitButton = null;
+    if (taskToUse.type === 'ManualTask') {
+      taskData = {};
+      jsonSchema = {
+        title: 'The title',
+        description: 'The description',
+        type: 'object',
+        required: [],
+        properties: {
+          isManualTask: {
+            type: 'boolean',
+            title: 'Is ManualTask',
+            default: true,
+          },
+        },
+      };
+      formUiSchema = {
+        isManualTask: {
+          'ui:widget': 'hidden',
+        },
+      };
+    } else if (taskToUse.form_ui_schema) {
       formUiSchema = JSON.parse(taskToUse.form_ui_schema);
     }
 
-    let reactFragmentToHideSubmitButton = null;
     if (taskToUse.state !== 'READY') {
       formUiSchema = Object.assign(formUiSchema || {}, {
         'ui:readonly': true,
@@ -105,19 +127,27 @@ export default function TaskShow() {
     }
 
     return (
+      <Form
+        formData={taskData}
+        onSubmit={handleFormSubmit}
+        schema={jsonSchema}
+        uiSchema={formUiSchema}
+      >
+        {reactFragmentToHideSubmitButton}
+      </Form>
+    );
+  };
+
+  if (task) {
+    const taskToUse = task as any;
+
+    return (
       <main>
         {buildTaskNavigation()}
         <h1>Task: {taskToUse.name}</h1>
         <h3>Process Model: {taskToUse.process_name}</h3>
         <h3>status: {taskToUse.state}</h3>
-        <Form
-          formData={taskToUse.data}
-          onSubmit={handleFormSubmit}
-          schema={JSON.parse(taskToUse.form_schema)}
-          uiSchema={formUiSchema}
-        >
-          {reactFragmentToHideSubmitButton}
-        </Form>
+        {formElement(taskToUse)}
       </main>
     );
   }
