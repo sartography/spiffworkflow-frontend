@@ -2,7 +2,7 @@
 
 [![Tests](https://github.com/sartography/spiffworkflow-frontend/actions/workflows/tests.yml/badge.svg)](https://github.com/sartography/spiffworkflow-frontend/actions/workflows/tests.yml)
    
-## NOTE: This is still in development. NOT READY FOR GENERAL USE!!!!
+## NOTE: This is still in development. NOT READY FOR GENERAL USE!!!
 
 This is the frontend part of an app that leverages
 [spiffworkflow](https://github.com/sartography/spiffworkflow) for managing and
