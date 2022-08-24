@@ -341,14 +341,18 @@ export default function ReactDiagramEditor({
         const file = new Blob([xmlObject.xml], {
           type: 'application/xml',
         });
+        let downloadFileName = fileName;
+        if (!downloadFileName) {
+          downloadFileName = `${processModelId}.${diagramType}`;
+        }
         element.href = URL.createObjectURL(file);
-        element.download = `${processModelId}.bpmn`;
+        element.download = downloadFileName;
         document.body.appendChild(element);
         element.click();
       });
   };
 
-  const saveButton = () => {
+  const userActionOptions = () => {
     if (diagramType !== 'readonly') {
       return (
         <>
@@ -362,5 +366,5 @@ export default function ReactDiagramEditor({
     return null;
   };
 
-  return <div>{saveButton()}</div>;
+  return <div>{userActionOptions()}</div>;
 }
