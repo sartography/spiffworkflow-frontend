@@ -34,19 +34,14 @@ export default function ProcessModelEdit() {
   const updateProcessModel = (event: any) => {
     const processModelToUse = processModel as any;
     event.preventDefault();
+    const processModelToPass = Object.assign(processModelToUse, {
+      display_name: displayName,
+    });
     HttpService.makeCallToBackend({
       path: `/${processModelPath}`,
       successCallback: navigateToProcessModel,
       httpMethod: 'PUT',
-      postBody: {
-        id: processModelToUse.id,
-        display_name: displayName,
-        description: processModelToUse.description,
-        process_group_id: processModelToUse.process_group_id,
-        is_master_spec: processModelToUse.is_master_spec,
-        standalone: processModelToUse.standalone,
-        library: processModelToUse.library,
-      },
+      postBody: processModelToPass,
     });
   };
 

@@ -37,7 +37,7 @@ export default function ProcessModelShow() {
 
   const processInstanceCreateAndRun = () => {
     HttpService.makeCallToBackend({
-      path: `/process-models/${params.process_group_id}/${params.process_model_id}`,
+      path: `/process-models/${params.process_group_id}/${params.process_model_id}/process-instances`,
       successCallback: processModelRun,
       httpMethod: 'POST',
     });
