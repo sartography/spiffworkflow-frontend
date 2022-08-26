@@ -38,6 +38,19 @@ export default function ProcessInstanceShow() {
     });
   };
 
+  // to force update the diagram since it could have changed
+  const refreshPage = () => {
+    window.location.reload();
+  };
+
+  const terminateProcessInstance = () => {
+    HttpService.makeCallToBackend({
+      path: `/process-models/${params.process_group_id}/${params.process_model_id}/process-instances/${params.process_instance_id}/terminate`,
+      successCallback: refreshPage,
+      httpMethod: 'POST',
+    });
+  };
+
   const getTaskIds = () => {
     const taskIds = { completed: [], active: [] };
     if (tasks) {
@@ -98,6 +111,21 @@ export default function ProcessInstanceShow() {
     );
   };
 
+  const terminateButton = (processInstanceToUse: any) => {
+    if (
+      ['complete', 'terminated', 'faulted'].indexOf(
+        processInstanceToUse.status
+      ) === -1
+    ) {
+      return (
+        <Button onClick={terminateProcessInstance} variant="warning">
+          Terminate
+        </Button>
+      );
+    }
+    return <div />;
+  };
+
   if (processInstance && tasks) {
     const processInstanceToUse = processInstance as any;
     const taskData = getTaskData();
@@ -113,8 +141,9 @@ export default function ProcessInstanceShow() {
         <Stack direction="horizontal" gap={3}>
           <h2>Process Instance Id: {processInstanceToUse.id}</h2>
           <Button onClick={deleteProcessInstance} variant="danger">
-            Delete process instance
+            Delete
           </Button>
+          {terminateButton(processInstanceToUse)}
         </Stack>
         {getInfoTag(processInstanceToUse)}
         <h2>Data</h2>
