@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Button, Stack } from 'react-bootstrap';
+import { Button, Modal, Stack } from 'react-bootstrap';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 import HttpService from '../services/HttpService';
 import ReactDiagramEditor from '../components/ReactDiagramEditor';
@@ -12,6 +12,7 @@ export default function ProcessInstanceShow() {
 
   const [processInstance, setProcessInstance] = useState(null);
   const [tasks, setTasks] = useState(null);
+  const [taskToDisplay, setTaskToDisplay] = useState(null);
 
   const navigateToProcessInstances = (_result: any) => {
     navigate(
@@ -66,24 +67,6 @@ export default function ProcessInstanceShow() {
     return taskIds;
   };
 
-  const getTaskData = () => {
-    let taskData = null;
-    if (tasks) {
-      // FIXME: The READY task should be the last in the task list so should contain the data we want
-      // this may not be accurate though if there are parallell tasks and such so we'll probably need
-      // a better way to find the most recent task data at some point
-      (tasks as any).forEach(function getUserTasksElement(task: any) {
-        if (task.state === 'COMPLETED') {
-          taskData = task.data;
-        }
-        if (task.state === 'READY') {
-          taskData = task.data;
-        }
-      });
-    }
-    return taskData;
-  };
-
   const getInfoTag = (processInstanceToUse: any) => {
     const currentEndDate = convertSecondsToFormattedDate(
       processInstanceToUse.end_in_seconds
@@ -126,9 +109,37 @@ export default function ProcessInstanceShow() {
     return <div />;
   };
 
+  const handleClickedDiagramTask = (shapeElement: any) => {
+    if (tasks) {
+      const matchingTask = (tasks as any).find(
+        (task: any) => task.name === shapeElement.id
+      );
+      if (matchingTask) {
+        setTaskToDisplay(matchingTask);
+      }
+    }
+  };
+
+  const handleTaskDataDisplayClose = () => {
+    setTaskToDisplay(null);
+  };
+
+  const taskDataDisplayArea = () => {
+    if (taskToDisplay) {
+      return (
+        <Modal show={taskToDisplay} onHide={handleTaskDataDisplayClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>{(taskToDisplay as any).name}</Modal.Title>
+          </Modal.Header>
+          <pre>{JSON.stringify((taskToDisplay as any).data, null, 2)}</pre>
+        </Modal>
+      );
+    }
+    return <></>;
+  };
+
   if (processInstance && tasks) {
     const processInstanceToUse = processInstance as any;
-    const taskData = getTaskData();
     const taskIds = getTaskIds();
 
     return (
@@ -146,10 +157,7 @@ export default function ProcessInstanceShow() {
           {terminateButton(processInstanceToUse)}
         </Stack>
         {getInfoTag(processInstanceToUse)}
-        <h2>Data</h2>
-        <div>
-          <pre>{JSON.stringify(taskData, null, 2)}</pre>
-        </div>
+        {taskDataDisplayArea()}
         <ReactDiagramEditor
           processModelId={params.process_model_id || ''}
           processGroupId={params.process_group_id || ''}
@@ -158,6 +166,7 @@ export default function ProcessInstanceShow() {
           activeTaskBpmnIds={taskIds.active}
           completedTasksBpmnIds={taskIds.completed}
           diagramType="readonly"
+          onElementClick={handleClickedDiagramTask}
         />
 
         <div id="diagram-container" />

@@ -63,6 +63,7 @@ type OwnProps = {
   diagramXML?: string | null;
   fileName?: string;
   onLaunchScriptEditor?: (..._args: any[]) => any;
+  onElementClick?: (..._args: any[]) => any;
   url?: string;
 };
 
@@ -77,6 +78,7 @@ export default function ReactDiagramEditor({
   diagramXML,
   fileName,
   onLaunchScriptEditor,
+  onElementClick,
   url,
 }: OwnProps) {
   const [diagramXMLString, setDiagramXMLString] = useState('');
@@ -174,6 +176,12 @@ export default function ReactDiagramEditor({
       }
     }
 
+    function handleElementClick(event: any) {
+      if (onElementClick) {
+        onElementClick(event.element);
+      }
+    }
+
     setDiagramModelerState(diagramModeler);
 
     diagramModeler.on('launch.script.editor', (event: any) => {
@@ -183,7 +191,17 @@ export default function ReactDiagramEditor({
       }
       handleLaunchScriptEditor(element);
     });
-  }, [diagramModelerState, diagramType, onLaunchScriptEditor]);
+
+    // 'element.hover',
+    // 'element.out',
+    // 'element.click',
+    // 'element.dblclick',
+    // 'element.mousedown',
+    // 'element.mouseup',
+    diagramModeler.on('element.click', (element: any) => {
+      handleElementClick(element);
+    });
+  }, [diagramModelerState, diagramType, onLaunchScriptEditor, onElementClick]);
 
   useEffect(() => {
     // These seem to be system tasks that cannot be highlighted
