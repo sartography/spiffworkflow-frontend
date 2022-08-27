@@ -135,7 +135,7 @@ export default function ProcessInstanceShow() {
         </Modal>
       );
     }
-    return <></>;
+    return null;
   };
 
   if (processInstance && tasks) {
