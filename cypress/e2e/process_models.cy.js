@@ -139,7 +139,7 @@ describe('process-models', () => {
 
     cy.getBySel('process-instance-list-link').click();
     cy.getBySel('process-instance-show-link').click();
-    cy.contains('Delete process instance').click();
+    cy.contains('Delete').click();
     cy.contains(`Process Instances for ${modelId}`);
     cy.contains(`Process Model: ${modelId}`);
     cy.contains(modelId).click();

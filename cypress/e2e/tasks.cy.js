@@ -57,6 +57,8 @@ describe('process-models', () => {
     // This should get the first one which should be the one we just completed
     cy.getBySel('process-instance-show-link').first().click();
     cy.contains('Process Instance Id: ');
+
+    cy.get(`g[data-element-id=form3]`).click();
     cy.contains('"user_generated_number_1": 2');
     cy.contains('"user_generated_number_2": 3');
     cy.contains('"user_generated_number_3": 4');
@@ -65,6 +67,7 @@ describe('process-models', () => {
     checkTaskHasClass('form2', completedTaskClassName);
     checkTaskHasClass('form3', completedTaskClassName);
     checkTaskHasClass('form4', activeTaskClassName);
+    cy.get('.modal .btn-close').click();
 
     cy.navigateToTasks();
     cy.url().should('include', '/tasks');
@@ -81,14 +84,7 @@ describe('process-models', () => {
     // This should get the first one which should be the one we just completed
     cy.getBySel('process-instance-show-link').first().click();
     cy.contains('Process Instance Id: ');
-    cy.contains('"user_generated_number_1": 2');
-    cy.contains('"user_generated_number_2": 3');
-    cy.contains('"user_generated_number_3": 4');
-    cy.contains('"user_generated_number_4": 5');
-    checkTaskHasClass('form1', completedTaskClassName);
-    checkTaskHasClass('form2', completedTaskClassName);
-    checkTaskHasClass('form3', completedTaskClassName);
-    checkTaskHasClass('form4', completedTaskClassName);
+    cy.contains('Status: complete');
   });
 
   it('can paginate items', () => {
