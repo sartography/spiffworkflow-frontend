@@ -129,7 +129,9 @@ export default function ProcessInstanceShow() {
       return (
         <Modal show={taskToDisplay} onHide={handleTaskDataDisplayClose}>
           <Modal.Header closeButton>
-            <Modal.Title>{(taskToDisplay as any).name}</Modal.Title>
+            <Modal.Title>
+              {(taskToDisplay as any).name}: {(taskToDisplay as any).state}
+            </Modal.Title>
           </Modal.Header>
           <pre>{JSON.stringify((taskToDisplay as any).data, null, 2)}</pre>
         </Modal>
