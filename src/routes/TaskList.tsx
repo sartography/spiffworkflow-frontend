@@ -29,6 +29,7 @@ export default function TaskList() {
       return (
         <tr key={rowToUse.id}>
           <td>{rowToUse.process_name}</td>
+          <td>{rowToUse.title}</td>
           <td>{rowToUse.name}</td>
           <td>
             <Link to={taskUrl}>{rowToUse.id}</Link>
@@ -49,7 +50,8 @@ export default function TaskList() {
           <tr>
             <th>Process Model</th>
             <th>Task Name</th>
-            <th>Id</th>
+            <th>Task Id</th>
+            <th>GUID</th>
             <th>Process Instance Id</th>
             <th>Status</th>
             <th>Actions</th>
