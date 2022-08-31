@@ -64,6 +64,7 @@ type OwnProps = {
   fileName?: string;
   onLaunchScriptEditor?: (..._args: any[]) => any;
   onElementClick?: (..._args: any[]) => any;
+  onServiceTasksRequested?: (..._args: any[]) => any;
   url?: string;
 };
 
@@ -79,6 +80,7 @@ export default function ReactDiagramEditor({
   fileName,
   onLaunchScriptEditor,
   onElementClick,
+  onServiceTasksRequested,
   url,
 }: OwnProps) {
   const [diagramXMLString, setDiagramXMLString] = useState('');
@@ -182,6 +184,12 @@ export default function ReactDiagramEditor({
       }
     }
 
+    function handleServiceTasksRequested(event: any) {
+      if (onServiceTasksRequested) {
+        onServiceTasksRequested(event);
+      }
+    }
+
     setDiagramModelerState(diagramModeler);
 
     diagramModeler.on('launch.script.editor', (event: any) => {
@@ -203,27 +211,8 @@ export default function ReactDiagramEditor({
     });
 
     diagramModeler.on('spiff.service_tasks.requested', (event: any) => {
-      HttpService.makeCallToBackend({
-        path: `/service_tasks`,
-        successCallback: makeApiHandler(event),
-      });
+      handleServiceTasksRequested(event);
     });
-
-    function makeApiHandler(event: any) {
-      return function (results: any) {
-        console.log('results', results);
-        event.eventBus.fire('spiff.service_tasks.returned', {
-          serviceTaskOperators: results,
-        });
-      };
-    }
-
-    // function handleServiceTask(results: any) {
-    //   console.log('results', results);
-    //   event.eventBus.fire('spiff.service_task.data.returned', {
-    //     wePass: 'hello',
-    //   });
-    // }
   }, [diagramModelerState, diagramType, onLaunchScriptEditor, onElementClick]);
 
   useEffect(() => {
