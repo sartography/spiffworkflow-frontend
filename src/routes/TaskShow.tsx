@@ -93,8 +93,8 @@ export default function TaskShow() {
     if (taskToUse.type === 'ManualTask') {
       taskData = {};
       jsonSchema = {
-        title: 'The title',
-        description: 'The description',
+        title: 'Instructions',
+        description: taskToUse.properties.instructionsForEndUser,
         type: 'object',
         required: [],
         properties: {
@@ -140,13 +140,17 @@ export default function TaskShow() {
 
   if (task) {
     const taskToUse = task as any;
+    let statusString = '';
+    if (taskToUse.state !== 'READY') {
+      statusString = ` ${taskToUse.state}`;
+    }
 
     return (
       <main>
         {buildTaskNavigation()}
-        <h1>Task: {taskToUse.title}</h1>
-        <h3>Process Model: {taskToUse.process_name}</h3>
-        <h3>status: {taskToUse.state}</h3>
+        <h3>
+          Task: {taskToUse.title} ({taskToUse.process_name}){statusString}
+        </h3>
         {formElement(taskToUse)}
       </main>
     );
