@@ -59,17 +59,9 @@ export default function ButtonWithConfirmation({
     );
   };
 
-  const onKeyUp = () => {
-    console.log('ehy');
-  };
-
   return (
     <main>
-      <Button
-        onClick={handleShowConfirmationPrompt}
-        variant="danger"
-        onKeyUp={onKeyUp}
-      >
+      <Button onClick={handleShowConfirmationPrompt} variant="danger">
         {buttonLabel}
       </Button>
       {confirmationDialog()}
