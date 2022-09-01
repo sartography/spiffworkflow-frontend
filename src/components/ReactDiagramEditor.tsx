@@ -213,7 +213,13 @@ export default function ReactDiagramEditor({
     diagramModeler.on('spiff.service_tasks.requested', (event: any) => {
       handleServiceTasksRequested(event);
     });
-  }, [diagramModelerState, diagramType, onLaunchScriptEditor, onElementClick]);
+  }, [
+    diagramModelerState,
+    diagramType,
+    onLaunchScriptEditor,
+    onElementClick,
+    onServiceTasksRequested,
+  ]);
 
   useEffect(() => {
     // These seem to be system tasks that cannot be highlighted
