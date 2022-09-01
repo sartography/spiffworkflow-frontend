@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Button, Stack } from 'react-bootstrap';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 import HttpService from '../services/HttpService';
+import ButtonWithConfirmation from '../components/ButtonWithConfirmation';
 
 export default function ProcessGroupEdit() {
   const [displayName, setDisplayName] = useState('');
@@ -78,9 +79,11 @@ export default function ProcessGroupEdit() {
             >
               Cancel
             </Button>
-            <Button onClick={deleteProcessGroup} variant="danger">
-              Delete Process Group
-            </Button>
+            <ButtonWithConfirmation
+              description={`Delete Process Group ${(processGroup as any).id}?`}
+              onConfirmation={deleteProcessGroup}
+              buttonLabel="Delete"
+            />
           </Stack>
         </form>
       </main>

@@ -1,14 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button, Stack } from 'react-bootstrap';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 import HttpService from '../services/HttpService';
+import ButtonWithConfirmation from '../components/ButtonWithConfirmation';
+import ErrorContext from '../contexts/ErrorContext';
 
 export default function ProcessModelEdit() {
   const [displayName, setDisplayName] = useState('');
   const params = useParams();
   const navigate = useNavigate();
   const [processModel, setProcessModel] = useState(null);
+  const setErrorMessage = (useContext as any)(ErrorContext)[1];
 
   const processModelPath = `process-models/${params.process_group_id}/${params.process_model_id}`;
 
@@ -46,12 +49,14 @@ export default function ProcessModelEdit() {
   };
 
   const deleteProcessModel = () => {
+    setErrorMessage('');
     const processModelToUse = processModel as any;
     const processModelShowPath = `/process-models/${processModelToUse.process_group_id}/${processModelToUse.id}`;
     HttpService.makeCallToBackend({
       path: `${processModelShowPath}`,
       successCallback: navigateToProcessModels,
       httpMethod: 'DELETE',
+      failureCallback: setErrorMessage,
     });
   };
 
@@ -79,9 +84,11 @@ export default function ProcessModelEdit() {
             <Button variant="secondary" href={`/admin/${processModelPath}`}>
               Cancel
             </Button>
-            <Button onClick={deleteProcessModel} variant="danger">
-              Delete process model
-            </Button>
+            <ButtonWithConfirmation
+              description={`Delete Process Model ${(processModel as any).id}?`}
+              onConfirmation={deleteProcessModel}
+              buttonLabel="Delete"
+            />
           </Stack>
         </form>
       </main>

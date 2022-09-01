@@ -5,6 +5,7 @@ import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 import HttpService from '../services/HttpService';
 import ReactDiagramEditor from '../components/ReactDiagramEditor';
 import { convertSecondsToFormattedDate } from '../helpers';
+import ButtonWithConfirmation from '../components/ButtonWithConfirmation';
 
 export default function ProcessInstanceShow() {
   const navigate = useNavigate();
@@ -153,9 +154,11 @@ export default function ProcessInstanceShow() {
         />
         <Stack direction="horizontal" gap={3}>
           <h2>Process Instance Id: {processInstanceToUse.id}</h2>
-          <Button onClick={deleteProcessInstance} variant="danger">
-            Delete
-          </Button>
+          <ButtonWithConfirmation
+            description="Delete Process Instance?"
+            onConfirmation={deleteProcessInstance}
+            buttonLabel="Delete"
+          />
           {terminateButton(processInstanceToUse)}
         </Stack>
         {getInfoTag(processInstanceToUse)}

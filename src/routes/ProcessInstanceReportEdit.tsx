@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 import HttpService from '../services/HttpService';
+import ButtonWithConfirmation from '../components/ButtonWithConfirmation';
 
 type ReportColumn = {
   Header: string;
@@ -113,9 +114,11 @@ export default function ProcessInstanceReportEdit() {
     <main style={{ padding: '1rem 0' }}>
       <ProcessBreadcrumb />
       <h2>Edit Process Instance Report: {params.report_identifier}</h2>
-      <Button onClick={deleteProcessInstanceReport} variant="danger">
-        Delete report
-      </Button>
+      <ButtonWithConfirmation
+        description={`Delete Report ${params.report_identifier}?`}
+        onConfirmation={deleteProcessInstanceReport}
+        buttonLabel="Delete"
+      />
       <br />
       <br />
       <form onSubmit={editProcessInstanceReport}>
