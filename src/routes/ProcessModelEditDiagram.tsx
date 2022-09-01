@@ -128,7 +128,20 @@ export default function ProcessModelEditDiagram() {
       </Modal>
     );
   };
+  function makeApiHandler(event: any) {
+    return function fireEvent(results: any) {
+      event.eventBus.fire('spiff.service_tasks.returned', {
+        serviceTaskOperators: results,
+      });
+    };
+  }
 
+  const onServiceTasksRequested = (event: any) => {
+    HttpService.makeCallToBackend({
+      path: `/service_tasks`,
+      successCallback: makeApiHandler(event),
+    });
+  };
   const onLaunchScriptEditor = (element: any, modeling: any) => {
     setScriptText(element.businessObject.script || '');
     setScriptModeling(modeling);
@@ -198,6 +211,7 @@ export default function ProcessModelEditDiagram() {
         fileName={processModelFile ? (processModelFile as any).name : null}
         diagramType="bpmn"
         onLaunchScriptEditor={onLaunchScriptEditor}
+        onServiceTasksRequested={onServiceTasksRequested}
       />
     );
   };

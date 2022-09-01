@@ -64,6 +64,7 @@ type OwnProps = {
   fileName?: string;
   onLaunchScriptEditor?: (..._args: any[]) => any;
   onElementClick?: (..._args: any[]) => any;
+  onServiceTasksRequested?: (..._args: any[]) => any;
   url?: string;
 };
 
@@ -79,6 +80,7 @@ export default function ReactDiagramEditor({
   fileName,
   onLaunchScriptEditor,
   onElementClick,
+  onServiceTasksRequested,
   url,
 }: OwnProps) {
   const [diagramXMLString, setDiagramXMLString] = useState('');
@@ -182,6 +184,12 @@ export default function ReactDiagramEditor({
       }
     }
 
+    function handleServiceTasksRequested(event: any) {
+      if (onServiceTasksRequested) {
+        onServiceTasksRequested(event);
+      }
+    }
+
     setDiagramModelerState(diagramModeler);
 
     diagramModeler.on('launch.script.editor', (event: any) => {
@@ -201,7 +209,17 @@ export default function ReactDiagramEditor({
     diagramModeler.on('element.click', (element: any) => {
       handleElementClick(element);
     });
-  }, [diagramModelerState, diagramType, onLaunchScriptEditor, onElementClick]);
+
+    diagramModeler.on('spiff.service_tasks.requested', (event: any) => {
+      handleServiceTasksRequested(event);
+    });
+  }, [
+    diagramModelerState,
+    diagramType,
+    onLaunchScriptEditor,
+    onElementClick,
+    onServiceTasksRequested,
+  ]);
 
   useEffect(() => {
     // These seem to be system tasks that cannot be highlighted
