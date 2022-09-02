@@ -1,5 +1,5 @@
-const submitInputIntoFormField = (formName, fieldKey, fieldValue) => {
-  cy.contains(`Task: ${formName}`);
+const submitInputIntoFormField = (taskName, fieldKey, fieldValue) => {
+  cy.contains(`Task: ${taskName}`);
   cy.get(fieldKey).clear().type(fieldValue);
   cy.contains('Submit').click();
 };
@@ -21,7 +21,7 @@ describe('process-models', () => {
     cy.logout();
   });
 
-  it('can complete and navigate a form', () => {
+  it.only('can complete and navigate a form', () => {
     const groupId = 'acceptance-tests-group-one';
     const modelId = `acceptance-tests-model-2`;
     const completedTaskClassName = 'completed-task-highlight';
@@ -36,20 +36,38 @@ describe('process-models', () => {
 
     // FIXME: this will probably need a better way to link to the proper form that we want
     cy.contains('Complete form1').click();
-    submitInputIntoFormField('form1', '#root_user_generated_number_1', 2);
-    submitInputIntoFormField('form2', '#root_user_generated_number_2', 3);
+    submitInputIntoFormField(
+      'get_user_generated_number_one',
+      '#root_user_generated_number_1',
+      2
+    );
+    submitInputIntoFormField(
+      'get_user_generated_number_two',
+      '#root_user_generated_number_2',
+      3
+    );
 
-    cy.contains('Task: form3');
+    cy.contains('Task: get_user_generated_number_three');
     cy.getBySel('form-nav-form2').click();
-    checkFormFieldIsReadOnly('form2', '#root_user_generated_number_2');
+    checkFormFieldIsReadOnly(
+      'get_user_generated_number_two',
+      '#root_user_generated_number_2'
+    );
     cy.getBySel('form-nav-form1').click();
-    checkFormFieldIsReadOnly('form1', '#root_user_generated_number_1');
+    checkFormFieldIsReadOnly(
+      'get_user_generated_number_one',
+      '#root_user_generated_number_1'
+    );
 
     cy.getBySel('form-nav-form3').should('have.text', 'form3 - Current');
     cy.getBySel('form-nav-form3').click();
-    submitInputIntoFormField('form3', '#root_user_generated_number_3', 4);
+    submitInputIntoFormField(
+      'get_user_generated_number_three',
+      '#root_user_generated_number_3',
+      4
+    );
 
-    cy.contains('Task: form4');
+    cy.contains('Task: get_user_generated_number_four');
     cy.navigateToProcessModel(groupId, modelId);
     cy.getBySel('process-instance-list-link').click();
     cy.assertAtLeastOneItemInPaginatedResults();
@@ -74,7 +92,11 @@ describe('process-models', () => {
 
     // FIXME: this will probably need a better way to link to the proper form that we want
     cy.contains('Complete form4').click();
-    submitInputIntoFormField('form4', '#root_user_generated_number_4', 5);
+    submitInputIntoFormField(
+      'get_user_generated_number_four',
+      '#root_user_generated_number_4',
+      5
+    );
     cy.url().should('include', '/tasks');
 
     cy.navigateToProcessModel(groupId, modelId);

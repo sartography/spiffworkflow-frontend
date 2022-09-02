@@ -31,7 +31,9 @@ describe('process-groups', () => {
       newGroupDisplayName
     );
 
-    cy.contains('Delete Process Group').click();
+    cy.contains('Delete').click();
+    cy.contains('Are you sure');
+    cy.contains('OK').click();
     cy.url().should('include', `process-groups`);
     cy.contains(groupId).should('not.exist');
   });

@@ -33,7 +33,9 @@ describe('process-models', () => {
       newModelDisplayName
     );
 
-    cy.contains('Delete process model').click();
+    cy.contains('Delete').click();
+    cy.contains('Are you sure');
+    cy.contains('OK').click();
     cy.url().should('include', `process-groups/${groupId}`);
     cy.contains(modelId).should('not.exist');
   });
@@ -104,7 +106,9 @@ describe('process-models', () => {
     cy.contains(`${jsonFileName}.json`).should('exist');
 
     cy.contains('Edit process model').click();
-    cy.contains('Delete process model').click();
+    cy.contains('Delete').click();
+    cy.contains('Are you sure');
+    cy.contains('OK').click();
     cy.url().should('include', `process-groups/${groupId}`);
     cy.contains(modelId).should('not.exist');
   });
@@ -140,12 +144,16 @@ describe('process-models', () => {
     cy.getBySel('process-instance-list-link').click();
     cy.getBySel('process-instance-show-link').click();
     cy.contains('Delete').click();
+    cy.contains('Are you sure');
+    cy.contains('OK').click();
     cy.contains(`Process Instances for ${modelId}`);
     cy.contains(`Process Model: ${modelId}`);
     cy.contains(modelId).click();
 
     cy.contains('Edit process model').click();
-    cy.contains('Delete process model').click();
+    cy.contains('Delete').click();
+    cy.contains('Are you sure');
+    cy.contains('OK').click();
     cy.url().should('include', `process-groups/${groupId}`);
     cy.contains(modelId).should('not.exist');
   });
