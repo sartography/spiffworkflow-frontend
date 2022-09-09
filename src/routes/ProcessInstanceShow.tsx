@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Button, Modal, Stack } from 'react-bootstrap';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 import HttpService from '../services/HttpService';
@@ -91,6 +91,13 @@ export default function ProcessInstanceShow() {
         </li>
         {currentEndDateTag}
         <li>Status: {processInstanceToUse.status}</li>
+        <li>
+          <Link
+            to={`/admin/process-models/${params.process_group_id}/${params.process_model_id}/process-instances/${params.process_instance_id}/logs`}
+          >
+            Logs
+          </Link>
+        </li>
       </ul>
     );
   };

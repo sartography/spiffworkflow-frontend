@@ -18,6 +18,7 @@ import ProcessInstanceReportNew from './ProcessInstanceReportNew';
 import ProcessInstanceReportEdit from './ProcessInstanceReportEdit';
 import ReactFormEditor from './ReactFormEditor';
 import ErrorContext from '../contexts/ErrorContext';
+import ProcessInstanceLogList from './ProcessInstanceLogList';
 
 export default function AdminRoutes() {
   const location = useLocation();
@@ -93,6 +94,10 @@ export default function AdminRoutes() {
         <Route
           path="/process-models/:process_group_id/:process_model_id/form/:file_name"
           element={<ReactFormEditor />}
+        />
+        <Route
+          path="/process-models/:process_group_id/:process_model_id/process-instances/:process_instance_id/logs"
+          element={<ProcessInstanceLogList />}
         />
       </Routes>
     );
