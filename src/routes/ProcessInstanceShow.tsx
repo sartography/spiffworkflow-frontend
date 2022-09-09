@@ -92,7 +92,7 @@ export default function ProcessInstanceShow() {
         {currentEndDateTag}
         <li>Status: {processInstanceToUse.status}</li>
         <li>
-          <Link
+          <Link data-qa='process-instance-log-list-link'
             to={`/admin/process-models/${params.process_group_id}/${params.process_model_id}/process-instances/${params.process_instance_id}/logs`}
           >
             Logs

@@ -140,6 +140,17 @@ describe('process-instances', () => {
     cy.basicPaginationTest();
   });
 
+  it('can display logs', () => {
+    // make sure we have some process instances
+    cy.runPrimaryBpmnFile();
+    cy.getBySel('process-instance-list-link').click();
+    cy.getBySel('process-instance-show-link').first().click();
+    cy.getBySel('process-instance-log-list-link').click();
+    cy.contains('process_model_one');
+    cy.contains('State change to COMPLETED');
+    cy.basicPaginationTest();
+  });
+
   it('can filter', () => {
     cy.getBySel('process-instance-list-link').click();
     cy.assertAtLeastOneItemInPaginatedResults();
