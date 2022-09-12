@@ -149,7 +149,8 @@ export default function TaskShow() {
       <main>
         {buildTaskNavigation()}
         <h3>
-          Task: {taskToUse.title} ({taskToUse.process_name}){statusString}
+          Task: {taskToUse.title} ({taskToUse.process_model_display_name})
+          {statusString}
         </h3>
         {formElement(taskToUse)}
       </main>
