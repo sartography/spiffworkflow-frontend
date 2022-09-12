@@ -91,6 +91,23 @@ export default function ProcessModelEditDiagram() {
     setNewFileName('');
   };
 
+  const onDeleteFile = (fileName = params.file_name) => {
+    const url = `/process-models/${params.process_group_id}/${params.process_model_id}/files/${fileName}`;
+    const httpMethod = 'DELETE';
+
+    const navigateToProcessModelShow = (_httpResult: any) => {
+      debugger;
+      navigate(
+        `/admin/process-models/${params.process_group_id}/${params.process_model_id}`
+      );
+    };
+    HttpService.makeCallToBackend({
+      path: url,
+      successCallback: navigateToProcessModelShow,
+      httpMethod,
+    });
+  };
+
   const handleFileNameSave = (event: any) => {
     event.preventDefault();
     setShowFileNameEditor(false);
@@ -207,6 +224,7 @@ export default function ProcessModelEditDiagram() {
         processModelId={params.process_model_id || ''}
         processGroupId={params.process_group_id || ''}
         saveDiagram={saveDiagram}
+        onDeleteFile={onDeleteFile}
         diagramXML={bpmnXmlForDiagramRendering}
         fileName={processModelFile ? (processModelFile as any).name : null}
         diagramType="bpmn"
