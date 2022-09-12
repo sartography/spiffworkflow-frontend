@@ -169,7 +169,7 @@ export default function ProcessModelShow() {
         <Button
           href={`/admin/process-models/${
             (processModel as any).process_group_id
-          }/${(processModel as any).id}/file?file_type=bpmn`}
+          }/${(processModel as any).id}/files?file_type=bpmn`}
           variant="warning"
         >
           Add New BPMN File
@@ -177,7 +177,7 @@ export default function ProcessModelShow() {
         <Button
           href={`/admin/process-models/${
             (processModel as any).process_group_id
-          }/${(processModel as any).id}/file?file_type=dmn`}
+          }/${(processModel as any).id}/files?file_type=dmn`}
           variant="success"
         >
           Add New DMN File

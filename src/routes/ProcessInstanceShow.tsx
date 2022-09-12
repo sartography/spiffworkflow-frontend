@@ -54,14 +54,14 @@ export default function ProcessInstanceShow() {
   };
 
   const getTaskIds = () => {
-    const taskIds = { completed: [], active: [] };
+    const taskIds = { completed: [], readyOrWaiting: [] };
     if (tasks) {
       (tasks as any).forEach(function getUserTasksElement(task: any) {
         if (task.state === 'COMPLETED') {
           (taskIds.completed as any).push(task.name);
         }
         if (task.state === 'READY' || task.state === 'WAITING') {
-          (taskIds.active as any).push(task.name);
+          (taskIds.readyOrWaiting as any).push(task.name);
         }
       });
     }
@@ -176,7 +176,7 @@ export default function ProcessInstanceShow() {
           processGroupId={params.process_group_id || ''}
           diagramXML={processInstanceToUse.bpmn_xml_file_contents || ''}
           fileName={processInstanceToUse.bpmn_xml_file_contents || ''}
-          activeTaskBpmnIds={taskIds.active}
+          readyOrWaitingBpmnTaskIds={taskIds.readyOrWaiting}
           completedTasksBpmnIds={taskIds.completed}
           diagramType="readonly"
           onElementClick={handleClickedDiagramTask}

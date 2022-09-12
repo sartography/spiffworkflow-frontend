@@ -59,7 +59,7 @@ export default function ProcessModelEditDiagram() {
   const saveDiagram = (bpmnXML: any, fileName = params.file_name) => {
     setBpmnXmlForDiagramRendering(bpmnXML);
 
-    let url = `/process-models/${params.process_group_id}/${params.process_model_id}/file`;
+    let url = `/process-models/${params.process_group_id}/${params.process_model_id}/files`;
     let httpMethod = 'PUT';
     let fileNameWithExtension = fileName;
 

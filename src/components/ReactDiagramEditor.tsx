@@ -59,7 +59,7 @@ type OwnProps = {
   processModelId: string;
   processGroupId: string;
   diagramType: string;
-  activeTaskBpmnIds?: string[] | null;
+  readyOrWaitingBpmnTaskIds?: string[] | null;
   completedTasksBpmnIds?: string[] | null;
   saveDiagram?: (..._args: any[]) => any;
   onDeleteFile?: (..._args: any[]) => any;
@@ -76,7 +76,7 @@ export default function ReactDiagramEditor({
   processModelId,
   processGroupId,
   diagramType,
-  activeTaskBpmnIds,
+  readyOrWaitingBpmnTaskIds,
   completedTasksBpmnIds,
   saveDiagram,
   onDeleteFile,
@@ -247,6 +247,27 @@ export default function ReactDiagramEditor({
       );
     }
 
+    function highlightBpmnIoElement(
+      canvas: any,
+      taskBpmnId: string,
+      bpmnIoClassName: string
+    ) {
+      if (checkTaskCanBeHighlighted(taskBpmnId)) {
+        try {
+          canvas.addMarker(taskBpmnId, bpmnIoClassName);
+        } catch (bpmnIoError: any) {
+          // the task list also contains task for processes called from call activities which will
+          // not exist in this diagram so just ignore them for now.
+          if (
+            bpmnIoError.message !==
+            "Cannot read properties of undefined (reading 'id')"
+          ) {
+            throw bpmnIoError;
+          }
+        }
+      }
+    }
+
     function onImportDone(event: any) {
       const { error } = event;
 
@@ -272,18 +293,22 @@ export default function ReactDiagramEditor({
       // highlighting a field
       // Option 3 at:
       //  https://github.com/bpmn-io/bpmn-js-examples/tree/master/colors
-      if (activeTaskBpmnIds) {
-        activeTaskBpmnIds.forEach((activeTaskBpmnId) => {
-          if (checkTaskCanBeHighlighted(activeTaskBpmnId)) {
-            canvas.addMarker(activeTaskBpmnId, 'active-task-highlight');
-          }
+      if (readyOrWaitingBpmnTaskIds) {
+        readyOrWaitingBpmnTaskIds.forEach((readyOrWaitingBpmnTaskId) => {
+          highlightBpmnIoElement(
+            canvas,
+            readyOrWaitingBpmnTaskId,
+            'active-task-highlight'
+          );
         });
       }
       if (completedTasksBpmnIds) {
         completedTasksBpmnIds.forEach((completedTaskBpmnId) => {
-          if (checkTaskCanBeHighlighted(completedTaskBpmnId)) {
-            canvas.addMarker(completedTaskBpmnId, 'completed-task-highlight');
-          }
+          highlightBpmnIoElement(
+            canvas,
+            completedTaskBpmnId,
+            'completed-task-highlight'
+          );
         });
       }
     }
@@ -354,7 +379,7 @@ export default function ReactDiagramEditor({
     diagramType,
     diagramXML,
     diagramXMLString,
-    activeTaskBpmnIds,
+    readyOrWaitingBpmnTaskIds,
     completedTasksBpmnIds,
     fileName,
     performingXmlUpdates,

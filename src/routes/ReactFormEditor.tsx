@@ -43,7 +43,7 @@ export default function ReactFormEditor() {
   };
 
   const saveFile = () => {
-    let url = `/process-models/${params.process_group_id}/${params.process_model_id}/file`;
+    let url = `/process-models/${params.process_group_id}/${params.process_model_id}/files`;
     let httpMethod = 'PUT';
     let fileNameWithExtension = params.file_name;
 

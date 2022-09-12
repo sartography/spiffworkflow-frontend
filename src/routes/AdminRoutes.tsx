@@ -52,7 +52,7 @@ export default function AdminRoutes() {
           element={<ProcessModelShow />}
         />
         <Route
-          path="process-models/:process_group_id/:process_model_id/file"
+          path="process-models/:process_group_id/:process_model_id/files"
           element={<ProcessModelEditDiagram />}
         />
         <Route
