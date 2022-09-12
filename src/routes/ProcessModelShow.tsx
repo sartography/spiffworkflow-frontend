@@ -95,7 +95,7 @@ export default function ProcessModelShow() {
             <Link
               to={`/admin/process-models/${
                 (processModel as any).process_group_id
-              }/${(processModel as any).id}/file/${processModelFile.name}`}
+              }/${(processModel as any).id}/files/${processModelFile.name}`}
             >
               {processModelFile.name}
             </Link>

@@ -60,11 +60,11 @@ export default function ButtonWithConfirmation({
   };
 
   return (
-    <main>
+    <>
       <Button onClick={handleShowConfirmationPrompt} variant="danger">
         {buttonLabel}
       </Button>
       {confirmationDialog()}
-    </main>
+    </>
   );
 }

@@ -34,7 +34,7 @@ export default function ProcessModelEditDiagram() {
 
     if (params.file_name) {
       HttpService.makeCallToBackend({
-        path: `/process-models/${params.process_group_id}/${params.process_model_id}/file/${params.file_name}`,
+        path: `/process-models/${params.process_group_id}/${params.process_model_id}/files/${params.file_name}`,
         successCallback: processResult,
       });
     }
@@ -51,7 +51,7 @@ export default function ProcessModelEditDiagram() {
         'file_type'
       )}`;
       navigate(
-        `/admin/process-models/${params.process_group_id}/${params.process_model_id}/file/${fileNameWithExtension}`
+        `/admin/process-models/${params.process_group_id}/${params.process_model_id}/files/${fileNameWithExtension}`
       );
     }
   };
@@ -96,7 +96,6 @@ export default function ProcessModelEditDiagram() {
     const httpMethod = 'DELETE';
 
     const navigateToProcessModelShow = (_httpResult: any) => {
-      debugger;
       navigate(
         `/admin/process-models/${params.process_group_id}/${params.process_model_id}`
       );
@@ -213,6 +212,7 @@ export default function ProcessModelEditDiagram() {
           processModelId={params.process_model_id || ''}
           processGroupId={params.process_group_id || ''}
           saveDiagram={saveDiagram}
+          onDeleteFile={onDeleteFile}
           diagramXML={bpmnXmlForDiagramRendering}
           fileName={processModelFile ? (processModelFile as any).name : null}
           diagramType="dmn"

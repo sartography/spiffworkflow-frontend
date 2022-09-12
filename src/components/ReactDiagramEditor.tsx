@@ -53,6 +53,8 @@ import ZoomScrollModule from 'diagram-js/lib/navigation/zoomscroll';
 
 import HttpService from '../services/HttpService';
 
+import ButtonWithConfirmation from './ButtonWithConfirmation';
+
 type OwnProps = {
   processModelId: string;
   processGroupId: string;
@@ -310,7 +312,7 @@ export default function ReactDiagramEditor({
 
     function fetchDiagramFromJsonAPI() {
       HttpService.makeCallToBackend({
-        path: `/process-models/${processGroupId}/${processModelId}/file/${fileName}`,
+        path: `/process-models/${processGroupId}/${processModelId}/files/${fileName}`,
         successCallback: setDiagramXMLStringFromResponseJson,
       });
     }
@@ -372,7 +374,6 @@ export default function ReactDiagramEditor({
   }
 
   function handleDelete() {
-    debugger;
     if (onDeleteFile) {
       onDeleteFile(fileName);
     }
@@ -404,9 +405,13 @@ export default function ReactDiagramEditor({
           <Button onClick={handleSave} variant="danger">
             Save
           </Button>
-          <Button onClick={handleDelete} variant="danger">
-            Delete
-          </Button>
+          {fileName && (
+            <ButtonWithConfirmation
+              description={`Delete file ${fileName}?`}
+              onConfirmation={handleDelete}
+              buttonLabel="Delete"
+            />
+          )}
           <Button onClick={downloadXmlFile}>Download xml</Button>
         </>
       );

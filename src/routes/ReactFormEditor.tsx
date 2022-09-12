@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Button, Modal } from 'react-bootstrap';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 import HttpService from '../services/HttpService';
+import ButtonWithConfirmation from '../components/ButtonWithConfirmation';
 
 // NOTE: This is mostly the same as ProcessModelEditDiagram and if we go this route could
 // possibly be merged into it. I'm leaving as a separate file now in case it does
@@ -26,7 +27,7 @@ export default function ReactFormEditor() {
 
     if (params.file_name) {
       HttpService.makeCallToBackend({
-        path: `/process-models/${params.process_group_id}/${params.process_model_id}/file/${params.file_name}`,
+        path: `/process-models/${params.process_group_id}/${params.process_model_id}/files/${params.file_name}`,
         successCallback: processResult,
       });
     }
@@ -70,6 +71,23 @@ export default function ReactFormEditor() {
       successCallback: navigateToProcessModelFile,
       httpMethod,
       postBody: formData,
+    });
+  };
+
+  const deleteFile = () => {
+    const url = `/process-models/${params.process_group_id}/${params.process_model_id}/files/${params.file_name}`;
+    const httpMethod = 'DELETE';
+
+    const navigateToProcessModelShow = (_httpResult: any) => {
+      navigate(
+        `/admin/process-models/${params.process_group_id}/${params.process_model_id}`
+      );
+    };
+
+    HttpService.makeCallToBackend({
+      path: url,
+      successCallback: navigateToProcessModelShow,
+      httpMethod,
     });
   };
 
@@ -132,6 +150,13 @@ export default function ReactFormEditor() {
         <Button onClick={saveFile} variant="danger">
           Save
         </Button>
+        {params.file_name ? (
+          <ButtonWithConfirmation
+            description={`Delete file ${params.file_name}?`}
+            onConfirmation={deleteFile}
+            buttonLabel="Delete"
+          />
+        ) : null}
         <Editor
           height={600}
           width="auto"
