@@ -88,7 +88,7 @@ backendCallProps) => {
         if (failureCallback) {
           failureCallback(message);
         } else {
-          console.log(message);
+          console.error(message);
         }
       }
     })
@@ -97,7 +97,7 @@ backendCallProps) => {
         if (failureCallback) {
           failureCallback(error.message);
         } else {
-          console.log(error.message);
+          console.error(error.message);
         }
       }
     });
