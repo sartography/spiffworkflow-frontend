@@ -37,11 +37,13 @@ export default function TaskShow() {
   };
 
   const handleFormSubmit = (event: any) => {
+    setErrorMessage('');
     const dataToSubmit = event.formData;
     delete dataToSubmit.isManualTask;
     HttpService.makeCallToBackend({
       path: `/tasks/${params.process_instance_id}/${params.task_id}`,
       successCallback: processSubmitResult,
+      failureCallback: setErrorMessage,
       httpMethod: 'PUT',
       postBody: dataToSubmit,
     });
