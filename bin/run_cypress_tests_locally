@@ -12,4 +12,6 @@ if [[ -z "$command" ]]; then
   command=open
 fi
 
-./node_modules/.bin/cypress "$command" --e2e --browser chrome
+shift
+
+./node_modules/.bin/cypress "$command" --e2e --browser chrome "$@"

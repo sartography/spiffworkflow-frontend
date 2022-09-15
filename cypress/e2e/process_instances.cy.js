@@ -44,7 +44,8 @@ const updateBpmnPythonScriptWithMonaco = (
   cy.get('.monaco-editor textarea:first')
     .click()
     .focused() // change subject to currently focused element
-    .type('{ctrl}a')
+    // .type('{ctrl}a') // had been doing it this way, but it turns out to be flaky relative to clear()
+    .clear()
     .type(pythonScript);
 
   cy.contains('Close').click();
@@ -108,8 +109,6 @@ describe('process-instances', () => {
   });
 
   it('can create a new instance and can modify with monaco text editor', () => {
-    const dmnOutputForKevin = 'Very wonderful';
-    const dmnOutputForMike = 'Powerful wonderful';
     const originalPythonScript = 'person = "Kevin"';
     const newPythonScript = 'person = "Mike"';
     const bpmnFile = 'process_model_one.bpmn';
