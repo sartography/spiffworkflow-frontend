@@ -13,7 +13,7 @@ const checkTaskHasClass = (taskName, className) => {
   cy.get(`g[data-element-id=${taskName}]`).should('have.class', className);
 };
 
-describe('process-models', () => {
+describe('tasks', () => {
   beforeEach(() => {
     cy.login();
   });
