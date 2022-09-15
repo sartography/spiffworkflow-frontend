@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { Button, Modal } from 'react-bootstrap';
 import Editor from '@monaco-editor/react';
@@ -6,6 +6,7 @@ import Editor from '@monaco-editor/react';
 import ReactDiagramEditor from '../components/ReactDiagramEditor';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 import HttpService from '../services/HttpService';
+import ErrorContext from '../contexts/ErrorContext';
 
 export default function ProcessModelEditDiagram() {
   const [showFileNameEditor, setShowFileNameEditor] = useState(false);
@@ -21,6 +22,7 @@ export default function ProcessModelEditDiagram() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
+  const setErrorMessage = (useContext as any)(ErrorContext)[1];
   const [processModelFile, setProcessModelFile] = useState(null);
   const [newFileName, setNewFileName] = useState('');
   const [bpmnXmlForDiagramRendering, setBpmnXmlForDiagramRendering] =
@@ -57,6 +59,7 @@ export default function ProcessModelEditDiagram() {
   };
 
   const saveDiagram = (bpmnXML: any, fileName = params.file_name) => {
+    setErrorMessage('');
     setBpmnXmlForDiagramRendering(bpmnXML);
 
     let url = `/process-models/${params.process_group_id}/${params.process_model_id}/files`;
@@ -82,6 +85,7 @@ export default function ProcessModelEditDiagram() {
     HttpService.makeCallToBackend({
       path: url,
       successCallback: navigateToProcessModelFile,
+      failureCallback: setErrorMessage,
       httpMethod,
       postBody: formData,
     });
