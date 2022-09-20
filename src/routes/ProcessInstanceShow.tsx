@@ -99,6 +99,14 @@ export default function ProcessInstanceShow() {
             Logs
           </Link>
         </li>
+        <li>
+          <Link
+            data-qa="process-instance-message-instance-list-link"
+            to={`/admin/messages?process_group_id=${params.process_group_id}&process_model_id=${params.process_model_id}&process_instance_id=${params.process_instance_id}`}
+          >
+            Messages
+          </Link>
+        </li>
       </ul>
     );
   };
