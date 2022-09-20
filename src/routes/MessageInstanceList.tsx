@@ -85,7 +85,6 @@ export default function MessageInstanceList() {
         />
       );
     }
-    console.log('breadcrumbElement', breadcrumbElement);
     return (
       <main>
         {breadcrumbElement}
