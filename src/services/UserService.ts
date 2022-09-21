@@ -1,3 +1,4 @@
+import jwt from 'jwt-decode';
 import { BACKEND_BASE_URL } from '../config';
 
 // NOTE: this currently stores the jwt token in local storage
@@ -37,7 +38,14 @@ const getAuthToken = () => {
 const isLoggedIn = () => {
   return !!getAuthToken();
 };
-const getUsername = () => 'tmpuser';
+
+const getUsername = () => {
+  const idToken = getIdToken();
+  if (idToken) {
+    const idObject = jwt(idToken);
+    return (idObject as any).preferred_username;
+  }
+};
 
 // FIXME: we could probably change this search to a hook
 // and then could use useSearchParams here instead
