@@ -45,6 +45,7 @@ const getUsername = () => {
     const idObject = jwt(idToken);
     return (idObject as any).preferred_username;
   }
+  return null;
 };
 
 // FIXME: we could probably change this search to a hook
