@@ -31,5 +31,5 @@ export default function SubNavigation() {
       </Nav>
     );
   }
-  return <></>;
+  return null;
 }

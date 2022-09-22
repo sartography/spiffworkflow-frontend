@@ -53,7 +53,7 @@ export default function ProcessBreadcrumb({
     <main style={{ padding: '1rem 0' }}>
       <Breadcrumb>
         <Breadcrumb.Item linkAs={Link} linkProps={{ to: '/admin' }}>
-          Home
+          Process Groups
         </Breadcrumb.Item>
         {processGroupBreadcrumb}
         {processModelBreadcrumb}

@@ -6,7 +6,14 @@ import {
   useSearchParams,
 } from 'react-router-dom';
 
-import { Button, Table, Stack, Dropdown, Form } from 'react-bootstrap';
+import {
+  Button,
+  Table,
+  Stack,
+  Dropdown,
+  Form,
+  InputGroup,
+} from 'react-bootstrap';
 // @ts-expect-error TS(7016) FIXME: Could not find a declaration file for module 'reac... Remove this comment to see the full error message
 import DatePicker from 'react-datepicker';
 import { Typeahead } from 'react-bootstrap-typeahead';
@@ -45,8 +52,8 @@ export default function ProcessInstanceList() {
   const setErrorMessage = (useContext as any)(ErrorContext)[1];
 
   const [processStatus, setProcessStatus] = useState(PROCESS_STATUSES[0]);
-  const [processGroupIdentifier, setProcessGroupIdentifier] = useState([]);
-  const [processModelIdentifier, setProcessModelIdentifier] = useState(null);
+  const [processModeleSelectionOptions, setProcessModelSelectionOptions] =
+    useState([]);
   const [processModelSelection, setProcessModelSelection] = useState<Option[]>(
     []
   );
@@ -62,20 +69,18 @@ export default function ProcessInstanceList() {
 
   const parametersToGetFromSearchParams = useMemo(() => {
     return {
-      process_group_identifier: setProcessGroupIdentifier,
-      process_model_identifier: setProcessModelIdentifier,
+      process_group_identifier: null,
+      process_model_identifier: null,
       process_status: setProcessStatus,
     };
-  }, [setProcessStatus, setProcessGroupIdentifier, setProcessModelIdentifier]);
+  }, [setProcessStatus]);
 
+  // eslint-disable-next-line sonarjs/cognitive-complexity
   useEffect(() => {
     function setProcessInstancesFromResult(result: any) {
       const processInstancesFromApi = result.results;
       setProcessInstances(processInstancesFromApi);
       setPagination(result.pagination);
-    }
-    function processResultForProcessModels(result: any) {
-      getProcessInstances();
     }
     function getProcessInstances() {
       const { page, perPage } = getPageInfoFromSearchParams(searchParams);
@@ -95,9 +100,12 @@ export default function ProcessInstanceList() {
         (paramName: string) => {
           if (searchParams.get(paramName)) {
             // @ts-expect-error TS(7053) FIXME:
-            const functionToCall = parametersToAlwaysFilterBy[paramName];
+            const functionToCall = parametersToGetFromSearchParams[paramName];
             queryParamString += `&${paramName}=${searchParams.get(paramName)}`;
-            functionToCall(searchParams.get(paramName) || '');
+
+            if (functionToCall !== null) {
+              functionToCall(searchParams.get(paramName) || '');
+            }
           }
         }
       );
@@ -106,9 +114,30 @@ export default function ProcessInstanceList() {
         successCallback: setProcessInstancesFromResult,
       });
     }
+    function processResultForProcessModels(result: any) {
+      let processModelFullIdentifier = '';
+      if (
+        searchParams.get('process_model_identifier') &&
+        searchParams.get('process_group_identifier')
+      ) {
+        processModelFullIdentifier = `${searchParams.get(
+          'process_group_identifier'
+        )}/${searchParams.get('process_model_identifier')}`;
+      }
+      const selectionArray = result.results.map((item: any) => {
+        const label = `${item.process_group_id}/${item.id}`;
+        Object.assign(item, { label });
+        if (label === processModelFullIdentifier) {
+          setProcessModelSelection([item]);
+        }
+        return item;
+      });
+      setProcessModelSelectionOptions(selectionArray);
+      getProcessInstances();
+    }
 
     HttpService.makeCallToBackend({
-      path: `/process-models`,
+      path: `/process-models?per_page=1000`,
       successCallback: processResultForProcessModels,
     });
   }, [
@@ -174,6 +203,10 @@ export default function ProcessInstanceList() {
     if (processStatus && processStatus !== 'all') {
       queryParamString += `&process_status=${processStatus}`;
     }
+    if (processModelSelection.length > 0) {
+      const currentProcessModel: any = processModelSelection[0];
+      queryParamString += `&process_group_identifier=${currentProcessModel.process_group_id}&process_model_identifier=${currentProcessModel.id}`;
+    }
 
     setErrorMessage('');
     navigate(`/admin/process-instances?${queryParamString}`);
@@ -215,14 +248,32 @@ export default function ProcessInstanceList() {
     Object.keys(parametersToGetFromSearchParams).forEach(
       (paramName: string) => {
         if (searchParams.get(paramName)) {
-          // @ts-expect-error TS(7053) FIXME:
-          const functionToCall = parametersToAlwaysFilterBy[paramName];
           queryParamString += `&${paramName}=${searchParams.get(paramName)}`;
-          functionToCall(searchParams.get(paramName) || '');
         }
       }
     );
     return queryParamString;
+  };
+
+  const processModelSearch = () => {
+    return (
+      <Form.Group>
+        <InputGroup>
+          <InputGroup.Text className="text-nowrap">
+            Process Model:{' '}
+          </InputGroup.Text>
+          <Typeahead
+            style={{ width: 500 }}
+            id="process-model-selection"
+            labelKey="label"
+            onChange={setProcessModelSelection}
+            options={processModeleSelectionOptions}
+            placeholder="Choose a process model..."
+            selected={processModelSelection}
+          />
+        </InputGroup>
+      </Form.Group>
+    );
   };
 
   const filterOptions = () => {
@@ -248,8 +299,11 @@ export default function ProcessInstanceList() {
       <div className="container">
         <div className="row">
           <div className="col">
-            {processModelSearch()}
             <form onSubmit={handleFilter}>
+              <Stack direction="horizontal" gap={3}>
+                {processModelSearch()}
+              </Stack>
+              <br />
               <Stack direction="horizontal" gap={3}>
                 {dateComponent(
                   'Start Range: ',
@@ -287,48 +341,6 @@ export default function ProcessInstanceList() {
           <div className="col" />
         </div>
       </div>
-    );
-  };
-
-  const processModelSearch = () => {
-    const options = [
-      {
-        label: 'Alabama',
-        population: 4780127,
-        capital: 'Montgomery',
-        region: 'South',
-      },
-      {
-        label: 'Alaska',
-        population: 710249,
-        capital: 'Juneau',
-        region: 'West',
-      },
-      {
-        label: 'Arizona',
-        population: 6392307,
-        capital: 'Phoenix',
-        region: 'West',
-      },
-      {
-        label: 'Arkansas',
-        population: 2915958,
-        capital: 'Little Rock',
-        region: 'South',
-      },
-    ];
-    return (
-      <Form.Group>
-        <Form.Label>Single Selection</Form.Label>
-        <Typeahead
-          id="basic-typeahead-single"
-          labelKey="label"
-          onChange={setProcessModelSelection}
-          options={options}
-          placeholder="Choose a state..."
-          selected={processModelSelection}
-        />
-      </Form.Group>
     );
   };
 
@@ -394,7 +406,7 @@ export default function ProcessInstanceList() {
     const { page, perPage } = getPageInfoFromSearchParams(searchParams);
     return (
       <main style={{ padding: '1rem 0' }}>
-        <h2>Process Instances for {params.process_model_id}</h2>
+        <h2>Process Instances</h2>
         {filterOptions()}
         <PaginationForTable
           page={page}
