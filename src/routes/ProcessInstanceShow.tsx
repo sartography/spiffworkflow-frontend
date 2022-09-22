@@ -17,7 +17,7 @@ export default function ProcessInstanceShow() {
 
   const navigateToProcessInstances = (_result: any) => {
     navigate(
-      `/admin/process-models/${params.process_group_id}/${params.process_model_id}/process-instances`
+      `/admin/process-instances?process_group_identifier=${params.process_group_id}&process_model_identifier=${params.process_model_id}`
     );
   };
 

@@ -362,16 +362,12 @@ export default function ProcessInstanceList() {
             </Link>
           </td>
           <td>
-            <Link
-              data-qa="process-instance-show-link"
-              to={`/admin/process-groups/${row.process_group_identifier}`}
-            >
+            <Link to={`/admin/process-groups/${row.process_group_identifier}`}>
               {row.process_group_identifier}
             </Link>
           </td>
           <td>
             <Link
-              data-qa="process-instance-show-link"
               to={`/admin/process-models/${row.process_group_identifier}/${row.process_model_identifier}`}
             >
               {row.process_model_identifier}

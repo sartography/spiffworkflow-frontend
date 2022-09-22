@@ -113,7 +113,7 @@ describe('process-models', () => {
     cy.contains(modelId).should('not.exist');
   });
 
-  it('can upload and run a bpmn file', () => {
+  it.only('can upload and run a bpmn file', () => {
     const uuid = () => Cypress._.random(0, 1e6);
     const id = uuid();
     const groupId = 'acceptance-tests-group-one';
@@ -146,8 +146,8 @@ describe('process-models', () => {
     cy.contains('Delete').click();
     cy.contains('Are you sure');
     cy.contains('OK').click();
-    cy.contains(`Process Instances for ${modelId}`);
-    cy.contains(`Process Model: ${modelId}`);
+    cy.contains(`Process Instances`);
+    cy.contains(modelId);
     cy.contains(modelId).click();
 
     cy.contains('Edit process model').click();

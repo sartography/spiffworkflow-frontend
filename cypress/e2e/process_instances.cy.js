@@ -155,7 +155,7 @@ describe('process-instances', () => {
     cy.assertAtLeastOneItemInPaginatedResults();
 
     PROCESS_STATUSES.forEach((processStatus) => {
-      if (processStatus !== 'all') {
+      if (!['all', 'waiting'].includes(processStatus)) {
         cy.getBySel('process-status-dropdown')
           .type('typing_to_open_dropdown_box....FIXME')
           .find('.dropdown-item')
