@@ -18,6 +18,7 @@ import {
 import DatePicker from 'react-datepicker';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import { Option } from 'react-bootstrap-typeahead/types/types';
+import { stringify } from 'querystring';
 import { PROCESS_STATUSES, DATE_FORMAT } from '../config';
 import {
   convertDateToSeconds,
@@ -52,7 +53,11 @@ export default function ProcessInstanceList() {
 
   const setErrorMessage = (useContext as any)(ErrorContext)[1];
 
-  const [processStatus, setProcessStatus] = useState(PROCESS_STATUSES[0]);
+  const [processStatuseSelectionOptions, setProcessStatusSelectionOptions] =
+    useState<any[]>([]);
+  const [processStatusSelection, setProcessStatusSelection] = useState<
+    Option[]
+  >([]);
   const [processModeleSelectionOptions, setProcessModelSelectionOptions] =
     useState([]);
   const [processModelSelection, setProcessModelSelection] = useState<Option[]>(
@@ -72,9 +77,9 @@ export default function ProcessInstanceList() {
     return {
       process_group_identifier: null,
       process_model_identifier: null,
-      process_status: setProcessStatus,
+      process_status: null,
     };
-  }, [setProcessStatus]);
+  }, []);
 
   useEffect(() => {
     function setProcessInstancesFromResult(result: any) {
@@ -102,7 +107,6 @@ export default function ProcessInstanceList() {
             // @ts-expect-error TS(7053) FIXME:
             const functionToCall = parametersToGetFromSearchParams[paramName];
             queryParamString += `&${paramName}=${searchParams.get(paramName)}`;
-
             if (functionToCall !== null) {
               functionToCall(searchParams.get(paramName) || '');
             }
@@ -126,6 +130,20 @@ export default function ProcessInstanceList() {
         return item;
       });
       setProcessModelSelectionOptions(selectionArray);
+
+      const processStatusSelectedArray: Option[] = [];
+      const processStatusSelectionArray = PROCESS_STATUSES.map(
+        (processStatusOption: any) => {
+          const regex = new RegExp(`\\b${processStatusOption}\\b`);
+          if ((searchParams.get('process_status') || '').match(regex)) {
+            processStatusSelectedArray.push({ label: processStatusOption });
+          }
+          return { label: processStatusOption };
+        }
+      );
+      setProcessStatusSelection(processStatusSelectedArray);
+      setProcessStatusSelectionOptions(processStatusSelectionArray);
+
       getProcessInstances();
     }
 
@@ -193,8 +211,13 @@ export default function ProcessInstanceList() {
     if (endTill) {
       queryParamString += `&end_till=${endTill}`;
     }
-    if (processStatus && processStatus !== 'all') {
-      queryParamString += `&process_status=${processStatus}`;
+    if (processStatusSelection) {
+      const processStatusSelectionString = processStatusSelection.map(
+        (pss: any) => {
+          return pss.label;
+        }
+      );
+      queryParamString += `&process_status=${processStatusSelectionString}`;
     }
     if (processModelSelection.length > 0) {
       const currentProcessModel: any = processModelSelection[0];
@@ -269,25 +292,29 @@ export default function ProcessInstanceList() {
     );
   };
 
-  const filterOptions = () => {
-    const processStatusesRows = PROCESS_STATUSES.map((processStatusOption) => {
-      if (processStatusOption === processStatus) {
-        return (
-          <Dropdown.Item key={processStatusOption} active>
-            {processStatusOption}
-          </Dropdown.Item>
-        );
-      }
-      return (
-        <Dropdown.Item
-          key={processStatusOption}
-          onClick={() => setProcessStatus(processStatusOption)}
-        >
-          {processStatusOption}
-        </Dropdown.Item>
-      );
-    });
+  const processStatusSearch = () => {
+    return (
+      <Form.Group>
+        <InputGroup>
+          <InputGroup.Text className="text-nowrap">
+            Process Status:{' '}
+          </InputGroup.Text>
+          <Typeahead
+            style={{ width: 500 }}
+            id="process-status-selection"
+            labelKey="label"
+            multiple
+            onChange={setProcessStatusSelection}
+            options={processStatuseSelectionOptions}
+            placeholder="Choose process statuses..."
+            selected={processStatusSelection}
+          />
+        </InputGroup>
+      </Form.Group>
+    );
+  };
 
+  const filterOptions = () => {
     return (
       <div className="container">
         <div className="row">
@@ -313,18 +340,9 @@ export default function ProcessInstanceList() {
               </Stack>
               <br />
               <Stack direction="horizontal" gap={3}>
-                <Dropdown
-                  data-qa="process-status-dropdown"
-                  id="process-status-dropdown"
-                >
-                  <Dropdown.Toggle id="process-status" variant="light border">
-                    Process Statuses: {processStatus}
-                  </Dropdown.Toggle>
-
-                  <Dropdown.Menu variant="light">
-                    {processStatusesRows}
-                  </Dropdown.Menu>
-                </Dropdown>
+                {processStatusSearch()}
+              </Stack>
+              <Stack direction="horizontal" gap={3}>
                 <Button className="ms-auto" variant="secondary" type="submit">
                   Filter
                 </Button>
