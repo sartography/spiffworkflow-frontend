@@ -75,3 +75,18 @@ export const makeid = (length: number) => {
   }
   return result;
 };
+
+export const getProcessModelFullIdentifierFromSearchParams = (
+  searchParams: any
+) => {
+  let processModelFullIdentifier = null;
+  if (
+    searchParams.get('process_model_identifier') &&
+    searchParams.get('process_group_identifier')
+  ) {
+    processModelFullIdentifier = `${searchParams.get(
+      'process_group_identifier'
+    )}/${searchParams.get('process_model_identifier')}`;
+  }
+  return processModelFullIdentifier;
+};

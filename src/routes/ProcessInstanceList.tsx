@@ -23,6 +23,7 @@ import {
   convertDateToSeconds,
   convertSecondsToFormattedDate,
   getPageInfoFromSearchParams,
+  getProcessModelFullIdentifierFromSearchParams,
 } from '../helpers';
 
 import PaginationForTable from '../components/PaginationForTable';
@@ -75,7 +76,6 @@ export default function ProcessInstanceList() {
     };
   }, [setProcessStatus]);
 
-  // eslint-disable-next-line sonarjs/cognitive-complexity
   useEffect(() => {
     function setProcessInstancesFromResult(result: any) {
       const processInstancesFromApi = result.results;
@@ -115,15 +115,8 @@ export default function ProcessInstanceList() {
       });
     }
     function processResultForProcessModels(result: any) {
-      let processModelFullIdentifier = '';
-      if (
-        searchParams.get('process_model_identifier') &&
-        searchParams.get('process_group_identifier')
-      ) {
-        processModelFullIdentifier = `${searchParams.get(
-          'process_group_identifier'
-        )}/${searchParams.get('process_model_identifier')}`;
-      }
+      const processModelFullIdentifier =
+        getProcessModelFullIdentifierFromSearchParams(searchParams);
       const selectionArray = result.results.map((item: any) => {
         const label = `${item.process_group_id}/${item.id}`;
         Object.assign(item, { label });
@@ -398,11 +391,27 @@ export default function ProcessInstanceList() {
     );
   };
 
+  const processInstanceTitleElement = () => {
+    const processModelFullIdentifier =
+      getProcessModelFullIdentifierFromSearchParams(searchParams);
+    if (processModelFullIdentifier === null) {
+      return <h2>Process Instances</h2>;
+    }
+    return (
+      <h2>
+        Process Instances for:{' '}
+        <Link to={`/admin/process-models/${processModelFullIdentifier}`}>
+          {processModelFullIdentifier}
+        </Link>
+      </h2>
+    );
+  };
+
   if (pagination) {
     const { page, perPage } = getPageInfoFromSearchParams(searchParams);
     return (
       <main style={{ padding: '1rem 0' }}>
-        <h2>Process Instances</h2>
+        {processInstanceTitleElement()}
         {filterOptions()}
         <PaginationForTable
           page={page}
