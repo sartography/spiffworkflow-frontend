@@ -6,19 +6,11 @@ import {
   useSearchParams,
 } from 'react-router-dom';
 
-import {
-  Button,
-  Table,
-  Stack,
-  Dropdown,
-  Form,
-  InputGroup,
-} from 'react-bootstrap';
+import { Button, Table, Stack, Form, InputGroup } from 'react-bootstrap';
 // @ts-expect-error TS(7016) FIXME: Could not find a declaration file for module 'reac... Remove this comment to see the full error message
 import DatePicker from 'react-datepicker';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import { Option } from 'react-bootstrap-typeahead/types/types';
-import { stringify } from 'querystring';
 import { PROCESS_STATUSES, DATE_FORMAT } from '../config';
 import {
   convertDateToSeconds,
@@ -81,6 +73,7 @@ export default function ProcessInstanceList() {
     };
   }, []);
 
+  // eslint-disable-next-line sonarjs/cognitive-complexity
   useEffect(() => {
     function setProcessInstancesFromResult(result: any) {
       const processInstancesFromApi = result.results;
@@ -300,10 +293,14 @@ export default function ProcessInstanceList() {
             Process Status:{' '}
           </InputGroup.Text>
           <Typeahead
+            multiple
             style={{ width: 500 }}
             id="process-status-selection"
+            // for cypress tests since data-qa does not work
+            inputProps={{
+              name: 'process-status-selection',
+            }}
             labelKey="label"
-            multiple
             onChange={setProcessStatusSelection}
             options={processStatuseSelectionOptions}
             placeholder="Choose process statuses..."
