@@ -204,7 +204,7 @@ export default function ProcessInstanceList() {
     if (endTill) {
       queryParamString += `&end_till=${endTill}`;
     }
-    if (processStatusSelection) {
+    if (processStatusSelection.length > 0) {
       const processStatusSelectionString = processStatusSelection.map(
         (pss: any) => {
           return pss.label;
