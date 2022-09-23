@@ -8,7 +8,7 @@ test('renders home link', () => {
       <ProcessBreadcrumb />
     </BrowserRouter>
   );
-  const homeElement = screen.getByText(/Home/);
+  const homeElement = screen.getByText(/Process Groups/);
   expect(homeElement).toBeInTheDocument();
 });
 
