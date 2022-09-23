@@ -75,7 +75,6 @@ export default function ProcessGroups() {
     return (
       <main style={{ padding: '1rem 0' }}>
         <ProcessBreadcrumb />
-        <h2>Process Groups</h2>
         <Button href="/admin/process-groups/new">Add a process group</Button>
         <br />
         <br />

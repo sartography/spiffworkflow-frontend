@@ -155,24 +155,19 @@ describe('process-instances', () => {
     cy.assertAtLeastOneItemInPaginatedResults();
 
     PROCESS_STATUSES.forEach((processStatus) => {
-      if (processStatus !== 'all') {
-        cy.getBySel('process-status-dropdown')
-          .type('typing_to_open_dropdown_box....FIXME')
-          .find('.dropdown-item')
-          .contains(new RegExp(`^${processStatus}$`))
-          .click();
+      if (!['all', 'waiting'].includes(processStatus)) {
+        cy.get('[name=process-status-selection]').click();
+        cy.get('[name=process-status-selection]').type(processStatus);
+        cy.get(`[aria-label=${processStatus}]`).click();
+        cy.contains('Process Status').click();
         cy.contains('Filter').click();
         cy.assertAtLeastOneItemInPaginatedResults();
         cy.getBySel(`process-instance-status-${processStatus}`).contains(
           processStatus
         );
+        cy.get('button[aria-label=Remove]').click();
       }
     });
-    cy.getBySel('process-status-dropdown')
-      .type('typing_to_open_dropdown_box....FIXME')
-      .find('.dropdown-item')
-      .contains('all')
-      .click();
 
     const date = new Date();
     date.setHours(date.getHours() - 1);

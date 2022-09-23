@@ -24,7 +24,7 @@ export default function ProcessGroupShow() {
     const processResult = (result: any) => {
       setProcessGroup(result);
       HttpService.makeCallToBackend({
-        path: `/process-groups/${params.process_group_id}/process-models?per_page=${perPage}&page=${page}`,
+        path: `/process-models?process_group_identifier=${params.process_group_id}&per_page=${perPage}&page=${page}`,
         successCallback: setProcessModelFromResult,
       });
     };
@@ -73,7 +73,6 @@ export default function ProcessGroupShow() {
     return (
       <main style={{ padding: '1rem 0' }}>
         <ProcessBreadcrumb processGroupId={(processGroup as any).id} />
-        <h2>Process Group: {(processGroup as any).id}</h2>
         <ul>
           <Stack direction="horizontal" gap={3}>
             <Button

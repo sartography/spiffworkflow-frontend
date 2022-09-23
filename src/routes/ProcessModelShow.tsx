@@ -130,9 +130,9 @@ export default function ProcessModelShow() {
       <ul>
         <li>
           <Link
-            to={`/admin/process-models/${
+            to={`/admin/process-instances?process_group_identifier=${
               (processModel as any).process_group_id
-            }/${(processModel as any).id}/process-instances`}
+            }&process_model_identifier=${(processModel as any).id}`}
             data-qa="process-instance-list-link"
           >
             List
@@ -201,10 +201,6 @@ export default function ProcessModelShow() {
           processGroupId={(processModel as any).process_group_id}
           processModelId={(processModel as any).id}
         />
-        <Stack direction="horizontal" gap={3}>
-          <h2>Process Model: {(processModel as any).display_name}</h2>
-          <span>({(processModel as any).id})</span>
-        </Stack>
         {processInstanceResultTag}
         <FileInput
           processModelId={(processModel as any).id}

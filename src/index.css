@@ -50,3 +50,11 @@ span.bjs-crumb {
   width:90vw;
   margin:auto;
 }
+
+.breadcrumb {
+  font-size: 1.5em;
+}
+
+.breadcrumb-item.active {
+  color: black;
+}

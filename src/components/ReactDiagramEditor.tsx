@@ -54,6 +54,7 @@ import ZoomScrollModule from 'diagram-js/lib/navigation/zoomscroll';
 import HttpService from '../services/HttpService';
 
 import ButtonWithConfirmation from './ButtonWithConfirmation';
+import { makeid } from '../helpers';
 
 type OwnProps = {
   processModelId: string;
@@ -327,7 +328,11 @@ export default function ReactDiagramEditor({
     function fetchDiagramFromURL(urlToUse: any) {
       fetch(urlToUse)
         .then((response) => response.text())
-        .then((text) => setDiagramXMLString(text))
+        .then((text) => {
+          const processId = `Proccess_${makeid(7)}`;
+          const newText = text.replace('{{PROCESS_ID}}', processId);
+          setDiagramXMLString(newText);
+        })
         .catch((err) => handleError(err));
     }
 

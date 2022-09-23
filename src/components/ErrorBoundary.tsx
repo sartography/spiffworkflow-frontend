@@ -17,11 +17,11 @@ class ErrorBoundary extends React.Component<Props, State> {
   }
 
   componentDidCatch(error: any, errorInfo: any) {
-    console.log(error, errorInfo);
+    console.error(error, errorInfo);
     if (error.constructor.name === 'AggregateError') {
-      console.log(error.message);
-      console.log(error.name);
-      console.log(error.errors);
+      console.error(error.message);
+      console.error(error.name);
+      console.error(error.errors);
     }
   }
 

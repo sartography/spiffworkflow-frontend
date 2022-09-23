@@ -64,3 +64,29 @@ export const getPageInfoFromSearchParams = (
 
   return { page, perPage };
 };
+
+// https://stackoverflow.com/a/1349426/6090676
+export const makeid = (length: number) => {
+  let result = '';
+  const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  const charactersLength = characters.length;
+  for (let i = 0; i < length; i += 1) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+};
+
+export const getProcessModelFullIdentifierFromSearchParams = (
+  searchParams: any
+) => {
+  let processModelFullIdentifier = null;
+  if (
+    searchParams.get('process_model_identifier') &&
+    searchParams.get('process_group_identifier')
+  ) {
+    processModelFullIdentifier = `${searchParams.get(
+      'process_group_identifier'
+    )}/${searchParams.get('process_model_identifier')}`;
+  }
+  return processModelFullIdentifier;
+};

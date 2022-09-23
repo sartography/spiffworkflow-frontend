@@ -86,8 +86,9 @@ export default function MessageInstanceList() {
       );
     }
     return (
-      <main>
+      <main style={{ padding: '1rem 0' }}>
         {breadcrumbElement}
+        <h2>Messages</h2>
         <PaginationForTable
           page={page}
           perPage={perPage}

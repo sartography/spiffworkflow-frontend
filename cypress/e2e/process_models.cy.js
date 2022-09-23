@@ -101,6 +101,8 @@ describe('process-models', () => {
     cy.get('input[name=file_name]').type(jsonFileName);
     cy.contains('Save Changes').click();
     cy.contains(`Process Model File: ${jsonFileName}`);
+    // wait for json to load before clicking away to avoid network errors
+    cy.wait(500);
     cy.contains(modelId).click();
     cy.contains(`Process Model: ${modelId}`);
     cy.contains(`${jsonFileName}.json`).should('exist');
@@ -146,8 +148,7 @@ describe('process-models', () => {
     cy.contains('Delete').click();
     cy.contains('Are you sure');
     cy.contains('OK').click();
-    cy.contains(`Process Instances for ${modelId}`);
-    cy.contains(`Process Model: ${modelId}`);
+    cy.contains(`Process Instances for: ${groupId}/${modelId}`);
     cy.contains(modelId).click();
 
     cy.contains('Edit process model').click();

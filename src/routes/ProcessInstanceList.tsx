@@ -6,15 +6,17 @@ import {
   useSearchParams,
 } from 'react-router-dom';
 
-import { Button, Table, Stack, Dropdown } from 'react-bootstrap';
+import { Button, Table, Stack, Form, InputGroup } from 'react-bootstrap';
 // @ts-expect-error TS(7016) FIXME: Could not find a declaration file for module 'reac... Remove this comment to see the full error message
 import DatePicker from 'react-datepicker';
+import { Typeahead } from 'react-bootstrap-typeahead';
+import { Option } from 'react-bootstrap-typeahead/types/types';
 import { PROCESS_STATUSES, DATE_FORMAT } from '../config';
-import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 import {
   convertDateToSeconds,
   convertSecondsToFormattedDate,
   getPageInfoFromSearchParams,
+  getProcessModelFullIdentifierFromSearchParams,
 } from '../helpers';
 
 import PaginationForTable from '../components/PaginationForTable';
@@ -22,6 +24,9 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 import ErrorContext from '../contexts/ErrorContext';
 import HttpService from '../services/HttpService';
+
+import 'react-bootstrap-typeahead/css/Typeahead.css';
+import 'react-bootstrap-typeahead/css/Typeahead.bs5.css';
 
 export default function ProcessInstanceList() {
   const params = useParams();
@@ -40,7 +45,17 @@ export default function ProcessInstanceList() {
 
   const setErrorMessage = (useContext as any)(ErrorContext)[1];
 
-  const [processStatus, setProcessStatus] = useState(PROCESS_STATUSES[0]);
+  const [processStatuseSelectionOptions, setProcessStatusSelectionOptions] =
+    useState<any[]>([]);
+  const [processStatusSelection, setProcessStatusSelection] = useState<
+    Option[]
+  >([]);
+  const [processModeleSelectionOptions, setProcessModelSelectionOptions] =
+    useState([]);
+  const [processModelSelection, setProcessModelSelection] = useState<Option[]>(
+    []
+  );
+
   const parametersToAlwaysFilterBy = useMemo(() => {
     return {
       start_from: setStartFrom,
@@ -50,6 +65,15 @@ export default function ProcessInstanceList() {
     };
   }, [setStartFrom, setStartTill, setEndFrom, setEndTill]);
 
+  const parametersToGetFromSearchParams = useMemo(() => {
+    return {
+      process_group_identifier: null,
+      process_model_identifier: null,
+      process_status: null,
+    };
+  }, []);
+
+  // eslint-disable-next-line sonarjs/cognitive-complexity
   useEffect(() => {
     function setProcessInstancesFromResult(result: any) {
       const processInstancesFromApi = result.results;
@@ -61,7 +85,7 @@ export default function ProcessInstanceList() {
       let queryParamString = `per_page=${perPage}&page=${page}`;
 
       Object.keys(parametersToAlwaysFilterBy).forEach((paramName: string) => {
-        // @ts-expect-error TS(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
+        // @ts-expect-error TS(7053) FIXME:
         const functionToCall = parametersToAlwaysFilterBy[paramName];
         const searchParamValue = searchParams.get(paramName);
         if (searchParamValue) {
@@ -70,26 +94,63 @@ export default function ProcessInstanceList() {
         }
       });
 
-      if (searchParams.get('process_status')) {
-        queryParamString += `&process_status=${searchParams.get(
-          'process_status'
-        )}`;
-        setProcessStatus(searchParams.get('process_status') || '');
-      }
-
+      Object.keys(parametersToGetFromSearchParams).forEach(
+        (paramName: string) => {
+          if (searchParams.get(paramName)) {
+            // @ts-expect-error TS(7053) FIXME:
+            const functionToCall = parametersToGetFromSearchParams[paramName];
+            queryParamString += `&${paramName}=${searchParams.get(paramName)}`;
+            if (functionToCall !== null) {
+              functionToCall(searchParams.get(paramName) || '');
+            }
+          }
+        }
+      );
       HttpService.makeCallToBackend({
-        path: `/process-models/${params.process_group_id}/${params.process_model_id}/process-instances?${queryParamString}`,
+        path: `/process-instances?${queryParamString}`,
         successCallback: setProcessInstancesFromResult,
       });
     }
+    function processResultForProcessModels(result: any) {
+      const processModelFullIdentifier =
+        getProcessModelFullIdentifierFromSearchParams(searchParams);
+      const selectionArray = result.results.map((item: any) => {
+        const label = `${item.process_group_id}/${item.id}`;
+        Object.assign(item, { label });
+        if (label === processModelFullIdentifier) {
+          setProcessModelSelection([item]);
+        }
+        return item;
+      });
+      setProcessModelSelectionOptions(selectionArray);
 
-    getProcessInstances();
+      const processStatusSelectedArray: Option[] = [];
+      const processStatusSelectionArray = PROCESS_STATUSES.map(
+        (processStatusOption: any) => {
+          const regex = new RegExp(`\\b${processStatusOption}\\b`);
+          if ((searchParams.get('process_status') || '').match(regex)) {
+            processStatusSelectedArray.push({ label: processStatusOption });
+          }
+          return { label: processStatusOption };
+        }
+      );
+      setProcessStatusSelection(processStatusSelectedArray);
+      setProcessStatusSelectionOptions(processStatusSelectionArray);
+
+      getProcessInstances();
+    }
+
+    HttpService.makeCallToBackend({
+      path: `/process-models?per_page=1000`,
+      successCallback: processResultForProcessModels,
+    });
   }, [
     searchParams,
     params,
     oneMonthInSeconds,
     oneHourInSeconds,
     parametersToAlwaysFilterBy,
+    parametersToGetFromSearchParams,
   ]);
 
   // does the comparison, but also returns false if either argument
@@ -143,14 +204,21 @@ export default function ProcessInstanceList() {
     if (endTill) {
       queryParamString += `&end_till=${endTill}`;
     }
-    if (processStatus && processStatus !== 'all') {
-      queryParamString += `&process_status=${processStatus}`;
+    if (processStatusSelection.length > 0) {
+      const processStatusSelectionString = processStatusSelection.map(
+        (pss: any) => {
+          return pss.label;
+        }
+      );
+      queryParamString += `&process_status=${processStatusSelectionString}`;
+    }
+    if (processModelSelection.length > 0) {
+      const currentProcessModel: any = processModelSelection[0];
+      queryParamString += `&process_group_identifier=${currentProcessModel.process_group_id}&process_model_identifier=${currentProcessModel.id}`;
     }
 
     setErrorMessage('');
-    navigate(
-      `/admin/process-models/${params.process_group_id}/${params.process_model_id}/process-instances?${queryParamString}`
-    );
+    navigate(`/admin/process-instances?${queryParamString}`);
   };
 
   const dateComponent = (
@@ -185,33 +253,74 @@ export default function ProcessInstanceList() {
         queryParamString += `&${paramName}=${searchParamValue}`;
       }
     });
+
+    Object.keys(parametersToGetFromSearchParams).forEach(
+      (paramName: string) => {
+        if (searchParams.get(paramName)) {
+          queryParamString += `&${paramName}=${searchParams.get(paramName)}`;
+        }
+      }
+    );
     return queryParamString;
   };
 
-  const filterOptions = () => {
-    const processStatusesRows = PROCESS_STATUSES.map((processStatusOption) => {
-      if (processStatusOption === processStatus) {
-        return (
-          <Dropdown.Item key={processStatusOption} active>
-            {processStatusOption}
-          </Dropdown.Item>
-        );
-      }
-      return (
-        <Dropdown.Item
-          key={processStatusOption}
-          onClick={() => setProcessStatus(processStatusOption)}
-        >
-          {processStatusOption}
-        </Dropdown.Item>
-      );
-    });
+  const processModelSearch = () => {
+    return (
+      <Form.Group>
+        <InputGroup>
+          <InputGroup.Text className="text-nowrap">
+            Process Model:{' '}
+          </InputGroup.Text>
+          <Typeahead
+            style={{ width: 500 }}
+            id="process-model-selection"
+            labelKey="label"
+            onChange={setProcessModelSelection}
+            options={processModeleSelectionOptions}
+            placeholder="Choose a process model..."
+            selected={processModelSelection}
+          />
+        </InputGroup>
+      </Form.Group>
+    );
+  };
 
+  const processStatusSearch = () => {
+    return (
+      <Form.Group>
+        <InputGroup>
+          <InputGroup.Text className="text-nowrap">
+            Process Status:{' '}
+          </InputGroup.Text>
+          <Typeahead
+            multiple
+            style={{ width: 500 }}
+            id="process-status-selection"
+            // for cypress tests since data-qa does not work
+            inputProps={{
+              name: 'process-status-selection',
+            }}
+            labelKey="label"
+            onChange={setProcessStatusSelection}
+            options={processStatuseSelectionOptions}
+            placeholder="Choose process statuses..."
+            selected={processStatusSelection}
+          />
+        </InputGroup>
+      </Form.Group>
+    );
+  };
+
+  const filterOptions = () => {
     return (
       <div className="container">
         <div className="row">
           <div className="col">
             <form onSubmit={handleFilter}>
+              <Stack direction="horizontal" gap={3}>
+                {processModelSearch()}
+              </Stack>
+              <br />
               <Stack direction="horizontal" gap={3}>
                 {dateComponent(
                   'Start Range: ',
@@ -228,18 +337,9 @@ export default function ProcessInstanceList() {
               </Stack>
               <br />
               <Stack direction="horizontal" gap={3}>
-                <Dropdown
-                  data-qa="process-status-dropdown"
-                  id="process-status-dropdown"
-                >
-                  <Dropdown.Toggle id="process-status" variant="light border">
-                    Process Statuses: {processStatus}
-                  </Dropdown.Toggle>
-
-                  <Dropdown.Menu variant="light">
-                    {processStatusesRows}
-                  </Dropdown.Menu>
-                </Dropdown>
+                {processStatusSearch()}
+              </Stack>
+              <Stack direction="horizontal" gap={3}>
                 <Button className="ms-auto" variant="secondary" type="submit">
                   Filter
                 </Button>
@@ -253,30 +353,38 @@ export default function ProcessInstanceList() {
   };
 
   const buildTable = () => {
-    const rows = processInstances.map((row) => {
+    const rows = processInstances.map((row: any) => {
       const formattedStartDate =
-        convertSecondsToFormattedDate((row as any).start_in_seconds) || '-';
+        convertSecondsToFormattedDate(row.start_in_seconds) || '-';
       const formattedEndDate =
-        convertSecondsToFormattedDate((row as any).end_in_seconds) || '-';
+        convertSecondsToFormattedDate(row.end_in_seconds) || '-';
 
       return (
-        <tr key={(row as any).id}>
+        <tr key={row.id}>
           <td>
             <Link
               data-qa="process-instance-show-link"
-              to={`/admin/process-models/${params.process_group_id}/${
-                params.process_model_id
-              }/process-instances/${(row as any).id}`}
+              to={`/admin/process-models/${row.process_group_identifier}/${row.process_model_identifier}/process-instances/${row.id}`}
             >
-              {(row as any).id}
+              {row.id}
             </Link>
           </td>
-          <td>{(row as any).process_model_identifier}</td>
-          <td>{(row as any).process_group_identifier}</td>
+          <td>
+            <Link to={`/admin/process-groups/${row.process_group_identifier}`}>
+              {row.process_group_identifier}
+            </Link>
+          </td>
+          <td>
+            <Link
+              to={`/admin/process-models/${row.process_group_identifier}/${row.process_model_identifier}`}
+            >
+              {row.process_model_identifier}
+            </Link>
+          </td>
           <td>{formattedStartDate}</td>
           <td>{formattedEndDate}</td>
-          <td data-qa={`process-instance-status-${(row as any).status}`}>
-            {(row as any).status}
+          <td data-qa={`process-instance-status-${row.status}`}>
+            {row.status}
           </td>
         </tr>
       );
@@ -286,8 +394,8 @@ export default function ProcessInstanceList() {
         <thead>
           <tr>
             <th>Process Instance Id</th>
-            <th>Process Model Id</th>
-            <th>Process Group Id</th>
+            <th>Process Group</th>
+            <th>Process Model</th>
             <th>Start Time</th>
             <th>End Time</th>
             <th>Status</th>
@@ -298,16 +406,27 @@ export default function ProcessInstanceList() {
     );
   };
 
+  const processInstanceTitleElement = () => {
+    const processModelFullIdentifier =
+      getProcessModelFullIdentifierFromSearchParams(searchParams);
+    if (processModelFullIdentifier === null) {
+      return <h2>Process Instances</h2>;
+    }
+    return (
+      <h2>
+        Process Instances for:{' '}
+        <Link to={`/admin/process-models/${processModelFullIdentifier}`}>
+          {processModelFullIdentifier}
+        </Link>
+      </h2>
+    );
+  };
+
   if (pagination) {
     const { page, perPage } = getPageInfoFromSearchParams(searchParams);
     return (
-      <main>
-        <ProcessBreadcrumb
-          processModelId={params.process_model_id}
-          processGroupId={params.process_group_id}
-          linkProcessModel
-        />
-        <h2>Process Instances for {params.process_model_id}</h2>
+      <main style={{ padding: '1rem 0' }}>
+        {processInstanceTitleElement()}
         {filterOptions()}
         <PaginationForTable
           page={page}
@@ -315,7 +434,7 @@ export default function ProcessInstanceList() {
           pagination={pagination}
           tableToDisplay={buildTable()}
           queryParamString={getSearchParamsAsQueryString()}
-          path={`/admin/process-models/${params.process_group_id}/${params.process_model_id}/process-instances`}
+          path="/admin/process-instances"
         />
       </main>
     );

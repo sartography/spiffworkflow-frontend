@@ -36,6 +36,7 @@ export default function ProcessInstanceLogList() {
           <td>{rowToUse.bpmn_process_identifier}</td>
           <td>{rowToUse.message}</td>
           <td>{rowToUse.bpmn_task_identifier}</td>
+          <td>{rowToUse.bpmn_task_name}</td>
           <td>{rowToUse.bpmn_task_type}</td>
           <td>{rowToUse.username}</td>
           <td>{convertSecondsToFormattedDate(rowToUse.timestamp)}</td>
@@ -49,6 +50,7 @@ export default function ProcessInstanceLogList() {
             <th>Bpmn Process Identifier</th>
             <th>Message</th>
             <th>Task Identifier</th>
+            <th>Task Name</th>
             <th>Task Type</th>
             <th>User</th>
             <th>Timestamp</th>
