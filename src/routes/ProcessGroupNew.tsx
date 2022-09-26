@@ -40,7 +40,7 @@ export default function ProcessGroupNew() {
     <main style={{ padding: '1rem 0' }}>
       <ProcessBreadcrumb />
       <h2>Add Process Group</h2>
-      <form onSubmit={addProcessGroup}>
+      <Form onSubmit={addProcessGroup}>
         <Form.Group className="mb-3" controlId="formDisplayName">
           <Form.Label>Display Name:</Form.Label>
           <Form.Control
@@ -63,7 +63,7 @@ export default function ProcessGroupNew() {
         <Button variant="primary" type="submit">
           Submit
         </Button>
-      </form>
+      </Form>
     </main>
   );
 }

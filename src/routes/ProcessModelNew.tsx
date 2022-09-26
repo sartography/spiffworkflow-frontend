@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 import { slugifyString } from '../helpers';
 import HttpService from '../services/HttpService';
@@ -45,23 +47,18 @@ export default function ProcessModelNew() {
     <main style={{ padding: '1rem 0' }}>
       <ProcessBreadcrumb />
       <h2>Add Process Model</h2>
-      <form onSubmit={addProcessModel}>
-        <label htmlFor="display_name">
-          Display Name:
-          <input
-            name="display_name"
-            id="display_name"
+      <Form onSubmit={addProcessModel}>
+        <Form.Group className="mb-3" controlId="formDisplayName">
+          <Form.Label>Display Name:</Form.Label>
+          <Form.Control
             type="text"
             value={displayName}
             onChange={(e) => onDisplayNameChanged(e.target.value)}
           />
-        </label>
-        <br />
-        <label htmlFor="id">
-          ID:
-          <input
-            name="id"
-            id="id"
+        </Form.Group>
+        <Form.Group className="mb-3" controlId="formIdentifier">
+          <Form.Label>ID:</Form.Label>
+          <Form.Control
             type="text"
             value={identifier}
             onChange={(e) => {
@@ -69,10 +66,11 @@ export default function ProcessModelNew() {
               setIdHasBeenUpdatedByUser(true);
             }}
           />
-        </label>
-        <br />
-        <button type="submit">Submit</button>
-      </form>
+        </Form.Group>
+        <Button variant="primary" type="submit">
+          Submit
+        </Button>
+      </Form>
     </main>
   );
 }
