@@ -232,16 +232,25 @@ export default function ProcessInstanceList() {
       selectedDate = new Date(initialDate * 1000);
     }
     return (
-      <Stack className="ms-auto" direction="horizontal" gap={3}>
-        <label className="text-nowrap">{labelString}</label>
-        <DatePicker
-          id={`date-picker-${name}`}
-          selected={selectedDate}
-          onChange={(date: any) => convertDateToSeconds(date, onChangeFunction)}
-          showTimeSelect
-          dateFormat={DATE_FORMAT}
-        />
-      </Stack>
+      <Form.Group>
+        <InputGroup>
+          <Stack className="ms-auto" direction="horizontal" gap={3}>
+            <InputGroup.Text className="text-nowrap">
+              {labelString}
+              {'\u00A0'}
+            </InputGroup.Text>
+            <DatePicker
+              id={`date-picker-${name}`}
+              selected={selectedDate}
+              onChange={(date: any) =>
+                convertDateToSeconds(date, onChangeFunction)
+              }
+              showTimeSelect
+              dateFormat={DATE_FORMAT}
+            />
+          </Stack>
+        </InputGroup>
+      </Form.Group>
     );
   };
 
@@ -332,7 +341,12 @@ export default function ProcessInstanceList() {
               </Stack>
               <br />
               <Stack direction="horizontal" gap={3}>
-                {dateComponent('End Range: ', 'end-from', endFrom, setEndFrom)}
+                {dateComponent(
+                  'End Range: \u00A0\u00A0',
+                  'end-from',
+                  endFrom,
+                  setEndFrom
+                )}
                 {dateComponent('-', 'end-till', endTill, setEndTill)}
               </Stack>
               <br />
