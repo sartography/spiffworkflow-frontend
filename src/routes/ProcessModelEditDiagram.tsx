@@ -28,6 +28,7 @@ export default function ProcessModelEditDiagram() {
     useState<ScriptUnitTest | null>(null);
   const [currentScriptUnitTestIndex, setCurrentScriptUnitTestIndex] =
     useState<number>(-1);
+  const [unitTestResultIcon, setUnitTestResultIcon] = useState('');
 
   const params = useParams();
   const navigate = useNavigate();
@@ -206,6 +207,7 @@ export default function ProcessModelEditDiagram() {
     handleShowScriptEditor();
   };
   const handleScriptEditorClose = () => {
+    setUnitTestResultIcon('');
     setShowScriptEditor(false);
   };
   const handleEditorScriptChange = (value: any) => {
@@ -236,19 +238,42 @@ export default function ProcessModelEditDiagram() {
     };
   };
   const setPreviousScriptUnitTest = () => {
+    setUnitTestResultIcon('');
     const newScriptIndex = currentScriptUnitTestIndex - 1;
     if (newScriptIndex >= 0) {
       setScriptUnitTestElementWithIndex(newScriptIndex);
     }
   };
   const setNextScriptUnitTest = () => {
+    setUnitTestResultIcon('');
     const newScriptIndex = currentScriptUnitTestIndex + 1;
     const unitTestsModdleElements = getScriptUnitTestElements(scriptElement);
     if (newScriptIndex < unitTestsModdleElements.length) {
       setScriptUnitTestElementWithIndex(newScriptIndex);
     }
   };
-  const runCurrentUnitTest = () => {};
+
+  const processScriptUnitTestRunResult = (result: any) => {
+    console.log(result);
+    if (result.result === true) {
+      setUnitTestResultIcon('✓');
+    } else {
+      setUnitTestResultIcon('✘');
+    }
+  };
+  const runCurrentUnitTest = () => {
+    if (currentScriptUnitTest && scriptElement) {
+      HttpService.makeCallToBackend({
+        path: `/process-models/${params.process_group_id}/${params.process_model_id}/script-unit-tests/run`,
+        httpMethod: 'POST',
+        successCallback: processScriptUnitTestRunResult,
+        postBody: {
+          script_unit_test_identifier: currentScriptUnitTest.id,
+          bpmn_task_identifier: (scriptElement as any).id,
+        },
+      });
+    }
+  };
   const scriptUnitTestEditorElement = () => {
     if (currentScriptUnitTest) {
       let previousButtonDisable = true;
@@ -286,6 +311,7 @@ export default function ProcessModelEditDiagram() {
             >
               Run
             </Button>
+            {unitTestResultIcon}
             <Button
               data-qa="unit-test-next-button"
               style={{ fontSize: '1.5em' }}
