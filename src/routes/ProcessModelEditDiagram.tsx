@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { Button, Modal } from 'react-bootstrap';
+import { Button, Modal, Stack } from 'react-bootstrap';
 import Editor from '@monaco-editor/react';
 
 import ReactDiagramEditor from '../components/ReactDiagramEditor';
@@ -17,6 +17,17 @@ export default function ProcessModelEditDiagram() {
   const [scriptElement, setScriptElement] = useState(null);
   const [showScriptEditor, setShowScriptEditor] = useState(false);
   const handleShowScriptEditor = () => setShowScriptEditor(true);
+
+  interface ScriptUnitTest {
+    id: string;
+    inputJson: any;
+    expectedOutputJson: any;
+  }
+
+  const [currentScriptUnitTest, setCurrentScriptUnitTest] =
+    useState<ScriptUnitTest | null>(null);
+  const [currentScriptUnitTestIndex, setCurrentScriptUnitTestIndex] =
+    useState<number>(-1);
 
   const params = useParams();
   const navigate = useNavigate();
@@ -162,21 +173,163 @@ export default function ProcessModelEditDiagram() {
       successCallback: makeApiHandler(event),
     });
   };
+
+  const getScriptUnitTestElements = (element: any) => {
+    const { extensionElements } = element.businessObject;
+    if (extensionElements && extensionElements.values.length > 0) {
+      const unitTestModdleElements = extensionElements
+        .get('values')
+        .filter(function getInstanceOfType(e: any) {
+          return e.$instanceOf('spiffworkflow:unitTests');
+        })[0];
+      if (unitTestModdleElements) {
+        return unitTestModdleElements.unitTests;
+      }
+    }
+    return [];
+  };
+  const setScriptUnitTestElementWithIndex = (
+    scriptIndex: number,
+    element: any = scriptElement
+  ) => {
+    const unitTestsModdleElements = getScriptUnitTestElements(element);
+    if (unitTestsModdleElements.length > 0) {
+      setCurrentScriptUnitTest(unitTestsModdleElements[scriptIndex]);
+      setCurrentScriptUnitTestIndex(scriptIndex);
+    }
+  };
   const onLaunchScriptEditor = (element: any, modeling: any) => {
     setScriptText(element.businessObject.script || '');
     setScriptModeling(modeling);
     setScriptElement(element);
+    setScriptUnitTestElementWithIndex(0, element);
     handleShowScriptEditor();
   };
   const handleScriptEditorClose = () => {
     setShowScriptEditor(false);
   };
-  const handleEditorChange = (value: any) => {
+  const handleEditorScriptChange = (value: any) => {
     setScriptText(value);
     (scriptModeling as any).updateProperties(scriptElement, {
       scriptFormat: 'python',
       script: value,
     });
+  };
+  const handleEditorScriptTestUnitInputChange = (value: any) => {
+    if (currentScriptUnitTest) {
+      currentScriptUnitTest.inputJson.value = value;
+      (scriptModeling as any).updateProperties(scriptElement, {});
+    }
+  };
+  const handleEditorScriptTestUnitOutputChange = (value: any) => {
+    if (currentScriptUnitTest) {
+      currentScriptUnitTest.expectedOutputJson.value = value;
+      (scriptModeling as any).updateProperties(scriptElement, {});
+    }
+  };
+
+  const generalEditorOptions = () => {
+    return {
+      glyphMargin: false,
+      folding: false,
+      lineNumbersMinChars: 0,
+    };
+  };
+  const setPreviousScriptUnitTest = () => {
+    const newScriptIndex = currentScriptUnitTestIndex - 1;
+    if (newScriptIndex >= 0) {
+      setScriptUnitTestElementWithIndex(newScriptIndex);
+    }
+  };
+  const setNextScriptUnitTest = () => {
+    const newScriptIndex = currentScriptUnitTestIndex + 1;
+    const unitTestsModdleElements = getScriptUnitTestElements(scriptElement);
+    if (newScriptIndex < unitTestsModdleElements.length) {
+      setScriptUnitTestElementWithIndex(newScriptIndex);
+    }
+  };
+  const runCurrentUnitTest = () => {};
+  const scriptUnitTestEditorElement = () => {
+    if (currentScriptUnitTest) {
+      let previousButtonDisable = true;
+      if (currentScriptUnitTestIndex > 0) {
+        previousButtonDisable = false;
+      }
+      let nextButtonDisable = true;
+      const unitTestsModdleElements = getScriptUnitTestElements(scriptElement);
+      if (currentScriptUnitTestIndex < unitTestsModdleElements.length - 1) {
+        nextButtonDisable = false;
+      }
+
+      // unset current unit test if all tests were deleted
+      if (unitTestsModdleElements.length < 1) {
+        setCurrentScriptUnitTest(null);
+        setCurrentScriptUnitTestIndex(-1);
+      }
+      return (
+        <main>
+          <Stack direction="horizontal" gap={3}>
+            <Button
+              data-qa="unit-test-previous-button"
+              style={{ fontSize: '1.5em' }}
+              onClick={setPreviousScriptUnitTest}
+              variant="link"
+              disabled={previousButtonDisable}
+            >
+              &laquo;
+            </Button>
+            <h3>Unit Test: {currentScriptUnitTest.id}</h3>
+            <Button
+              data-qa="unit-test-run"
+              style={{ fontSize: '1.5em' }}
+              onClick={runCurrentUnitTest}
+            >
+              Run
+            </Button>
+            <Button
+              data-qa="unit-test-next-button"
+              style={{ fontSize: '1.5em' }}
+              onClick={setNextScriptUnitTest}
+              variant="link"
+              disabled={nextButtonDisable}
+            >
+              &raquo;
+            </Button>
+          </Stack>
+          <Stack direction="horizontal" gap={3}>
+            <Stack>
+              <div>Input Json:</div>
+              <div>
+                <Editor
+                  height={200}
+                  defaultLanguage="json"
+                  options={Object.assign(generalEditorOptions(), {
+                    minimap: { enabled: false },
+                  })}
+                  value={currentScriptUnitTest.inputJson.value}
+                  onChange={handleEditorScriptTestUnitInputChange}
+                />
+              </div>
+            </Stack>
+            <Stack>
+              <div>Expected Output Json:</div>
+              <div>
+                <Editor
+                  height={200}
+                  defaultLanguage="json"
+                  options={Object.assign(generalEditorOptions(), {
+                    minimap: { enabled: false },
+                  })}
+                  value={currentScriptUnitTest.expectedOutputJson.value}
+                  onChange={handleEditorScriptTestUnitOutputChange}
+                />
+              </div>
+            </Stack>
+          </Stack>
+        </main>
+      );
+    }
+    return null;
   };
   const scriptEditor = () => {
     let scriptName = '';
@@ -188,13 +341,17 @@ export default function ProcessModelEditDiagram() {
         <Modal.Header closeButton>
           <Modal.Title>Editing Script: {scriptName}</Modal.Title>
         </Modal.Header>
-        <Editor
-          height={600}
-          width="auto"
-          defaultLanguage="python"
-          defaultValue={scriptText}
-          onChange={handleEditorChange}
-        />
+        <Modal.Body>
+          <Editor
+            height={500}
+            width="auto"
+            options={generalEditorOptions()}
+            defaultLanguage="python"
+            defaultValue={scriptText}
+            onChange={handleEditorScriptChange}
+          />
+          {scriptUnitTestEditorElement()}
+        </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleScriptEditorClose}>
             Close

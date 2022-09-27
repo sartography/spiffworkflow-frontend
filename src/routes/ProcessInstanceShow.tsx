@@ -142,15 +142,16 @@ export default function ProcessInstanceShow() {
   };
 
   const taskDataDisplayArea = () => {
+    const taskToUse: any = taskToDisplay;
     if (taskToDisplay) {
       return (
         <Modal show={taskToDisplay} onHide={handleTaskDataDisplayClose}>
           <Modal.Header closeButton>
             <Modal.Title>
-              {(taskToDisplay as any).name}: {(taskToDisplay as any).state}
+              {taskToUse.name} ({taskToUse.type}): {taskToUse.state}
             </Modal.Title>
           </Modal.Header>
-          <pre>{JSON.stringify((taskToDisplay as any).data, null, 2)}</pre>
+          <pre>{JSON.stringify(taskToUse.data, null, 2)}</pre>
         </Modal>
       );
     }
