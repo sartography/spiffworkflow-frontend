@@ -254,7 +254,6 @@ export default function ProcessModelEditDiagram() {
   };
 
   const processScriptUnitTestRunResult = (result: any) => {
-    console.log(result);
     if (result.result === true) {
       setUnitTestResultIcon('✓');
     } else {
