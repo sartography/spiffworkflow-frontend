@@ -23,6 +23,7 @@ import MessageInstanceList from './MessageInstanceList';
 import SubNavigation from '../components/SubNavigation';
 import SecretList from './SecretList';
 import SecretNew from './SecretNew';
+import SecretShow from './SecretShow';
 
 export default function AdminRoutes() {
   const location = useLocation();
@@ -109,6 +110,7 @@ export default function AdminRoutes() {
           <Route path="messages" element={<MessageInstanceList />} />
           <Route path="secrets" element={<SecretList />} />
           <Route path="secrets/new" element={<SecretNew />} />
+          <Route path="secrets/:key" element={<SecretShow />} />
         </Routes>
       </main>
     );
