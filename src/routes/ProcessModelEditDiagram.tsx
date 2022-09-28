@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { Button, Modal, Stack } from 'react-bootstrap';
 import Container from 'react-bootstrap/Container';
@@ -11,6 +11,7 @@ import ReactDiagramEditor from '../components/ReactDiagramEditor';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 import HttpService from '../services/HttpService';
 import ErrorContext from '../contexts/ErrorContext';
+import { makeid } from '../helpers';
 
 export default function ProcessModelEditDiagram() {
   const [showFileNameEditor, setShowFileNameEditor] = useState(false);
@@ -22,25 +23,38 @@ export default function ProcessModelEditDiagram() {
   const [showScriptEditor, setShowScriptEditor] = useState(false);
   const handleShowScriptEditor = () => setShowScriptEditor(true);
 
+  const editorRef = useRef(null);
+  const monacoRef = useRef(null);
+
+  const failingScriptLineClassNamePrefix = 'failingScriptLineError';
+
+  function handleEditorDidMount(editor: any, monaco: any) {
+    // here is the editor instance
+    // you can store it in `useRef` for further usage
+    editorRef.current = editor;
+    monacoRef.current = monaco;
+  }
+
   interface ScriptUnitTest {
     id: string;
     inputJson: any;
     expectedOutputJson: any;
   }
 
+  interface ScriptUnitTestResult {
+    result: boolean;
+    context: object;
+    error: string;
+    line_number: number;
+    offset: number;
+  }
+
   const [currentScriptUnitTest, setCurrentScriptUnitTest] =
     useState<ScriptUnitTest | null>(null);
   const [currentScriptUnitTestIndex, setCurrentScriptUnitTestIndex] =
     useState<number>(-1);
-  const [unitTestResultBool, setUnitTestResultBool] = useState<boolean | null>(
-    null
-  );
-  const [unitTestResultContext, setUnitTestResultContext] = useState<
-    object | null
-  >(null);
-  const [unitTestResultErrorString, setUnitTestResultErrorString] = useState<
-    string | null
-  >(null);
+  const [scriptUnitTestResult, setScriptUnitTestResult] =
+    useState<ScriptUnitTestResult | null>(null);
 
   const params = useParams();
   const navigate = useNavigate();
@@ -174,9 +188,17 @@ export default function ProcessModelEditDiagram() {
   };
 
   const resetUnitTextResult = () => {
-    setUnitTestResultBool(null);
-    setUnitTestResultContext(null);
-    setUnitTestResultErrorString(null);
+    setScriptUnitTestResult(null);
+    const styleSheet = document.styleSheets[0];
+    const ruleList = styleSheet.cssRules;
+    for (let ii = ruleList.length - 1; ii >= 0; ii -= 1) {
+      const regexp = new RegExp(
+        `^.${failingScriptLineClassNamePrefix}_.*::after `
+      );
+      if (ruleList[ii].cssText.match(regexp)) {
+        styleSheet.deleteRule(ii);
+      }
+    }
   };
 
   const makeApiHandler = (event: any) => {
@@ -281,17 +303,49 @@ export default function ProcessModelEditDiagram() {
   };
 
   const processScriptUnitTestRunResult = (result: any) => {
-    if (result.result === true) {
-      setUnitTestResultBool(true);
-    } else {
-      setUnitTestResultContext(result.context);
-      setUnitTestResultErrorString(result.error);
-      setUnitTestResultBool(false);
+    if ('result' in result) {
+      setScriptUnitTestResult(result);
+      if (
+        result.line_number &&
+        result.error &&
+        editorRef.current &&
+        monacoRef.current
+      ) {
+        const currentClassName = `${failingScriptLineClassNamePrefix}_${makeid(
+          7
+        )}`;
+
+        // document.documentElement.style.setProperty causes the content property to go away
+        // so add the rule dynamically instead of changing a property variable
+        document.styleSheets[0].addRule(
+          `.${currentClassName}::after`,
+          `content: "  # ${result.error}"; color: red`
+        );
+
+        const lineLength =
+          scriptText.split('\n')[result.line_number - 1].length + 1;
+
+        const editorRefToUse = editorRef.current as any;
+        editorRefToUse.deltaDecorations(
+          [],
+          [
+            {
+              // Range(lineStart, column, lineEnd, column)
+              range: new (monacoRef.current as any).Range(
+                result.line_number,
+                lineLength
+              ),
+              options: { afterContentClassName: currentClassName },
+            },
+          ]
+        );
+      }
     }
   };
 
   const runCurrentUnitTest = () => {
     if (currentScriptUnitTest && scriptElement) {
+      resetUnitTextResult();
       HttpService.makeCallToBackend({
         path: `/process-models/${params.process_group_id}/${params.process_model_id}/script-unit-tests/run`,
         httpMethod: 'POST',
@@ -305,29 +359,42 @@ export default function ProcessModelEditDiagram() {
   };
 
   const unitTestFailureElement = () => {
-    let errorStringElement = null;
-    if (unitTestResultErrorString) {
-      errorStringElement = (
-        <span>
-          Received error when running script:{' '}
-          {JSON.stringify(unitTestResultErrorString)}
+    if (scriptUnitTestResult && scriptUnitTestResult.result === false) {
+      let errorStringElement = null;
+      if (scriptUnitTestResult.error) {
+        errorStringElement = (
+          <span>
+            Received error when running script:{' '}
+            {JSON.stringify(scriptUnitTestResult.error)}
+          </span>
+        );
+      }
+      let errorContextElement = null;
+      if (scriptUnitTestResult.context) {
+        errorContextElement = (
+          <span>
+            Received unexpected output:{' '}
+            {JSON.stringify(scriptUnitTestResult.context)}
+          </span>
+        );
+      }
+      const lineNumberElement = null;
+      if (scriptUnitTestResult.line_number) {
+        errorContextElement = (
+          <span>
+            At line: {JSON.stringify(scriptUnitTestResult.line_number)}
+          </span>
+        );
+      }
+      return (
+        <span style={{ color: 'red', fontSize: '1em' }}>
+          {errorStringElement}
+          {errorContextElement}
+          {lineNumberElement}
         </span>
       );
     }
-    let errorContextElement = null;
-    if (unitTestResultContext) {
-      errorContextElement = (
-        <span>
-          Received unexpected output: {JSON.stringify(unitTestResultContext)}
-        </span>
-      );
-    }
-    return (
-      <span style={{ color: 'red', fontSize: '1em' }}>
-        {errorStringElement}
-        {errorContextElement}
-      </span>
-    );
+    return null;
   };
 
   const scriptUnitTestEditorElement = () => {
@@ -346,6 +413,20 @@ export default function ProcessModelEditDiagram() {
       if (unitTestsModdleElements.length < 1) {
         setCurrentScriptUnitTest(null);
         setCurrentScriptUnitTestIndex(-1);
+      }
+
+      let scriptUnitTestResultBoolElement = null;
+      if (scriptUnitTestResult) {
+        scriptUnitTestResultBoolElement = (
+          <Col xs={1}>
+            {scriptUnitTestResult.result === true && (
+              <span style={{ color: 'green', fontSize: '3em' }}>✓</span>
+            )}
+            {scriptUnitTestResult.result === false && (
+              <span style={{ color: 'red', fontSize: '3em' }}>✘</span>
+            )}
+          </Col>
+        );
       }
       return (
         <main>
@@ -378,14 +459,7 @@ export default function ProcessModelEditDiagram() {
                   Run
                 </Button>
               </Col>
-              <Col xs={1}>
-                {unitTestResultBool === true && (
-                  <span style={{ color: 'green', fontSize: '3em' }}>✓</span>
-                )}
-                {unitTestResultBool === false && (
-                  <span style={{ color: 'red', fontSize: '3em' }}>✘</span>
-                )}
-              </Col>
+              {scriptUnitTestResultBoolElement}
               <Col className="d-flex justify-content-end">
                 <Button
                   data-qa="unit-test-next-button"
@@ -456,6 +530,7 @@ export default function ProcessModelEditDiagram() {
             defaultLanguage="python"
             defaultValue={scriptText}
             onChange={handleEditorScriptChange}
+            onMount={handleEditorDidMount}
           />
           {scriptUnitTestEditorElement()}
         </Modal.Body>
