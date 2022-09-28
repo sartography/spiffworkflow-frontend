@@ -12,6 +12,8 @@ export default function SubNavigation() {
       newActiveKey = '/admin/messages';
     } else if (location.pathname.match(/^\/admin\/process-instances\b/)) {
       newActiveKey = '/admin/process-instances';
+    } else if (location.pathname.match(/^\/admin\/secrets\b/)) {
+      newActiveKey = '/admin/secrets';
     }
     setActiveKey(newActiveKey);
   }, [location]);
@@ -27,6 +29,9 @@ export default function SubNavigation() {
         </Nav.Item>
         <Nav.Item>
           <Nav.Link href="/admin/messages">Messages</Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link href="/admin/secrets">Secrets</Nav.Link>
         </Nav.Item>
       </Nav>
     );

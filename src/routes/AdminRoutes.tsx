@@ -21,6 +21,7 @@ import ErrorContext from '../contexts/ErrorContext';
 import ProcessInstanceLogList from './ProcessInstanceLogList';
 import MessageInstanceList from './MessageInstanceList';
 import SubNavigation from '../components/SubNavigation';
+import SecretList from './SecretList';
 
 export default function AdminRoutes() {
   const location = useLocation();
@@ -105,6 +106,8 @@ export default function AdminRoutes() {
           />
           <Route path="process-instances" element={<ProcessInstanceList />} />
           <Route path="messages" element={<MessageInstanceList />} />
+          <Route path="secrets" element={<SecretList />} />
+          <Route path="secrets/new" element={<SecretNew />} />
         </Routes>
       </main>
     );
