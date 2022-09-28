@@ -12,8 +12,8 @@ export default function ProcessInstanceShow() {
   const params = useParams();
 
   const [processInstance, setProcessInstance] = useState(null);
-  const [tasks, setTasks] = useState(null);
-  const [taskToDisplay, setTaskToDisplay] = useState(null);
+  const [tasks, setTasks] = useState<Array<object> | null>(null);
+  const [taskToDisplay, setTaskToDisplay] = useState<object | null>(null);
 
   const navigateToProcessInstances = (_result: any) => {
     navigate(
@@ -56,7 +56,7 @@ export default function ProcessInstanceShow() {
   const getTaskIds = () => {
     const taskIds = { completed: [], readyOrWaiting: [] };
     if (tasks) {
-      (tasks as any).forEach(function getUserTasksElement(task: any) {
+      tasks.forEach(function getUserTasksElement(task: any) {
         if (task.state === 'COMPLETED') {
           (taskIds.completed as any).push(task.name);
         }
@@ -128,7 +128,7 @@ export default function ProcessInstanceShow() {
 
   const handleClickedDiagramTask = (shapeElement: any) => {
     if (tasks) {
-      const matchingTask = (tasks as any).find(
+      const matchingTask = tasks.find(
         (task: any) => task.name === shapeElement.id
       );
       if (matchingTask) {
@@ -141,14 +141,54 @@ export default function ProcessInstanceShow() {
     setTaskToDisplay(null);
   };
 
+  const getTaskById = (taskId: string) => {
+    if (tasks !== null) {
+      return tasks.find((task: any) => task.id === taskId);
+    }
+    return null;
+  };
+
+  const processScriptUnitTestCreateResult = (result: any) => {
+    console.log('result', result);
+  };
+
+  const createScriptUnitTest = () => {
+    if (taskToDisplay) {
+      const taskToUse: any = taskToDisplay;
+      const previousTask: any = getTaskById(taskToUse.parent);
+      HttpService.makeCallToBackend({
+        path: `/process-models/${params.process_group_id}/${params.process_model_id}/script-unit-tests`,
+        httpMethod: 'POST',
+        successCallback: processScriptUnitTestCreateResult,
+        postBody: {
+          bpmn_task_identifier: taskToUse.name,
+          input_json: previousTask.data,
+          expected_output_json: taskToUse.data,
+        },
+      });
+    }
+  };
+
   const taskDataDisplayArea = () => {
     const taskToUse: any = taskToDisplay;
     if (taskToDisplay) {
+      let createScriptUnitTestElement = null;
+      if (taskToUse.type === 'Script Task') {
+        createScriptUnitTestElement = (
+          <Button
+            data-qa="create-script-unit-test-button"
+            onClick={createScriptUnitTest}
+          >
+            Create Script Unit Test
+          </Button>
+        );
+      }
       return (
-        <Modal show={taskToDisplay} onHide={handleTaskDataDisplayClose}>
+        <Modal show={!!taskToUse} onHide={handleTaskDataDisplayClose}>
           <Modal.Header closeButton>
             <Modal.Title>
               {taskToUse.name} ({taskToUse.type}): {taskToUse.state}
+              {createScriptUnitTestElement}
             </Modal.Title>
           </Modal.Header>
           <pre>{JSON.stringify(taskToUse.data, null, 2)}</pre>
