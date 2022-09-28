@@ -35,6 +35,12 @@ export default function ProcessModelEditDiagram() {
   const [unitTestResultBool, setUnitTestResultBool] = useState<boolean | null>(
     null
   );
+  const [unitTestResultContext, setUnitTestResultContext] = useState<
+    object | null
+  >(null);
+  const [unitTestResultErrorString, setUnitTestResultErrorString] = useState<
+    string | null
+  >(null);
 
   const params = useParams();
   const navigate = useNavigate();
@@ -166,13 +172,20 @@ export default function ProcessModelEditDiagram() {
       </Modal>
     );
   };
-  function makeApiHandler(event: any) {
+
+  const resetUnitTextResult = () => {
+    setUnitTestResultBool(null);
+    setUnitTestResultContext(null);
+    setUnitTestResultErrorString(null);
+  };
+
+  const makeApiHandler = (event: any) => {
     return function fireEvent(results: any) {
       event.eventBus.fire('spiff.service_tasks.returned', {
         serviceTaskOperators: results,
       });
     };
-  }
+  };
 
   const onServiceTasksRequested = (event: any) => {
     HttpService.makeCallToBackend({
@@ -195,6 +208,7 @@ export default function ProcessModelEditDiagram() {
     }
     return [];
   };
+
   const setScriptUnitTestElementWithIndex = (
     scriptIndex: number,
     element: any = scriptElement
@@ -205,6 +219,7 @@ export default function ProcessModelEditDiagram() {
       setCurrentScriptUnitTestIndex(scriptIndex);
     }
   };
+
   const onLaunchScriptEditor = (element: any, modeling: any) => {
     setScriptText(element.businessObject.script || '');
     setScriptModeling(modeling);
@@ -212,10 +227,12 @@ export default function ProcessModelEditDiagram() {
     setScriptUnitTestElementWithIndex(0, element);
     handleShowScriptEditor();
   };
+
   const handleScriptEditorClose = () => {
-    setUnitTestResultBool(null);
+    resetUnitTextResult();
     setShowScriptEditor(false);
   };
+
   const handleEditorScriptChange = (value: any) => {
     setScriptText(value);
     (scriptModeling as any).updateProperties(scriptElement, {
@@ -223,12 +240,14 @@ export default function ProcessModelEditDiagram() {
       script: value,
     });
   };
+
   const handleEditorScriptTestUnitInputChange = (value: any) => {
     if (currentScriptUnitTest) {
       currentScriptUnitTest.inputJson.value = value;
       (scriptModeling as any).updateProperties(scriptElement, {});
     }
   };
+
   const handleEditorScriptTestUnitOutputChange = (value: any) => {
     if (currentScriptUnitTest) {
       currentScriptUnitTest.expectedOutputJson.value = value;
@@ -243,15 +262,17 @@ export default function ProcessModelEditDiagram() {
       lineNumbersMinChars: 0,
     };
   };
+
   const setPreviousScriptUnitTest = () => {
-    setUnitTestResultBool(null);
+    resetUnitTextResult();
     const newScriptIndex = currentScriptUnitTestIndex - 1;
     if (newScriptIndex >= 0) {
       setScriptUnitTestElementWithIndex(newScriptIndex);
     }
   };
+
   const setNextScriptUnitTest = () => {
-    setUnitTestResultBool(null);
+    resetUnitTextResult();
     const newScriptIndex = currentScriptUnitTestIndex + 1;
     const unitTestsModdleElements = getScriptUnitTestElements(scriptElement);
     if (newScriptIndex < unitTestsModdleElements.length) {
@@ -263,9 +284,12 @@ export default function ProcessModelEditDiagram() {
     if (result.result === true) {
       setUnitTestResultBool(true);
     } else {
+      setUnitTestResultContext(result.context);
+      setUnitTestResultErrorString(result.error);
       setUnitTestResultBool(false);
     }
   };
+
   const runCurrentUnitTest = () => {
     if (currentScriptUnitTest && scriptElement) {
       HttpService.makeCallToBackend({
@@ -279,6 +303,33 @@ export default function ProcessModelEditDiagram() {
       });
     }
   };
+
+  const unitTestFailureElement = () => {
+    let errorStringElement = null;
+    if (unitTestResultErrorString) {
+      errorStringElement = (
+        <span>
+          Received error when running script:{' '}
+          {JSON.stringify(unitTestResultErrorString)}
+        </span>
+      );
+    }
+    let errorContextElement = null;
+    if (unitTestResultContext) {
+      errorContextElement = (
+        <span>
+          Received unexpected output: {JSON.stringify(unitTestResultContext)}
+        </span>
+      );
+    }
+    return (
+      <span style={{ color: 'red', fontSize: '1em' }}>
+        {errorStringElement}
+        {errorContextElement}
+      </span>
+    );
+  };
+
   const scriptUnitTestEditorElement = () => {
     if (currentScriptUnitTest) {
       let previousButtonDisable = true;
@@ -349,6 +400,9 @@ export default function ProcessModelEditDiagram() {
             </Row>
           </Container>
           <Stack direction="horizontal" gap={3}>
+            {unitTestFailureElement()}
+          </Stack>
+          <Stack direction="horizontal" gap={3}>
             <Stack>
               <div>Input Json:</div>
               <div>
@@ -383,6 +437,7 @@ export default function ProcessModelEditDiagram() {
     }
     return null;
   };
+
   const scriptEditor = () => {
     let scriptName = '';
     if (scriptElement) {
