@@ -1,6 +1,10 @@
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { Button, Modal, Stack } from 'react-bootstrap';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+
 import Editor from '@monaco-editor/react';
 
 import ReactDiagramEditor from '../components/ReactDiagramEditor';
@@ -294,44 +298,56 @@ export default function ProcessModelEditDiagram() {
       }
       return (
         <main>
-          <Stack
-            direction="horizontal"
-            className="justify-content-md-center"
-            gap={3}
-          >
-            <Button
-              data-qa="unit-test-previous-button"
-              style={{ fontSize: '1.5em' }}
-              onClick={setPreviousScriptUnitTest}
-              variant="link"
-              disabled={previousButtonDisable}
-            >
-              &laquo;
-            </Button>
-            <h3>Unit Test: {currentScriptUnitTest.id}</h3>
-            <Button
-              data-qa="unit-test-run"
-              style={{ fontSize: '1.5em' }}
-              onClick={runCurrentUnitTest}
-            >
-              Run
-            </Button>
-            {unitTestResultBool === true && (
-              <span style={{ color: 'green', fontSize: '3em' }}>✓</span>
-            )}
-            {unitTestResultBool === false && (
-              <span style={{ color: 'red', fontSize: '3em' }}>✘</span>
-            )}
-            <Button
-              data-qa="unit-test-next-button"
-              style={{ fontSize: '1.5em' }}
-              onClick={setNextScriptUnitTest}
-              variant="link"
-              disabled={nextButtonDisable}
-            >
-              &raquo;
-            </Button>
-          </Stack>
+          <Container>
+            <Row>
+              <Col>
+                <Button
+                  data-qa="unit-test-previous-button"
+                  style={{ fontSize: '1.5em' }}
+                  onClick={setPreviousScriptUnitTest}
+                  variant="link"
+                  disabled={previousButtonDisable}
+                >
+                  &laquo;
+                </Button>
+              </Col>
+
+              <Col xs={4}>
+                <Button variant="link" disabled style={{ fontSize: '1.5em' }}>
+                  Unit Test: {currentScriptUnitTest.id}
+                </Button>
+              </Col>
+              <Col xs={1}>
+                <Button
+                  className="justify-content-end"
+                  data-qa="unit-test-run"
+                  style={{ fontSize: '1.5em' }}
+                  onClick={runCurrentUnitTest}
+                >
+                  Run
+                </Button>
+              </Col>
+              <Col xs={1}>
+                {unitTestResultBool === true && (
+                  <span style={{ color: 'green', fontSize: '3em' }}>✓</span>
+                )}
+                {unitTestResultBool === false && (
+                  <span style={{ color: 'red', fontSize: '3em' }}>✘</span>
+                )}
+              </Col>
+              <Col className="d-flex justify-content-end">
+                <Button
+                  data-qa="unit-test-next-button"
+                  style={{ fontSize: '1.5em' }}
+                  onClick={setNextScriptUnitTest}
+                  variant="link"
+                  disabled={nextButtonDisable}
+                >
+                  &raquo;
+                </Button>
+              </Col>
+            </Row>
+          </Container>
           <Stack direction="horizontal" gap={3}>
             <Stack>
               <div>Input Json:</div>
