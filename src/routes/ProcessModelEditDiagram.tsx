@@ -351,15 +351,23 @@ export default function ProcessModelEditDiagram() {
         httpMethod: 'POST',
         successCallback: processScriptUnitTestRunResult,
         postBody: {
-          script_unit_test_identifier: currentScriptUnitTest.id,
           bpmn_task_identifier: (scriptElement as any).id,
+          python_script: scriptText,
+          input_json: JSON.parse(currentScriptUnitTest.inputJson.value),
+          expected_output_json: JSON.parse(
+            currentScriptUnitTest.expectedOutputJson.value
+          ),
         },
       });
     }
   };
 
   const unitTestFailureElement = () => {
-    if (scriptUnitTestResult && scriptUnitTestResult.result === false) {
+    if (
+      scriptUnitTestResult &&
+      scriptUnitTestResult.result === false &&
+      !scriptUnitTestResult.line_number
+    ) {
       let errorStringElement = null;
       if (scriptUnitTestResult.error) {
         errorStringElement = (
@@ -378,19 +386,10 @@ export default function ProcessModelEditDiagram() {
           </span>
         );
       }
-      const lineNumberElement = null;
-      if (scriptUnitTestResult.line_number) {
-        errorContextElement = (
-          <span>
-            At line: {JSON.stringify(scriptUnitTestResult.line_number)}
-          </span>
-        );
-      }
       return (
         <span style={{ color: 'red', fontSize: '1em' }}>
           {errorStringElement}
           {errorContextElement}
-          {lineNumberElement}
         </span>
       );
     }
