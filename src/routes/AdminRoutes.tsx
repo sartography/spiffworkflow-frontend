@@ -22,6 +22,7 @@ import ProcessInstanceLogList from './ProcessInstanceLogList';
 import MessageInstanceList from './MessageInstanceList';
 import SubNavigation from '../components/SubNavigation';
 import SecretList from './SecretList';
+import SecretNew from './SecretNew';
 
 export default function AdminRoutes() {
   const location = useLocation();
