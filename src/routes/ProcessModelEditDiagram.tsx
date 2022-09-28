@@ -28,7 +28,9 @@ export default function ProcessModelEditDiagram() {
     useState<ScriptUnitTest | null>(null);
   const [currentScriptUnitTestIndex, setCurrentScriptUnitTestIndex] =
     useState<number>(-1);
-  const [unitTestResultIcon, setUnitTestResultIcon] = useState('');
+  const [unitTestResultBool, setUnitTestResultBool] = useState<boolean | null>(
+    null
+  );
 
   const params = useParams();
   const navigate = useNavigate();
@@ -207,7 +209,7 @@ export default function ProcessModelEditDiagram() {
     handleShowScriptEditor();
   };
   const handleScriptEditorClose = () => {
-    setUnitTestResultIcon('');
+    setUnitTestResultBool(null);
     setShowScriptEditor(false);
   };
   const handleEditorScriptChange = (value: any) => {
@@ -238,14 +240,14 @@ export default function ProcessModelEditDiagram() {
     };
   };
   const setPreviousScriptUnitTest = () => {
-    setUnitTestResultIcon('');
+    setUnitTestResultBool(null);
     const newScriptIndex = currentScriptUnitTestIndex - 1;
     if (newScriptIndex >= 0) {
       setScriptUnitTestElementWithIndex(newScriptIndex);
     }
   };
   const setNextScriptUnitTest = () => {
-    setUnitTestResultIcon('');
+    setUnitTestResultBool(null);
     const newScriptIndex = currentScriptUnitTestIndex + 1;
     const unitTestsModdleElements = getScriptUnitTestElements(scriptElement);
     if (newScriptIndex < unitTestsModdleElements.length) {
@@ -255,9 +257,9 @@ export default function ProcessModelEditDiagram() {
 
   const processScriptUnitTestRunResult = (result: any) => {
     if (result.result === true) {
-      setUnitTestResultIcon('✓');
+      setUnitTestResultBool(true);
     } else {
-      setUnitTestResultIcon('✘');
+      setUnitTestResultBool(false);
     }
   };
   const runCurrentUnitTest = () => {
@@ -310,7 +312,12 @@ export default function ProcessModelEditDiagram() {
             >
               Run
             </Button>
-            {unitTestResultIcon}
+            {unitTestResultBool === true && (
+              <span style={{ color: 'green', fontSize: '3em' }}>✓</span>
+            )}
+            {unitTestResultBool === false && (
+              <span style={{ color: 'red', fontSize: '3em' }}>✘</span>
+            )}
             <Button
               data-qa="unit-test-next-button"
               style={{ fontSize: '1.5em' }}
