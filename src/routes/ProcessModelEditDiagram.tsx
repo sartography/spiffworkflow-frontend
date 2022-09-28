@@ -294,7 +294,11 @@ export default function ProcessModelEditDiagram() {
       }
       return (
         <main>
-          <Stack direction="horizontal" gap={3}>
+          <Stack
+            direction="horizontal"
+            className="justify-content-md-center"
+            gap={3}
+          >
             <Button
               data-qa="unit-test-previous-button"
               style={{ fontSize: '1.5em' }}
