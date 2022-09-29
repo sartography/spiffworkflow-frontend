@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Button, Table } from 'react-bootstrap';
 import { MdDelete } from 'react-icons/md';
 import PaginationForTable from '../components/PaginationForTable';
@@ -10,6 +10,7 @@ export default function SecretList() {
   const [searchParams] = useSearchParams();
 
   const [secrets, setSecrets] = useState([]);
+  const navigate = useNavigate();
   const [pagination, setPagination] = useState(null);
 
   useEffect(() => {
@@ -24,8 +25,17 @@ export default function SecretList() {
     });
   }, [searchParams]);
 
-  const deleteSecret = (id: any) => {
-    alert(id);
+  const navigateToSecrets = () => {
+    console.log('navigateToSecrets');
+    navigate(`/admin/secrets`);
+  };
+
+  const handleDeleteSecret = (key: any) => {
+    HttpService.makeCallToBackend({
+      path: `/secrets/${key}`,
+      successCallback: navigateToSecrets,
+      httpMethod: 'DELETE',
+    });
   };
 
   const buildTable = () => {
@@ -45,12 +55,7 @@ export default function SecretList() {
           <td>{(row as any).value}</td>
           <td>{(row as any).username}</td>
           <td>
-            <MdDelete onClick={() => deleteSecret((row as any).id)} />
-          </td>
-          <td>
-            <Button variant="danger" onClick={() => deleteSecret((row as any).id)}>
-              <MdDelete />
-            </Button>
+            <MdDelete onClick={() => handleDeleteSecret((row as any).key)} />
           </td>
         </tr>
       );
@@ -64,7 +69,6 @@ export default function SecretList() {
             <th>Secret Value</th>
             <th>Creator</th>
             <th>Delete</th>
-            <th>Delete 2</th>
           </tr>
         </thead>
         <tbody>{rows}</tbody>
