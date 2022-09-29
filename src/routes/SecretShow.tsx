@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Stack, Table } from 'react-bootstrap';
-import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 import HttpService from '../services/HttpService';
 import ButtonWithConfirmation from '../components/ButtonWithConfirmation';
 
