@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Button, Table } from 'react-bootstrap';
+import { MdDelete } from 'react-icons/md';
 import PaginationForTable from '../components/PaginationForTable';
 import HttpService from '../services/HttpService';
 import { getPageInfoFromSearchParams } from '../helpers';
@@ -29,11 +30,19 @@ export default function SecretList() {
         <tr key={(row as any).key}>
           <td>
             <Link to={`/admin/secrets/${(row as any).key}`}>
+              {(row as any).id}
+            </Link>
+          </td>
+          <td>
+            <Link to={`/admin/secrets/${(row as any).key}`}>
               {(row as any).key}
             </Link>
           </td>
           <td>{(row as any).value}</td>
           <td>{(row as any).username}</td>
+          <td>
+            <MdDelete />
+          </td>
         </tr>
       );
     });
@@ -41,9 +50,11 @@ export default function SecretList() {
       <Table striped bordered>
         <thead>
           <tr>
+            <th>ID</th>
             <th>Secret Key</th>
             <th>Secret Value</th>
             <th>Creator</th>
+            <th>Delete</th>
           </tr>
         </thead>
         <tbody>{rows}</tbody>

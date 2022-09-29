@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Stack, Table } from 'react-bootstrap';
+import { useParams, useNavigate, Link } from 'react-router-dom';
+import { Stack, Table, Button } from 'react-bootstrap';
+import { MdDelete } from 'react-icons/md';
 import HttpService from '../services/HttpService';
 import { Secret } from '../interfaces';
 import ButtonWithConfirmation from '../components/ButtonWithConfirmation';
@@ -33,6 +34,44 @@ export default function SecretShow() {
     });
   };
 
+  const deleteAllowedProcess = (id: any) => {
+    alert(id);
+  };
+
+  const addAllowedProcess = (secretToUse: any) => {
+    alert(secretToUse.id);
+    // console.log(secretToUse);
+  };
+
+  const buildAllowedProcessesTable = (secretToUse: any) => {
+    const rows = secretToUse.allowed_processes.map((row: any) => {
+      return (
+        <tr key={(row as any).key}>
+          <td>{(row as any).id}</td>
+          <td>{(row as any).allowed_relative_path}</td>
+          <td>
+            <MdDelete />
+          </td>
+        </tr>
+      );
+    });
+    if (secretToUse.allowed_processes.length > 0) {
+      return (
+        <Table striped bordered>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Allowed Process Path</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody>{rows}</tbody>
+        </Table>
+      );
+    }
+    return <p>No Allowed Processes</p>;
+  };
+
   if (secret) {
     const secretToUse = secret as any;
 
@@ -62,6 +101,13 @@ export default function SecretShow() {
             </tbody>
           </Table>
         </div>
+        <Stack direction="horizontal" gap={3}>
+          <h3>Allowed Processes</h3>
+          <Button onClick={() => addAllowedProcess(secretToUse)}>
+            Add Process
+          </Button>
+        </Stack>
+        <div>{buildAllowedProcessesTable(secretToUse)}</div>
       </main>
     );
   }
