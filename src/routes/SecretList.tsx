@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { Button, Table } from 'react-bootstrap';
 import { MdDelete } from 'react-icons/md';
 import PaginationForTable from '../components/PaginationForTable';
@@ -10,7 +10,6 @@ export default function SecretList() {
   const [searchParams] = useSearchParams();
 
   const [secrets, setSecrets] = useState([]);
-  const navigate = useNavigate();
   const [pagination, setPagination] = useState(null);
 
   useEffect(() => {
@@ -25,15 +24,14 @@ export default function SecretList() {
     });
   }, [searchParams]);
 
-  const navigateToSecrets = () => {
-    console.log('navigateToSecrets');
-    navigate(`/admin/secrets`);
+  const reloadSecrets = (_result: any) => {
+    window.location.reload();
   };
 
   const handleDeleteSecret = (key: any) => {
     HttpService.makeCallToBackend({
       path: `/secrets/${key}`,
-      successCallback: navigateToSecrets,
+      successCallback: reloadSecrets,
       httpMethod: 'DELETE',
     });
   };
