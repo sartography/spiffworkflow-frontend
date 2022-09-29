@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Stack, Table, Button } from 'react-bootstrap';
 import { MdDelete } from 'react-icons/md';
 import HttpService from '../services/HttpService';
@@ -50,7 +50,7 @@ export default function SecretShow() {
           <td>{(row as any).id}</td>
           <td>{(row as any).allowed_relative_path}</td>
           <td>
-            <MdDelete />
+            <MdDelete onClick={() => deleteAllowedProcess(secretToUse.id)} />
           </td>
         </tr>
       );

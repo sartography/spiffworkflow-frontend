@@ -24,6 +24,10 @@ export default function SecretList() {
     });
   }, [searchParams]);
 
+  const deleteSecret = (id: any) => {
+    alert(id);
+  };
+
   const buildTable = () => {
     const rows = secrets.map((row) => {
       return (
@@ -41,7 +45,12 @@ export default function SecretList() {
           <td>{(row as any).value}</td>
           <td>{(row as any).username}</td>
           <td>
-            <MdDelete />
+            <MdDelete onClick={() => deleteSecret((row as any).id)} />
+          </td>
+          <td>
+            <Button variant="danger" onClick={() => deleteSecret((row as any).id)}>
+              <MdDelete />
+            </Button>
           </td>
         </tr>
       );
@@ -55,6 +64,7 @@ export default function SecretList() {
             <th>Secret Value</th>
             <th>Creator</th>
             <th>Delete</th>
+            <th>Delete 2</th>
           </tr>
         </thead>
         <tbody>{rows}</tbody>

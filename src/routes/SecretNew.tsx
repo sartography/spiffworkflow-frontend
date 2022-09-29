@@ -13,6 +13,10 @@ export default function SecretNew() {
     navigate(`/admin/secrets/${key}`);
   };
 
+  const navigateToSecrets = () => {
+    navigate(`/admin/secrets`);
+  };
+
   const addSecret = (event: any) => {
     event.preventDefault();
     HttpService.makeCallToBackend({
@@ -50,6 +54,9 @@ export default function SecretNew() {
         </Form.Group>
         <Button variant="primary" type="submit">
           Submit
+        </Button>
+        <Button variant="danger" type="button" onClick={navigateToSecrets}>
+          Cancel
         </Button>
       </Form>
     </main>
