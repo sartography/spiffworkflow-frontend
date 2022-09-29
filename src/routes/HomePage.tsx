@@ -96,7 +96,6 @@ export default function HomePage() {
               {rowToUse.processModelDisplayName}
             </Link>
           </td>
-          <td />
         </tr>
       );
     });
@@ -107,7 +106,6 @@ export default function HomePage() {
           <thead>
             <tr>
               <th>Process Model</th>
-              <th>Actions</th>
             </tr>
           </thead>
           <tbody>{rows}</tbody>
