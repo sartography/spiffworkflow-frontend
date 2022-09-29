@@ -73,13 +73,13 @@ export default function ProcessGroups() {
 
   if (pagination) {
     return (
-      <main style={{ padding: '1rem 0' }}>
+      <>
         <ProcessBreadcrumb />
         <Button href="/admin/process-groups/new">Add a process group</Button>
         <br />
         <br />
         {processGroupsDisplayArea()}
-      </main>
+      </>
     );
   }
   return null;

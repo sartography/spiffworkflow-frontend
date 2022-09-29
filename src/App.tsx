@@ -5,10 +5,11 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import ErrorContext from './contexts/ErrorContext';
 import NavigationBar from './components/NavigationBar';
 
-import TaskList from './routes/TaskList';
+import HomePage from './routes/HomePage';
 import TaskShow from './routes/TaskShow';
 import ErrorBoundary from './components/ErrorBoundary';
 import AdminRoutes from './routes/AdminRoutes';
+import SubNavigation from './components/SubNavigation';
 
 export default function App() {
   const [errorMessage, setErrorMessage] = useState('');
@@ -34,19 +35,21 @@ export default function App() {
         {errorTag}
         <ErrorBoundary>
           <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<TaskList />} />
-              <Route path="/admin/*" element={<AdminRoutes />} />
-              <Route path="/tasks" element={<TaskList />} />
-              <Route
-                path="/tasks/:process_instance_id/:task_id"
-                element={<TaskShow />}
-              />
-              <Route
-                path="/tasks/:process_instance_id/:task_id"
-                element={<TaskShow />}
-              />
-            </Routes>
+            <SubNavigation />
+            <main style={{ padding: '1rem 0' }}>
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/admin/*" element={<AdminRoutes />} />
+                <Route
+                  path="/tasks/:process_instance_id/:task_id"
+                  element={<TaskShow />}
+                />
+                <Route
+                  path="/tasks/:process_instance_id/:task_id"
+                  element={<TaskShow />}
+                />
+              </Routes>
+            </main>
           </BrowserRouter>
         </ErrorBoundary>
       </Container>

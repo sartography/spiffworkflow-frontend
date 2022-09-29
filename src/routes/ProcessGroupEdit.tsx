@@ -58,7 +58,7 @@ export default function ProcessGroupEdit() {
 
   if (processGroup) {
     return (
-      <main style={{ padding: '1rem 0' }}>
+      <>
         <ProcessBreadcrumb processGroupId={(processGroup as any).id} />
         <h2>Edit Process Group: {(processGroup as any).id}</h2>
         <form onSubmit={updateProcessGroup}>
@@ -86,7 +86,7 @@ export default function ProcessGroupEdit() {
             />
           </Stack>
         </form>
-      </main>
+      </>
     );
   }
   return null;

@@ -74,11 +74,13 @@ Cypress.Commands.add('createModel', (groupId, modelId, modelDisplayName) => {
   cy.contains(`Process Model: ${modelId}`);
 });
 
-Cypress.Commands.add('runPrimaryBpmnFile', () => {
+Cypress.Commands.add('runPrimaryBpmnFile', (reload = true) => {
   cy.contains('Run').click();
   cy.contains(/Process Instance.*kicked off/);
-  cy.reload(true);
-  cy.contains(/Process Instance.*kicked off/).should('not.exist');
+  if (reload) {
+    cy.reload(true);
+    cy.contains(/Process Instance.*kicked off/).should('not.exist');
+  }
 });
 
 Cypress.Commands.add('navigateToProcessModel', (groupId, modelId) => {

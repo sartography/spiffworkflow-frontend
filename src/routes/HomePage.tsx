@@ -5,7 +5,7 @@ import PaginationForTable from '../components/PaginationForTable';
 import { getPageInfoFromSearchParams } from '../helpers';
 import HttpService from '../services/HttpService';
 
-export default function TaskList() {
+export default function HomePage() {
   const [searchParams] = useSearchParams();
   const [tasks, setTasks] = useState([]);
   const [pagination, setPagination] = useState(null);
@@ -28,17 +28,31 @@ export default function TaskList() {
       const taskUrl = `/tasks/${rowToUse.process_instance_id}/${rowToUse.id}`;
       return (
         <tr key={rowToUse.id}>
-          <td>{rowToUse.process_model_display_name}</td>
-          <td>{rowToUse.title}</td>
-          <td>{rowToUse.name}</td>
           <td>
-            <Link to={taskUrl}>{rowToUse.id}</Link>
+            <Link
+              data-qa="process-model-show-link"
+              to={`/admin/process-models/${rowToUse.process_group_identifier}/${rowToUse.process_model_identifier}`}
+            >
+              {rowToUse.process_model_display_name}
+            </Link>
           </td>
-          <td>{rowToUse.process_instance_id}</td>
+          <td>
+            <Link
+              data-qa="process-instance-show-link"
+              to={`/admin/process-models/${rowToUse.process_group_identifier}/${rowToUse.process_model_identifier}/process-instances/${rowToUse.process_instance_id}`}
+            >
+              View
+            </Link>
+          </td>
+          <td
+            title={`task id: ${rowToUse.name}, spiffworkflow task guid: ${rowToUse.id}`}
+          >
+            {rowToUse.title}
+          </td>
           <td>{rowToUse.state}</td>
           <td>
             <Button variant="primary" href={taskUrl}>
-              Complete {rowToUse.name}
+              Complete Task
             </Button>
           </td>
         </tr>
@@ -49,10 +63,8 @@ export default function TaskList() {
         <thead>
           <tr>
             <th>Process Model</th>
+            <th>Process Instance</th>
             <th>Task Name</th>
-            <th>Task Id</th>
-            <th>GUID</th>
-            <th>Process Instance Id</th>
             <th>Status</th>
             <th>Actions</th>
           </tr>
@@ -65,7 +77,7 @@ export default function TaskList() {
   if (pagination) {
     const { page, perPage } = getPageInfoFromSearchParams(searchParams);
     return (
-      <main>
+      <>
         <h2>Tasks</h2>
         <PaginationForTable
           page={page}
@@ -74,7 +86,7 @@ export default function TaskList() {
           tableToDisplay={buildTable()}
           path="/tasks"
         />
-      </main>
+      </>
     );
   }
   return null;

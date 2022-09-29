@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Table } from 'react-bootstrap';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import PaginationForTable from '../components/PaginationForTable';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 import {
@@ -40,7 +40,31 @@ export default function MessageInstanceList() {
       return (
         <tr key={rowToUse.id}>
           <td>{rowToUse.id}</td>
-          <td>{rowToUse.message_model_id}</td>
+          <td>
+            <Link
+              data-qa="process-model-show-link"
+              to={`/admin/process-groups/${rowToUse.process_group_identifier}`}
+            >
+              {rowToUse.process_group_identifier}
+            </Link>
+          </td>
+          <td>
+            <Link
+              data-qa="process-model-show-link"
+              to={`/admin/process-models/${rowToUse.process_group_identifier}/${rowToUse.process_model_identifier}`}
+            >
+              {rowToUse.process_model_identifier}
+            </Link>
+          </td>
+          <td>
+            <Link
+              data-qa="process-instance-show-link"
+              to={`/admin/process-models/${rowToUse.process_group_identifier}/${rowToUse.process_model_identifier}/process-instances/${rowToUse.process_instance_id}`}
+            >
+              {rowToUse.process_instance_id}
+            </Link>
+          </td>
+          <td>{rowToUse.message_identifier}</td>
           <td>{rowToUse.message_type}</td>
           <td>{rowToUse.failure_cause}</td>
           <td>{rowToUse.status}</td>
@@ -55,7 +79,10 @@ export default function MessageInstanceList() {
         <thead>
           <tr>
             <th>Instance Id</th>
-            <th>Model</th>
+            <th>Process Group</th>
+            <th>Process Model</th>
+            <th>Process Instance</th>
+            <th>Message Model</th>
             <th>Type</th>
             <th>Failure Cause</th>
             <th>Status</th>
@@ -86,7 +113,7 @@ export default function MessageInstanceList() {
       );
     }
     return (
-      <main style={{ padding: '1rem 0' }}>
+      <>
         {breadcrumbElement}
         <h2>Messages</h2>
         <PaginationForTable
@@ -97,7 +124,7 @@ export default function MessageInstanceList() {
           queryParamString={queryParamString}
           path="/admin/messages"
         />
-      </main>
+      </>
     );
   }
   return null;

@@ -71,7 +71,7 @@ export default function ProcessGroupShow() {
   if (processGroup && pagination) {
     const { page, perPage } = getPageInfoFromSearchParams(searchParams);
     return (
-      <main style={{ padding: '1rem 0' }}>
+      <>
         <ProcessBreadcrumb processGroupId={(processGroup as any).id} />
         <ul>
           <Stack direction="horizontal" gap={3}>
@@ -97,7 +97,7 @@ export default function ProcessGroupShow() {
             path={`/admin/process-groups/${(processGroup as any).id}`}
           />
         </ul>
-      </main>
+      </>
     );
   }
   return null;

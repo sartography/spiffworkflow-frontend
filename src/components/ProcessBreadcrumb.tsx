@@ -50,14 +50,12 @@ export default function ProcessBreadcrumb({
   }
 
   return (
-    <main style={{ padding: '1rem 0' }}>
-      <Breadcrumb>
-        <Breadcrumb.Item linkAs={Link} linkProps={{ to: '/admin' }}>
-          Process Groups
-        </Breadcrumb.Item>
-        {processGroupBreadcrumb}
-        {processModelBreadcrumb}
-      </Breadcrumb>
-    </main>
+    <Breadcrumb>
+      <Breadcrumb.Item linkAs={Link} linkProps={{ to: '/admin' }}>
+        Process Groups
+      </Breadcrumb.Item>
+      {processGroupBreadcrumb}
+      {processModelBreadcrumb}
+    </Breadcrumb>
   );
 }

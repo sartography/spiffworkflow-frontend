@@ -37,22 +37,24 @@ export default function ProcessGroupNew() {
   };
 
   return (
-    <main style={{ padding: '1rem 0' }}>
+    <>
       <ProcessBreadcrumb />
       <h2>Add Process Group</h2>
       <Form onSubmit={addProcessGroup}>
-        <Form.Group className="mb-3" controlId="formDisplayName">
+        <Form.Group className="mb-3" controlId="display_name">
           <Form.Label>Display Name:</Form.Label>
           <Form.Control
             type="text"
+            name="display_name"
             value={displayName}
             onChange={(e) => onDisplayNameChanged(e.target.value)}
           />
         </Form.Group>
-        <Form.Group className="mb-3" controlId="formIdentifier">
+        <Form.Group className="mb-3" controlId="identifier">
           <Form.Label>ID:</Form.Label>
           <Form.Control
             type="text"
+            name="id"
             value={identifier}
             onChange={(e) => {
               setIdentifier(e.target.value);
@@ -64,6 +66,6 @@ export default function ProcessGroupNew() {
           Submit
         </Button>
       </Form>
-    </main>
+    </>
   );
 }

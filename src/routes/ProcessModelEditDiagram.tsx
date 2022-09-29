@@ -578,7 +578,7 @@ export default function ProcessModelEditDiagram() {
   // if a file name is not given then this is a new model and the ReactDiagramEditor component will handle it
   if (bpmnXmlForDiagramRendering || !params.file_name) {
     return (
-      <main style={{ padding: '1rem 0' }}>
+      <>
         <ProcessBreadcrumb
           processGroupId={params.process_group_id}
           processModelId={params.process_model_id}
@@ -593,7 +593,7 @@ export default function ProcessModelEditDiagram() {
         {scriptEditor()}
 
         <div id="diagram-container" />
-      </main>
+      </>
     );
   }
   return null;
