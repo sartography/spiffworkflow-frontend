@@ -5,6 +5,7 @@ import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 import FileInput from '../components/FileInput';
 import HttpService from '../services/HttpService';
 import ErrorContext from '../contexts/ErrorContext';
+import { RecentProcessModel } from '../interfaces';
 
 export default function ProcessModelShow() {
   const params = useParams();
@@ -14,45 +15,67 @@ export default function ProcessModelShow() {
   const [processInstanceResult, setProcessInstanceResult] = useState(null);
   const [reloadModel, setReloadModel] = useState(false);
 
-  // useEffect(() => {
-  //   // All values stored in localStorage are strings.
-  //   // Grab our recentProcessModels string from localStorage.
-  //   const stringFromLocalStorage = window.localStorage.getItem(
-  //     'recentProcessModels'
-  //   );
-  //
-  //   // Then parse that string into an actual value.
-  //   const parsedValueFromString = JSON.parse(stringFromLocalStorage);
-  //
-  //   // If that value is null (meaning that we've never saved anything to that spot in localStorage before), use an empty array as our array. Otherwise, just stick with the value we've just parsed out.
-  //   const array = parsedValueFromString || [];
-  //
-  //   // Here's the value we want to add
-  //   const value = {
-  //     processGroupIdentifier: params.process_group_id,
-  //     processModelIdentifier: params.process_model_id,
-  //   };
-  //
-  //   // If our parsed/empty array doesn't already have this value in it...
-  //   if (array.indexOf(value) == -1) {
-  //     // add the value to the array
-  //     array.push(value);
-  //
-  //     // turn the array WITH THE NEW VALUE IN IT into a string to prepare it to be stored in localStorage
-  //     const stringRepresentingArray = JSON.stringify(array);
-  //
-  //     // and store it in localStorage as "recentProcessModels"
-  //     window.localStorage.setItem(
-  //       'recentProcessModels',
-  //       stringRepresentingArray
-  //     );
-  //   }
-  // }, []);
-
   useEffect(() => {
+    const storeRecentProcessModelInLocalStorage = (
+      processModelForStorage: any
+    ) => {
+      if (
+        params.process_group_id === undefined ||
+        params.process_model_id === undefined
+      ) {
+        return;
+      }
+      // All values stored in localStorage are strings.
+      // Grab our recentProcessModels string from localStorage.
+      const stringFromLocalStorage = window.localStorage.getItem(
+        'recentProcessModels'
+      );
+
+      // adapted from https://stackoverflow.com/a/59424458/6090676
+      // If that value is null (meaning that we've never saved anything to that spot in localStorage before), use an empty array as our array. Otherwise, use the value we parse out.
+      let array: RecentProcessModel[] = [];
+      if (stringFromLocalStorage !== null) {
+        // Then parse that string into an actual value.
+        array = JSON.parse(stringFromLocalStorage);
+      }
+
+      // Here's the value we want to add
+      const value = {
+        processGroupIdentifier: processModelForStorage.process_group_id,
+        processModelIdentifier: processModelForStorage.id,
+        processModelDisplayName: processModelForStorage.display_name,
+      };
+
+      // If our parsed/empty array doesn't already have this value in it...
+      const matchingItem = array.find(
+        (item) =>
+          item.processGroupIdentifier === value.processGroupIdentifier &&
+          item.processModelIdentifier === value.processModelIdentifier
+      );
+      if (matchingItem === undefined) {
+        // add the value to the beginning of the array
+        array.unshift(value);
+
+        // Keep the array to 3 items
+        if (array.length > 3) {
+          array.pop();
+        }
+
+        // turn the array WITH THE NEW VALUE IN IT into a string to prepare it to be stored in localStorage
+        const stringRepresentingArray = JSON.stringify(array);
+
+        // and store it in localStorage as "recentProcessModels"
+        window.localStorage.setItem(
+          'recentProcessModels',
+          stringRepresentingArray
+        );
+      }
+    };
+
     const processResult = (result: object) => {
       setProcessModel(result);
       setReloadModel(false);
+      storeRecentProcessModelInLocalStorage(result);
     };
     HttpService.makeCallToBackend({
       path: `/process-models/${params.process_group_id}/${params.process_model_id}`,

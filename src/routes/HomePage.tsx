@@ -4,6 +4,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import PaginationForTable from '../components/PaginationForTable';
 import { getPageInfoFromSearchParams } from '../helpers';
 import HttpService from '../services/HttpService';
+import { RecentProcessModel } from '../interfaces';
 
 export default function HomePage() {
   const [searchParams] = useSearchParams();
@@ -21,6 +22,12 @@ export default function HomePage() {
       successCallback: setTasksFromResult,
     });
   }, [searchParams]);
+
+  let recentProcessModels: RecentProcessModel[] = [];
+  const recentProcessModelsString = localStorage.getItem('recentProcessModels');
+  if (recentProcessModelsString !== null) {
+    recentProcessModels = JSON.parse(recentProcessModelsString);
+  }
 
   const buildTable = () => {
     const rows = tasks.map((row) => {
@@ -74,7 +81,43 @@ export default function HomePage() {
     );
   };
 
-  const relevantProcessModelSection = null;
+  const buildRecentProcessModelSection = () => {
+    const rows = recentProcessModels.map((row) => {
+      const rowToUse = row as any;
+      return (
+        <tr
+          key={`${rowToUse.processGroupIdentifier}/${rowToUse.processModelIdentifier}`}
+        >
+          <td>
+            <Link
+              data-qa="process-model-show-link"
+              to={`/admin/process-models/${rowToUse.processGroupIdentifier}/${rowToUse.processModelIdentifier}`}
+            >
+              {rowToUse.processModelDisplayName}
+            </Link>
+          </td>
+          <td />
+        </tr>
+      );
+    });
+    return (
+      <>
+        <h2>Processes to start</h2>
+        <Table striped bordered>
+          <thead>
+            <tr>
+              <th>Process Model</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>{rows}</tbody>
+        </Table>
+      </>
+    );
+  };
+
+  const relevantProcessModelSection =
+    recentProcessModels.length > 0 && buildRecentProcessModelSection();
 
   if (pagination) {
     const { page, perPage } = getPageInfoFromSearchParams(searchParams);
