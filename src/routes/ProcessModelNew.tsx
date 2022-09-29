@@ -48,17 +48,19 @@ export default function ProcessModelNew() {
       <ProcessBreadcrumb />
       <h2>Add Process Model</h2>
       <Form onSubmit={addProcessModel}>
-        <Form.Group className="mb-3" controlId="formDisplayName">
+        <Form.Group className="mb-3" controlId="display_name">
           <Form.Label>Display Name:</Form.Label>
           <Form.Control
+            name="display_name"
             type="text"
             value={displayName}
             onChange={(e) => onDisplayNameChanged(e.target.value)}
           />
         </Form.Group>
-        <Form.Group className="mb-3" controlId="formIdentifier">
+        <Form.Group className="mb-3" controlId="identifier">
           <Form.Label>ID:</Form.Label>
           <Form.Control
+            name="id"
             type="text"
             value={identifier}
             onChange={(e) => {

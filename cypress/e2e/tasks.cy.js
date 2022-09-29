@@ -21,7 +21,7 @@ describe('tasks', () => {
     cy.logout();
   });
 
-  it.only('can complete and navigate a form', () => {
+  it('can complete and navigate a form', () => {
     const groupId = 'acceptance-tests-group-one';
     const modelId = `acceptance-tests-model-2`;
     const completedTaskClassName = 'completed-task-highlight';
@@ -29,13 +29,11 @@ describe('tasks', () => {
 
     cy.navigateToProcessModel(groupId, modelId);
 
-    // create a bunch to test pagination as well
-    cy.runPrimaryBpmnFile();
-    cy.navigateToTasks();
-    cy.url().should('include', '/tasks');
+    // avoid reloading so we can click on the task link that appears on running the process instance
+    cy.runPrimaryBpmnFile(false);
 
-    // FIXME: this will probably need a better way to link to the proper form that we want
-    cy.contains('Complete form1').click();
+    cy.contains('my task').click();
+
     submitInputIntoFormField(
       'get_user_generated_number_one',
       '#root_user_generated_number_1',
@@ -91,7 +89,8 @@ describe('tasks', () => {
     cy.url().should('include', '/tasks');
 
     // FIXME: this will probably need a better way to link to the proper form that we want
-    cy.contains('Complete form4').click();
+    cy.contains('Complete Task').click();
+
     submitInputIntoFormField(
       'get_user_generated_number_four',
       '#root_user_generated_number_4',
