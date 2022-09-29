@@ -319,7 +319,7 @@ export default function ProcessModelEditDiagram() {
         // so add the rule dynamically instead of changing a property variable
         document.styleSheets[0].addRule(
           `.${currentClassName}::after`,
-          `content: "  # ${result.error}"; color: red`
+          `content: "  # ${result.error.replaceAll('"', '')}"; color: red`
         );
 
         const lineLength =
@@ -431,7 +431,12 @@ export default function ProcessModelEditDiagram() {
         <main>
           <Container>
             <Row>
-              <Col>
+              <Col xs={8}>
+                <Button variant="link" disabled style={{ fontSize: '1.5em' }}>
+                  Unit Test: {currentScriptUnitTest.id}
+                </Button>
+              </Col>
+              <Col xs={1}>
                 <Button
                   data-qa="unit-test-previous-button"
                   style={{ fontSize: '1.5em' }}
@@ -442,10 +447,15 @@ export default function ProcessModelEditDiagram() {
                   &laquo;
                 </Button>
               </Col>
-
-              <Col xs={4}>
-                <Button variant="link" disabled style={{ fontSize: '1.5em' }}>
-                  Unit Test: {currentScriptUnitTest.id}
+              <Col xs={1}>
+                <Button
+                  data-qa="unit-test-next-button"
+                  style={{ fontSize: '1.5em' }}
+                  onClick={setNextScriptUnitTest}
+                  variant="link"
+                  disabled={nextButtonDisable}
+                >
+                  &raquo;
                 </Button>
               </Col>
               <Col xs={1}>
@@ -458,18 +468,7 @@ export default function ProcessModelEditDiagram() {
                   Run
                 </Button>
               </Col>
-              {scriptUnitTestResultBoolElement}
-              <Col className="d-flex justify-content-end">
-                <Button
-                  data-qa="unit-test-next-button"
-                  style={{ fontSize: '1.5em' }}
-                  onClick={setNextScriptUnitTest}
-                  variant="link"
-                  disabled={nextButtonDisable}
-                >
-                  &raquo;
-                </Button>
-              </Col>
+              <Col xs={1}>{scriptUnitTestResultBoolElement}</Col>
             </Row>
           </Container>
           <Stack direction="horizontal" gap={3}>
