@@ -203,7 +203,7 @@ export default function ProcessInstanceShow() {
     const taskIds = getTaskIds();
 
     return (
-      <main style={{ padding: '1rem 0' }}>
+      <>
         <ProcessBreadcrumb
           processModelId={params.process_model_id}
           processGroupId={params.process_group_id}
@@ -232,7 +232,7 @@ export default function ProcessInstanceShow() {
         />
 
         <div id="diagram-container" />
-      </main>
+      </>
     );
   }
   return null;

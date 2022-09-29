@@ -44,7 +44,7 @@ export default function ProcessModelNew() {
   };
 
   return (
-    <main style={{ padding: '1rem 0' }}>
+    <>
       <ProcessBreadcrumb />
       <h2>Add Process Model</h2>
       <Form onSubmit={addProcessModel}>
@@ -73,6 +73,6 @@ export default function ProcessModelNew() {
           Submit
         </Button>
       </Form>
-    </main>
+    </>
   );
 }

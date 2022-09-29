@@ -72,12 +72,12 @@ export default function SecretList() {
 
   if (pagination) {
     return (
-      <main style={{ padding: '1rem 0' }}>
+      <>
         <Button href="/admin/secrets/new">Add a secret</Button>
         <br />
         <br />
         {SecretsDisplayArea()}
-      </main>
+      </>
     );
   }
   return null;

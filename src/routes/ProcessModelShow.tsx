@@ -196,7 +196,7 @@ export default function ProcessModelShow() {
 
   if (Object.keys(processModel).length > 1) {
     return (
-      <main style={{ padding: '1rem 0' }}>
+      <>
         <ProcessBreadcrumb
           processGroupId={(processModel as any).process_group_id}
           processModelId={(processModel as any).id}
@@ -217,7 +217,7 @@ export default function ProcessModelShow() {
         <br />
         <h3>Files</h3>
         {processModelFileList()}
-      </main>
+      </>
     );
   }
   return null;

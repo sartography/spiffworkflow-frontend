@@ -37,7 +37,7 @@ export default function SecretShow() {
     const secretToUse = secret as any;
 
     return (
-      <main style={{ padding: '1rem 0' }}>
+      <>
         <Stack direction="horizontal" gap={3}>
           <h2>Secret Key: {secretToUse.key}</h2>
           <ButtonWithConfirmation
@@ -62,7 +62,7 @@ export default function SecretShow() {
             </tbody>
           </Table>
         </div>
-      </main>
+      </>
     );
   }
   return null;

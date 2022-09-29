@@ -37,7 +37,7 @@ export default function ProcessGroupNew() {
   };
 
   return (
-    <main style={{ padding: '1rem 0' }}>
+    <>
       <ProcessBreadcrumb />
       <h2>Add Process Group</h2>
       <Form onSubmit={addProcessGroup}>
@@ -66,6 +66,6 @@ export default function ProcessGroupNew() {
           Submit
         </Button>
       </Form>
-    </main>
+    </>
   );
 }

@@ -57,7 +57,7 @@ export default function ProcessInstanceReportNew() {
   };
 
   return (
-    <main style={{ padding: '1rem 0' }}>
+    <>
       <ProcessBreadcrumb />
       <h2>Add Process Model</h2>
       <form onSubmit={addProcessInstanceReport}>
@@ -109,6 +109,6 @@ export default function ProcessInstanceReportNew() {
         <br />
         <button type="submit">Submit</button>
       </form>
-    </main>
+    </>
   );
 }

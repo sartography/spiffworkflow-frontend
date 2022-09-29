@@ -86,7 +86,7 @@ export default function MessageInstanceList() {
       );
     }
     return (
-      <main style={{ padding: '1rem 0' }}>
+      <>
         {breadcrumbElement}
         <h2>Messages</h2>
         <PaginationForTable
@@ -97,7 +97,7 @@ export default function MessageInstanceList() {
           queryParamString={queryParamString}
           path="/admin/messages"
         />
-      </main>
+      </>
     );
   }
   return null;

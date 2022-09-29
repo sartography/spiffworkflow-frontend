@@ -439,7 +439,7 @@ export default function ProcessInstanceList() {
   if (pagination) {
     const { page, perPage } = getPageInfoFromSearchParams(searchParams);
     return (
-      <main style={{ padding: '1rem 0' }}>
+      <>
         {processInstanceTitleElement()}
         {filterOptions()}
         <PaginationForTable
@@ -450,7 +450,7 @@ export default function ProcessInstanceList() {
           queryParamString={getSearchParamsAsQueryString()}
           path="/admin/process-instances"
         />
-      </main>
+      </>
     );
   }
 

@@ -5,7 +5,7 @@ import PaginationForTable from '../components/PaginationForTable';
 import { getPageInfoFromSearchParams } from '../helpers';
 import HttpService from '../services/HttpService';
 
-export default function TaskList() {
+export default function HomePage() {
   const [searchParams] = useSearchParams();
   const [tasks, setTasks] = useState([]);
   const [pagination, setPagination] = useState(null);
@@ -77,7 +77,7 @@ export default function TaskList() {
   if (pagination) {
     const { page, perPage } = getPageInfoFromSearchParams(searchParams);
     return (
-      <main>
+      <>
         <h2>Tasks</h2>
         <PaginationForTable
           page={page}
@@ -86,7 +86,7 @@ export default function TaskList() {
           tableToDisplay={buildTable()}
           path="/tasks"
         />
-      </main>
+      </>
     );
   }
   return null;

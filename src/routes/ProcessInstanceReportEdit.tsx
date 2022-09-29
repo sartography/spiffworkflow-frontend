@@ -110,7 +110,7 @@ export default function ProcessInstanceReportEdit() {
   };
 
   return (
-    <main style={{ padding: '1rem 0' }}>
+    <>
       <ProcessBreadcrumb />
       <h2>Edit Process Instance Report: {params.report_identifier}</h2>
       <ButtonWithConfirmation
@@ -158,6 +158,6 @@ export default function ProcessInstanceReportEdit() {
         <br />
         <button type="submit">Submit</button>
       </form>
-    </main>
+    </>
   );
 }
