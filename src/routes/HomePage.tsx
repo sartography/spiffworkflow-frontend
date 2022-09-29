@@ -101,7 +101,7 @@ export default function HomePage() {
     });
     return (
       <>
-        <h2>Processes to start</h2>
+        <h2>Processes I can start</h2>
         <Table striped bordered>
           <thead>
             <tr>
@@ -121,7 +121,7 @@ export default function HomePage() {
     const { page, perPage } = getPageInfoFromSearchParams(searchParams);
     return (
       <>
-        <h2>Tasks</h2>
+        <h2>Tasks waiting for me</h2>
         <PaginationForTable
           page={page}
           perPage={perPage}
