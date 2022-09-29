@@ -25,7 +25,7 @@ export default function SubNavigation() {
   if (activeKey) {
     return (
       <Nav variant="tabs" activeKey={activeKey}>
-        <Nav.Item>
+        <Nav.Item data-qa="nav-home">
           <Nav.Link href="/">Home</Nav.Link>
         </Nav.Item>
         <Nav.Item>

@@ -14,6 +14,41 @@ export default function ProcessModelShow() {
   const [processInstanceResult, setProcessInstanceResult] = useState(null);
   const [reloadModel, setReloadModel] = useState(false);
 
+  // useEffect(() => {
+  //   // All values stored in localStorage are strings.
+  //   // Grab our recentProcessModels string from localStorage.
+  //   const stringFromLocalStorage = window.localStorage.getItem(
+  //     'recentProcessModels'
+  //   );
+  //
+  //   // Then parse that string into an actual value.
+  //   const parsedValueFromString = JSON.parse(stringFromLocalStorage);
+  //
+  //   // If that value is null (meaning that we've never saved anything to that spot in localStorage before), use an empty array as our array. Otherwise, just stick with the value we've just parsed out.
+  //   const array = parsedValueFromString || [];
+  //
+  //   // Here's the value we want to add
+  //   const value = {
+  //     processGroupIdentifier: params.process_group_id,
+  //     processModelIdentifier: params.process_model_id,
+  //   };
+  //
+  //   // If our parsed/empty array doesn't already have this value in it...
+  //   if (array.indexOf(value) == -1) {
+  //     // add the value to the array
+  //     array.push(value);
+  //
+  //     // turn the array WITH THE NEW VALUE IN IT into a string to prepare it to be stored in localStorage
+  //     const stringRepresentingArray = JSON.stringify(array);
+  //
+  //     // and store it in localStorage as "recentProcessModels"
+  //     window.localStorage.setItem(
+  //       'recentProcessModels',
+  //       stringRepresentingArray
+  //     );
+  //   }
+  // }, []);
+
   useEffect(() => {
     const processResult = (result: object) => {
       setProcessModel(result);

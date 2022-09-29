@@ -30,12 +30,12 @@ Cypress.Commands.add('getBySel', (selector, ...args) => {
   return cy.get(`[data-qa=${selector}]`, ...args);
 });
 
-Cypress.Commands.add('navigateToTasks', () => {
-  cy.getBySel('nav-item-tasks').click();
+Cypress.Commands.add('navigateToHome', () => {
+  cy.getBySel('nav-home').click();
 });
 
 Cypress.Commands.add('navigateToAdmin', () => {
-  cy.getBySel('nav-item-admin').click();
+  cy.getBySel('spiffworkflow-logo').click();
 });
 
 Cypress.Commands.add('login', (selector, ...args) => {

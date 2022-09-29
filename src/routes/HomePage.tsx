@@ -74,6 +74,8 @@ export default function HomePage() {
     );
   };
 
+  const relevantProcessModelSection = null;
+
   if (pagination) {
     const { page, perPage } = getPageInfoFromSearchParams(searchParams);
     return (
@@ -86,6 +88,7 @@ export default function HomePage() {
           tableToDisplay={buildTable()}
           path="/tasks"
         />
+        {relevantProcessModelSection}
       </>
     );
   }
