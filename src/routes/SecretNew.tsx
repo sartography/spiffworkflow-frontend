@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 import HttpService from '../services/HttpService';
 
 export default function SecretNew() {
@@ -29,7 +28,6 @@ export default function SecretNew() {
 
   return (
     <main style={{ padding: '1rem 0' }}>
-      <ProcessBreadcrumb />
       <h2>Add Secret</h2>
       <Form onSubmit={addSecret}>
         <Form.Group className="mb-3" controlId="formDisplayName">

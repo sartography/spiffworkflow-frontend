@@ -2,13 +2,14 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Stack, Table } from 'react-bootstrap';
 import HttpService from '../services/HttpService';
+import { Secret } from '../interfaces';
 import ButtonWithConfirmation from '../components/ButtonWithConfirmation';
 
 export default function SecretShow() {
   const navigate = useNavigate();
   const params = useParams();
 
-  const [secret, setSecret] = useState(null);
+  const [secret, setSecret] = useState<Secret | null>(null);
 
   const navigateToSecrets = (_result: any) => {
     navigate(`/admin/secrets`);
@@ -22,15 +23,17 @@ export default function SecretShow() {
   }, [params]);
 
   const deleteSecret = () => {
+    if (secret === null) {
+      return;
+    }
     HttpService.makeCallToBackend({
-      path: `/process-models/${params.process_group_id}/${params.process_model_id}/process-instances/${params.process_instance_id}`,
+      path: `/secrets/${secret.key}`,
       successCallback: navigateToSecrets,
       httpMethod: 'DELETE',
     });
   };
 
   if (secret) {
-    console.log('secret: ', secret);
     const secretToUse = secret as any;
 
     return (

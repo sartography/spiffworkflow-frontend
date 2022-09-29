@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Button, Table } from 'react-bootstrap';
-import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 import PaginationForTable from '../components/PaginationForTable';
 import HttpService from '../services/HttpService';
 import { getPageInfoFromSearchParams } from '../helpers';
@@ -66,7 +65,7 @@ export default function SecretList() {
         />
       );
     } else {
-      displayText = <p>No Groups To Display</p>;
+      displayText = <p>No Secrets to Display</p>;
     }
     return displayText;
   };
@@ -74,7 +73,6 @@ export default function SecretList() {
   if (pagination) {
     return (
       <main style={{ padding: '1rem 0' }}>
-        <ProcessBreadcrumb />
         <Button href="/admin/secrets/new">Add a secret</Button>
         <br />
         <br />
