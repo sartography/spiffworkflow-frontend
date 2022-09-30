@@ -1,22 +1,16 @@
 import { useState } from 'react';
-import {useNavigate, useParams} from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import HttpService from '../services/HttpService';
 
 export default function SecretAllowedModelNew() {
   const [allowedRelativePath, setPath] = useState('');
-  const [key, setKey] = useState('');
   const navigate = useNavigate();
   const params = useParams();
 
   const navigateToSecret = (_result: any) => {
-    alert(`/admin/secrets/${params.secret}`);
     navigate(`/admin/secrets/${params.secret}`);
-  };
-
-  const navigateToSecrets = () => {
-    navigate(`/admin/secrets`);
   };
 
   const addAllowedModel = (event: any) => {
