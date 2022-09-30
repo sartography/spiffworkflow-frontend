@@ -61,7 +61,7 @@ export default function SecretShow() {
           <thead>
             <tr>
               <th>ID</th>
-              <th>Allowed Process Path</th>
+              <th>Relative Path to Model</th>
               <th>Delete</th>
             </tr>
           </thead>
@@ -102,9 +102,9 @@ export default function SecretShow() {
           </Table>
         </div>
         <Stack direction="horizontal" gap={3}>
-          <h3>Allowed Processes</h3>
-          <Button onClick={() => addAllowedProcess(secretToUse)}>
-            Add Process
+          <h3>Allowed Models</h3>
+          <Button href={`/admin/secrets/allowed_model/new/${secretToUse.key}`}>
+            Add Model
           </Button>
         </Stack>
         <div>{buildAllowedProcessesTable(secretToUse)}</div>
