@@ -23,6 +23,10 @@ export default function SecretShow() {
     });
   }, [params]);
 
+  const reloadSecret = (_result: any) => {
+    window.location.reload();
+  };
+
   const deleteSecret = () => {
     if (secret === null) {
       return;
@@ -35,12 +39,11 @@ export default function SecretShow() {
   };
 
   const deleteAllowedProcess = (id: any) => {
-    alert(id);
-  };
-
-  const addAllowedProcess = (secretToUse: any) => {
-    alert(secretToUse.id);
-    // console.log(secretToUse);
+    HttpService.makeCallToBackend({
+      path: `/secrets/allowed_process_paths/${id}`,
+      successCallback: reloadSecret,
+      httpMethod: 'DELETE',
+    });
   };
 
   const buildAllowedProcessesTable = (secretToUse: any) => {
@@ -50,7 +53,7 @@ export default function SecretShow() {
           <td>{(row as any).id}</td>
           <td>{(row as any).allowed_relative_path}</td>
           <td>
-            <MdDelete onClick={() => deleteAllowedProcess(secretToUse.id)} />
+            <MdDelete onClick={() => deleteAllowedProcess((row as any).id)} />
           </td>
         </tr>
       );
