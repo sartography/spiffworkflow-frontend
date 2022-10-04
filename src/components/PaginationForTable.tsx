@@ -9,6 +9,7 @@ export const DEFAULT_PAGE = 1;
 type OwnProps = {
   page: number;
   perPage: number;
+  perPageOptions?: number[];
   pagination: {
     [key: string]: number;
   };
@@ -20,6 +21,7 @@ type OwnProps = {
 export default function PaginationForTable({
   page,
   perPage,
+  perPageOptions,
   pagination,
   tableToDisplay,
   queryParamString = '',
@@ -28,27 +30,29 @@ export default function PaginationForTable({
   const PER_PAGE_OPTIONS = [2, 10, 50, 100];
 
   const buildPerPageDropdown = () => {
-    const perPageDropdownRows = PER_PAGE_OPTIONS.map((perPageOption) => {
-      if (perPageOption === perPage) {
+    const perPageDropdownRows = (perPageOptions || PER_PAGE_OPTIONS).map(
+      (perPageOption) => {
+        if (perPageOption === perPage) {
+          return (
+            <Dropdown.Item
+              key={perPageOption}
+              href={`${path}?page=1&per_page=${perPageOption}`}
+              active
+            >
+              {perPageOption}
+            </Dropdown.Item>
+          );
+        }
         return (
           <Dropdown.Item
             key={perPageOption}
             href={`${path}?page=1&per_page=${perPageOption}`}
-            active
           >
             {perPageOption}
           </Dropdown.Item>
         );
       }
-      return (
-        <Dropdown.Item
-          key={perPageOption}
-          href={`${path}?page=1&per_page=${perPageOption}`}
-        >
-          {perPageOption}
-        </Dropdown.Item>
-      );
-    });
+    );
     return (
       <Stack direction="horizontal" gap={3}>
         <Dropdown className="ms-auto" id="pagination-page-dropdown">

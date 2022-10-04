@@ -31,11 +31,13 @@ export default function ProcessGroupList() {
       return (
         <tr key={(row as any).id}>
           <td>
-            <Link to={`/admin/process-groups/${(row as any).id}`}>
-              {(row as any).id}
+            <Link
+              to={`/admin/process-groups/${(row as any).id}`}
+              title={(row as any).id}
+            >
+              {(row as any).display_name}
             </Link>
           </td>
-          <td>{(row as any).display_name}</td>
         </tr>
       );
     });
@@ -43,8 +45,7 @@ export default function ProcessGroupList() {
       <Table striped bordered>
         <thead>
           <tr>
-            <th>Process Group Id</th>
-            <th>Display Name</th>
+            <th>Process Group</th>
           </tr>
         </thead>
         <tbody>{rows}</tbody>

@@ -6,13 +6,19 @@ import { getPageInfoFromSearchParams } from '../helpers';
 import HttpService from '../services/HttpService';
 import { RecentProcessModel } from '../interfaces';
 
+const PER_PAGE_FOR_TASKS_ON_HOME_PAGE = 5;
+
 export default function HomePage() {
   const [searchParams] = useSearchParams();
   const [tasks, setTasks] = useState([]);
   const [pagination, setPagination] = useState(null);
 
   useEffect(() => {
-    const { page, perPage } = getPageInfoFromSearchParams(searchParams);
+    const { page, perPage } = getPageInfoFromSearchParams(
+      searchParams,
+      PER_PAGE_FOR_TASKS_ON_HOME_PAGE
+    );
+    console.log('perPageYo', perPage);
     const setTasksFromResult = (result: any) => {
       setTasks(result.results);
       setPagination(result.pagination);
@@ -118,13 +124,17 @@ export default function HomePage() {
     recentProcessModels.length > 0 && buildRecentProcessModelSection();
 
   if (pagination) {
-    const { page, perPage } = getPageInfoFromSearchParams(searchParams);
+    const { page, perPage } = getPageInfoFromSearchParams(
+      searchParams,
+      PER_PAGE_FOR_TASKS_ON_HOME_PAGE
+    );
     return (
       <>
         <h2>Tasks waiting for me</h2>
         <PaginationForTable
           page={page}
           perPage={perPage}
+          perPageOptions={[2, PER_PAGE_FOR_TASKS_ON_HOME_PAGE, 25]}
           pagination={pagination}
           tableToDisplay={buildTable()}
           path="/tasks"
