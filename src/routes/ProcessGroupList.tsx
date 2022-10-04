@@ -8,7 +8,7 @@ import { getPageInfoFromSearchParams } from '../helpers';
 
 // Example process group json
 // {'admin': False, 'display_name': 'Test Workflows', 'display_order': 0, 'id': 'test_process_group'}
-export default function ProcessGroups() {
+export default function ProcessGroupList() {
   const [searchParams] = useSearchParams();
 
   const [processGroups, setProcessGroups] = useState([]);

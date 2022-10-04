@@ -1,7 +1,7 @@
 import { Routes, Route, useLocation } from 'react-router-dom';
 
 import { useContext, useEffect } from 'react';
-import ProcessGroups from './ProcessGroups';
+import ProcessGroupList from './ProcessGroupList';
 import ProcessGroupShow from './ProcessGroupShow';
 import ProcessGroupNew from './ProcessGroupNew';
 import ProcessGroupEdit from './ProcessGroupEdit';
@@ -35,8 +35,8 @@ export default function AdminRoutes() {
   if (UserService.hasRole(['admin'])) {
     return (
       <Routes>
-        <Route path="/" element={<ProcessGroups />} />
-        <Route path="process-groups" element={<ProcessGroups />} />
+        <Route path="/" element={<ProcessGroupList />} />
+        <Route path="process-groups" element={<ProcessGroupList />} />
         <Route
           path="process-groups/:process_group_id"
           element={<ProcessGroupShow />}
