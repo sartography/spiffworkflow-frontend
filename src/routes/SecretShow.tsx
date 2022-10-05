@@ -35,7 +35,7 @@ export default function SecretShow() {
       secret.value = secretValue;
       HttpService.makeCallToBackend({
         path: `/secrets/${secret.key}`,
-        successCallback: function () {
+        successCallback: () => {
           setSecret(secret);
         },
         httpMethod: 'PUT',
