@@ -9,7 +9,7 @@ export interface Secret {
   key: string;
   value: string;
   creator_user_id: string;
-  allowed_process_models: SecretAllowedProcessModel[];
+  allowed_processes: SecretAllowedProcessModel[];
 }
 
 export interface RecentProcessModel {

@@ -47,7 +47,8 @@ export default function SecretShow() {
   };
 
   const buildAllowedProcessesTable = (secretToUse: Secret) => {
-    const rows = secretToUse.allowed_process_models.map(
+    console.log(`secretToUse: ${secretToUse}`);
+    const rows = secretToUse.allowed_processes.map(
       (row: SecretAllowedProcessModel) => {
         return (
           <tr key={secretToUse.key}>
@@ -64,7 +65,7 @@ export default function SecretShow() {
         );
       }
     );
-    if (secretToUse.allowed_process_models.length > 0) {
+    if (secretToUse.allowed_processes.length > 0) {
       return (
         <Table striped bordered>
           <thead>
