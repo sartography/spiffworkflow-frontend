@@ -27,7 +27,7 @@ export default function ProcessBreadcrumb({
       const valueLabel = crumb[0];
       const url = crumb[1];
       return (
-        <Breadcrumb.Item linkAs={Link} linkProps={{ to: url }}>
+        <Breadcrumb.Item key={valueLabel} linkAs={Link} linkProps={{ to: url }}>
           {valueLabel}
         </Breadcrumb.Item>
       );
