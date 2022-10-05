@@ -21,25 +21,34 @@ export default function SecretShow() {
   }, [params]);
 
   const handleSecretValueChange = (event: any) => {
-    alert(`handleSecretValueChange`);
-    alert(event.target.value);
-    setSecretValue(event.target.value);
-  };
-
-  const updateSecretValue = () => {
-    alert(`updateSecretValue`);
-    alert(secretValue);
-    // if (secret) {
-    //   secret.value = useState(secretValue);
-    // }
-  };
-
-  const navigateToSecrets = (_result: any) => {
-    navigate(`/admin/secrets`);
+    if (secret) {
+      setSecretValue(event.target.value);
+    }
   };
 
   const reloadSecret = (_result: any) => {
     window.location.reload();
+  };
+
+  const updateSecretValue = () => {
+    if (secret && secretValue) {
+      secret.value = secretValue;
+      HttpService.makeCallToBackend({
+        path: `/secrets/${secret.key}`,
+        successCallback: function () {
+          setSecret(secret);
+        },
+        httpMethod: 'PUT',
+        postBody: {
+          value: secretValue,
+          creator_user_id: secret.creator_user_id,
+        },
+      });
+    }
+  };
+
+  const navigateToSecrets = (_result: any) => {
+    navigate(`/admin/secrets`);
   };
 
   const deleteSecret = () => {
@@ -127,7 +136,7 @@ export default function SecretShow() {
                     id="secret_value"
                     name="secret_value"
                     type="text"
-                    value={secret.value}
+                    value={secretValue || secret.value}
                     onChange={handleSecretValueChange}
                   />
                 </td>
