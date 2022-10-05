@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import { slugifyString } from '../helpers';
 import HttpService from '../services/HttpService';
 
 export default function SecretNew() {
@@ -30,16 +31,22 @@ export default function SecretNew() {
     });
   };
 
+  const warningStyle = {
+    color: 'red',
+  };
+
   return (
     <main style={{ padding: '1rem 0' }}>
       <h2>Add Secret</h2>
       <Form onSubmit={addSecret}>
         <Form.Group className="mb-3" controlId="formDisplayName">
-          <Form.Label>Key:</Form.Label>
+          <Form.Label>
+            Key: <span style={warningStyle}>No Spaces</span>
+          </Form.Label>
           <Form.Control
             type="text"
             value={key}
-            onChange={(e) => setKey(e.target.value)}
+            onChange={(e) => setKey(slugifyString(e.target.value))}
           />
         </Form.Group>
         <Form.Group className="mb-3" controlId="formIdentifier">
