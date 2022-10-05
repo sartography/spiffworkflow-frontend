@@ -11,10 +11,7 @@ export default function SecretShow() {
   const params = useParams();
 
   const [secret, setSecret] = useState<Secret | null>(null);
-
-  const navigateToSecrets = (_result: any) => {
-    navigate(`/admin/secrets`);
-  };
+  const [secretValue, setSecretValue] = useState(secret?.value);
 
   useEffect(() => {
     HttpService.makeCallToBackend({
@@ -22,6 +19,24 @@ export default function SecretShow() {
       successCallback: setSecret,
     });
   }, [params]);
+
+  const handleSecretValueChange = (event: any) => {
+    alert(`handleSecretValueChange`);
+    alert(event.target.value);
+    setSecretValue(event.target.value);
+  };
+
+  const updateSecretValue = () => {
+    alert(`updateSecretValue`);
+    alert(secretValue);
+    // if (secret) {
+    //   secret.value = useState(secretValue);
+    // }
+  };
+
+  const navigateToSecrets = (_result: any) => {
+    navigate(`/admin/secrets`);
+  };
 
   const reloadSecret = (_result: any) => {
     window.location.reload();
@@ -92,6 +107,9 @@ export default function SecretShow() {
             onConfirmation={deleteSecret}
             buttonLabel="Delete"
           />
+          <Button variant="warning" onClick={updateSecretValue}>
+            Update Value
+          </Button>
         </Stack>
         <div>
           <Table striped bordered>
@@ -104,7 +122,15 @@ export default function SecretShow() {
             <tbody>
               <tr>
                 <td>{params.key}</td>
-                <td>{secret.value}</td>
+                <td>
+                  <input
+                    id="secret_value"
+                    name="secret_value"
+                    type="text"
+                    value={secret.value}
+                    onChange={handleSecretValueChange}
+                  />
+                </td>
               </tr>
             </tbody>
           </Table>
