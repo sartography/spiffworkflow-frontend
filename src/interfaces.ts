@@ -9,3 +9,10 @@ export interface RecentProcessModel {
   processModelIdentifier: string;
   processModelDisplayName: string;
 }
+
+export interface ProcessModel {
+  id: string;
+  process_group_id: string;
+  display_name: string;
+  primary_file_name: string;
+}

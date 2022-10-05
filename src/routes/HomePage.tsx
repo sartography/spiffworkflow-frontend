@@ -18,7 +18,6 @@ export default function HomePage() {
       searchParams,
       PER_PAGE_FOR_TASKS_ON_HOME_PAGE
     );
-    console.log('perPageYo', perPage);
     const setTasksFromResult = (result: any) => {
       setTasks(result.results);
       setPagination(result.pagination);
