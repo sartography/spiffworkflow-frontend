@@ -47,6 +47,10 @@ Cypress.Commands.add('login', (selector, ...args) => {
 
 Cypress.Commands.add('logout', (selector, ...args) => {
   cy.getBySel('logout-button').click();
+
+  // otherwise we can click logout, quickly load the next page, and the javascript
+  // doesn't have time to actually sign you out
+  cy.contains('Sign in to your account');
 });
 
 Cypress.Commands.add('createGroup', (groupId, groupDisplayName) => {
