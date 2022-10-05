@@ -17,12 +17,12 @@ describe('process-groups', () => {
     cy.contains('Process Groups').click();
     cy.contains(groupDisplayName).click();
     cy.url().should('include', `process-groups/${groupId}`);
-    cy.contains(`Process Group: ${groupId}`);
+    cy.contains(`Process Group: ${groupDisplayName}`);
 
     cy.contains('Edit process group').click();
     cy.get('input[name=display_name]').clear().type(newGroupDisplayName);
     cy.contains('Submit').click();
-    cy.contains(`Process Group: ${groupId}`);
+    cy.contains(`Process Group: ${newGroupDisplayName}`);
 
     cy.contains('Edit process group').click();
     cy.get('input[name=display_name]').should(

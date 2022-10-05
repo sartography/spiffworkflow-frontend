@@ -10,9 +10,17 @@ export interface RecentProcessModel {
   processModelDisplayName: string;
 }
 
+export interface ProcessGroup {
+  id: string;
+  display_name: string;
+}
+
 export interface ProcessModel {
   id: string;
   process_group_id: string;
   display_name: string;
   primary_file_name: string;
 }
+
+// tuple of display value and URL
+export type BreadcrumbItem = [displayValue: string, url?: string];

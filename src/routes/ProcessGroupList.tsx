@@ -132,7 +132,7 @@ export default function ProcessGroupList() {
   if (pagination) {
     return (
       <>
-        <ProcessBreadcrumb />
+        <ProcessBreadcrumb hotCrumbs={[['Process Groups']]} />
         <Button href="/admin/process-groups/new">Add a process group</Button>
         <br />
         <br />

@@ -22,12 +22,12 @@ describe('tasks', () => {
   });
 
   it('can complete and navigate a form', () => {
-    const groupId = 'acceptance-tests-group-one';
+    const groupDisplayName = 'Acceptance Tests Group One';
     const modelId = `acceptance-tests-model-2`;
     const completedTaskClassName = 'completed-task-highlight';
     const activeTaskClassName = 'active-task-highlight';
 
-    cy.navigateToProcessModel(groupId, modelId);
+    cy.navigateToProcessModel(groupDisplayName, modelId);
 
     // avoid reloading so we can click on the task link that appears on running the process instance
     cy.runPrimaryBpmnFile(false);
@@ -66,7 +66,7 @@ describe('tasks', () => {
     );
 
     cy.contains('Task: get_user_generated_number_four');
-    cy.navigateToProcessModel(groupId, modelId);
+    cy.navigateToProcessModel(groupDisplayName, modelId);
     cy.getBySel('process-instance-list-link').click();
     cy.assertAtLeastOneItemInPaginatedResults();
 
@@ -98,7 +98,7 @@ describe('tasks', () => {
     );
     cy.url().should('include', '/tasks');
 
-    cy.navigateToProcessModel(groupId, modelId);
+    cy.navigateToProcessModel(groupDisplayName, modelId);
     cy.getBySel('process-instance-list-link').click();
     cy.assertAtLeastOneItemInPaginatedResults();
 
@@ -110,7 +110,7 @@ describe('tasks', () => {
 
   it('can paginate items', () => {
     cy.navigateToProcessModel(
-      'acceptance-tests-group-one',
+      'Acceptance Tests Group One',
       'acceptance-tests-model-2'
     );
 

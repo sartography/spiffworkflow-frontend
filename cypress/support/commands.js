@@ -58,7 +58,7 @@ Cypress.Commands.add('createGroup', (groupId, groupDisplayName) => {
   cy.contains('Submit').click();
 
   cy.url().should('include', `process-groups/${groupId}`);
-  cy.contains(`Process Group: ${groupId}`);
+  cy.contains(`Process Group: ${groupDisplayName}`);
 });
 
 Cypress.Commands.add('createModel', (groupId, modelId, modelDisplayName) => {

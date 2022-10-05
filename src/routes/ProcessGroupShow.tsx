@@ -5,12 +5,13 @@ import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 import PaginationForTable from '../components/PaginationForTable';
 import HttpService from '../services/HttpService';
 import { getPageInfoFromSearchParams } from '../helpers';
+import { ProcessGroup } from '../interfaces';
 
 export default function ProcessGroupShow() {
   const params = useParams();
   const [searchParams] = useSearchParams();
 
-  const [processGroup, setProcessGroup] = useState(null);
+  const [processGroup, setProcessGroup] = useState<ProcessGroup | null>(null);
   const [processModels, setProcessModels] = useState([]);
   const [pagination, setPagination] = useState(null);
 
@@ -35,14 +36,15 @@ export default function ProcessGroupShow() {
   }, [params, searchParams]);
 
   const buildTable = () => {
+    if (processGroup === null) {
+      return null;
+    }
     const rows = processModels.map((row) => {
       return (
         <tr key={(row as any).id}>
           <td>
             <Link
-              to={`/admin/process-models/${(processGroup as any).id}/${
-                (row as any).id
-              }`}
+              to={`/admin/process-models/${processGroup.id}/${(row as any).id}`}
               data-qa="process-model-show-link"
             >
               {(row as any).id}
@@ -72,7 +74,12 @@ export default function ProcessGroupShow() {
     const { page, perPage } = getPageInfoFromSearchParams(searchParams);
     return (
       <>
-        <ProcessBreadcrumb processGroupId={(processGroup as any).id} />
+        <ProcessBreadcrumb
+          hotCrumbs={[
+            ['Process Groups', '/admin'],
+            [`Process Group: ${processGroup.display_name}`],
+          ]}
+        />
         <ul>
           <Stack direction="horizontal" gap={3}>
             <Button
