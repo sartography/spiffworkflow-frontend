@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Stack, Table, Button } from 'react-bootstrap';
 import { MdDelete } from 'react-icons/md';
 import HttpService from '../services/HttpService';
-import { Secret } from '../interfaces';
+import { Secret, SecretAllowedProcessModel } from '../interfaces';
 import ButtonWithConfirmation from '../components/ButtonWithConfirmation';
 
 export default function SecretShow() {
@@ -46,19 +46,25 @@ export default function SecretShow() {
     });
   };
 
-  const buildAllowedProcessesTable = (secretToUse: any) => {
-    const rows = secretToUse.allowed_processes.map((row: any) => {
-      return (
-        <tr key={(row as any).key}>
-          <td>{(row as any).id}</td>
-          <td>{(row as any).allowed_relative_path}</td>
-          <td>
-            <MdDelete onClick={() => deleteAllowedProcess((row as any).id)} />
-          </td>
-        </tr>
-      );
-    });
-    if (secretToUse.allowed_processes.length > 0) {
+  const buildAllowedProcessesTable = (secretToUse: Secret) => {
+    const rows = secretToUse.allowed_process_models.map(
+      (row: SecretAllowedProcessModel) => {
+        return (
+          <tr key={secretToUse.key}>
+            <td>{(row as SecretAllowedProcessModel).id}</td>
+            <td>{(row as SecretAllowedProcessModel).allowed_relative_path}</td>
+            <td>
+              <MdDelete
+                onClick={() =>
+                  deleteAllowedProcess((row as SecretAllowedProcessModel).id)
+                }
+              />
+            </td>
+          </tr>
+        );
+      }
+    );
+    if (secretToUse.allowed_process_models.length > 0) {
       return (
         <Table striped bordered>
           <thead>
@@ -76,12 +82,10 @@ export default function SecretShow() {
   };
 
   if (secret) {
-    const secretToUse = secret as any;
-
     return (
       <>
         <Stack direction="horizontal" gap={3}>
-          <h2>Secret Key: {secretToUse.key}</h2>
+          <h2>Secret Key: {secret.key}</h2>
           <ButtonWithConfirmation
             description="Delete Secret?"
             onConfirmation={deleteSecret}
@@ -99,18 +103,18 @@ export default function SecretShow() {
             <tbody>
               <tr>
                 <td>{params.key}</td>
-                <td>{secretToUse.value}</td>
+                <td>{secret.value}</td>
               </tr>
             </tbody>
           </Table>
         </div>
         <Stack direction="horizontal" gap={3}>
           <h3>Allowed Models</h3>
-          <Button href={`/admin/secrets/allowed_model/new/${secretToUse.key}`}>
+          <Button href={`/admin/secrets/allowed_model/new/${secret.key}`}>
             Add Model
           </Button>
         </Stack>
-        <div>{buildAllowedProcessesTable(secretToUse)}</div>
+        <div>{buildAllowedProcessesTable(secret)}</div>
       </>
     );
   }
