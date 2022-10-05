@@ -50,7 +50,6 @@ export default function SecretList() {
               {(row as any).key}
             </Link>
           </td>
-          <td>{(row as any).value}</td>
           <td>{(row as any).username}</td>
           <td>
             <MdDelete onClick={() => handleDeleteSecret((row as any).key)} />
@@ -64,7 +63,6 @@ export default function SecretList() {
           <tr>
             <th>ID</th>
             <th>Secret Key</th>
-            <th>Secret Value</th>
             <th>Creator</th>
             <th>Delete</th>
           </tr>
