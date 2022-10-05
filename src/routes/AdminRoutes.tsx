@@ -24,6 +24,7 @@ import SecretList from './SecretList';
 import SecretNew from './SecretNew';
 import SecretShow from './SecretShow';
 import SecretAllowedModelNew from './SecretAllowedModelNew';
+import SecretAllowedModelEdit from './SecretAllowedModelEdit';
 
 export default function AdminRoutes() {
   const location = useLocation();
@@ -112,6 +113,10 @@ export default function AdminRoutes() {
         <Route
           path="secrets/allowed_model/new/:secret"
           element={<SecretAllowedModelNew />}
+        />
+        <Route
+          path="secrets/allowed_model/edit/:id"
+          element={<SecretAllowedModelEdit />}
         />
       </Routes>
     );

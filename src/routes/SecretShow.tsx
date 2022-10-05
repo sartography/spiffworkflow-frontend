@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { Stack, Table, Button } from 'react-bootstrap';
 import { MdDelete } from 'react-icons/md';
 import HttpService from '../services/HttpService';
@@ -76,7 +76,11 @@ export default function SecretShow() {
       (row: SecretAllowedProcessModel) => {
         return (
           <tr key={secretToUse.key}>
-            <td>{(row as SecretAllowedProcessModel).id}</td>
+            <td>
+              <Link to={`/admin/secrets/allowed_model/edit/${(row as any).id}`}>
+                {(row as SecretAllowedProcessModel).id}
+              </Link>
+            </td>
             <td>{(row as SecretAllowedProcessModel).allowed_relative_path}</td>
             <td>
               <MdDelete
