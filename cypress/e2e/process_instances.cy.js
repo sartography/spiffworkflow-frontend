@@ -58,7 +58,7 @@ describe('process-instances', () => {
   beforeEach(() => {
     cy.login();
     cy.navigateToProcessModel(
-      'acceptance-tests-group-one',
+      'Acceptance Tests Group One',
       'acceptance-tests-model-1'
     );
   });

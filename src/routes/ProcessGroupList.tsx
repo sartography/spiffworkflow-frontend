@@ -116,6 +116,10 @@ export default function ProcessGroupList() {
               id="process-model-selection"
               labelKey="label"
               onChange={processModelSearchOnChange}
+              // for cypress tests since data-qa does not work
+              inputProps={{
+                name: 'process-model-selection',
+              }}
               options={processModeleSelectionOptions}
               placeholder="Choose a process model..."
             />

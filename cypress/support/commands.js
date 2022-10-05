@@ -83,15 +83,18 @@ Cypress.Commands.add('runPrimaryBpmnFile', (reload = true) => {
   }
 });
 
-Cypress.Commands.add('navigateToProcessModel', (groupId, modelId) => {
-  cy.navigateToAdmin();
-  cy.contains(groupId).click();
-  cy.contains(`Process Group: ${groupId}`);
-  // https://stackoverflow.com/q/51254946/6090676
-  cy.getBySel('process-model-show-link').contains(modelId).click();
-  cy.url().should('include', `process-models/${groupId}/${modelId}`);
-  cy.contains(`Process Model: ${modelId}`);
-});
+Cypress.Commands.add(
+  'navigateToProcessModel',
+  (groupDisplayName, modelDisplayName) => {
+    cy.navigateToAdmin();
+    cy.contains(groupDisplayName).click();
+    cy.contains(`Process Group: ${groupDisplayName}`);
+    // https://stackoverflow.com/q/51254946/6090676
+    cy.getBySel('process-model-show-link').contains(modelDisplayName).click();
+    // cy.url().should('include', `process-models/${groupDisplayName}/${modelDisplayName}`);
+    cy.contains(`Process Model: ${modelDisplayName}`);
+  }
+);
 
 Cypress.Commands.add('basicPaginationTest', () => {
   cy.get('#pagination-page-dropdown')
