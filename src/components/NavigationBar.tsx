@@ -79,7 +79,7 @@ export default function NavigationBar() {
   return (
     <Navbar bg="dark" expand="lg" variant="dark">
       <Container>
-        <Navbar.Brand href="/admin">
+        <Navbar.Brand data-qa="spiffworkflow-logo" href="/admin">
           <img src={logo} className="app-logo" alt="logo" />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />

@@ -85,8 +85,8 @@ describe('tasks', () => {
     checkTaskHasClass('form4', activeTaskClassName);
     cy.get('.modal .btn-close').click();
 
-    cy.navigateToTasks();
-    cy.url().should('include', '/tasks');
+    cy.navigateToHome();
+    cy.contains('Tasks').should('exist');
 
     // FIXME: this will probably need a better way to link to the proper form that we want
     cy.contains('Complete Task').click();
@@ -121,7 +121,7 @@ describe('tasks', () => {
     cy.runPrimaryBpmnFile();
     cy.runPrimaryBpmnFile();
 
-    cy.navigateToTasks();
+    cy.navigateToHome();
     cy.basicPaginationTest();
   });
 });

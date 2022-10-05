@@ -39,6 +39,7 @@ export default function App() {
             <main style={{ padding: '1rem 0' }}>
               <Routes>
                 <Route path="/" element={<HomePage />} />
+                <Route path="/tasks" element={<HomePage />} />
                 <Route path="/admin/*" element={<AdminRoutes />} />
                 <Route
                   path="/tasks/:process_instance_id/:task_id"

@@ -8,7 +8,7 @@ import { getPageInfoFromSearchParams } from '../helpers';
 
 // Example process group json
 // {'admin': False, 'display_name': 'Test Workflows', 'display_order': 0, 'id': 'test_process_group'}
-export default function ProcessGroups() {
+export default function ProcessGroupList() {
   const [searchParams] = useSearchParams();
 
   const [processGroups, setProcessGroups] = useState([]);
@@ -31,11 +31,13 @@ export default function ProcessGroups() {
       return (
         <tr key={(row as any).id}>
           <td>
-            <Link to={`/admin/process-groups/${(row as any).id}`}>
-              {(row as any).id}
+            <Link
+              to={`/admin/process-groups/${(row as any).id}`}
+              title={(row as any).id}
+            >
+              {(row as any).display_name}
             </Link>
           </td>
-          <td>{(row as any).display_name}</td>
         </tr>
       );
     });
@@ -43,8 +45,7 @@ export default function ProcessGroups() {
       <Table striped bordered>
         <thead>
           <tr>
-            <th>Process Group Id</th>
-            <th>Display Name</th>
+            <th>Process Group</th>
           </tr>
         </thead>
         <tbody>{rows}</tbody>
