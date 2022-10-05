@@ -58,7 +58,7 @@ describe('process-instances', () => {
   beforeEach(() => {
     cy.login();
     cy.navigateToProcessModel(
-      'acceptance-tests-group-one',
+      'Acceptance Tests Group One',
       'acceptance-tests-model-1'
     );
   });
@@ -165,7 +165,8 @@ describe('process-instances', () => {
         cy.getBySel(`process-instance-status-${processStatus}`).contains(
           processStatus
         );
-        cy.get('button[aria-label=Remove]').click();
+        // there should really only be one, but in CI there are sometimes more
+        cy.get('button[aria-label=Remove]:first').click();
       }
     });
 

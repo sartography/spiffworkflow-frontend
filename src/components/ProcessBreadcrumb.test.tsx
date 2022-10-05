@@ -12,6 +12,20 @@ test('renders home link', () => {
   expect(homeElement).toBeInTheDocument();
 });
 
+test('renders hotCrumbs', () => {
+  render(
+    <BrowserRouter>
+      <ProcessBreadcrumb
+        hotCrumbs={[['Process Groups', '/admin'], [`Process Group: hey`]]}
+      />
+    </BrowserRouter>
+  );
+  const homeElement = screen.getByText(/Process Groups/);
+  expect(homeElement).toBeInTheDocument();
+  const nextElement = screen.getByText(/Process Group: hey/);
+  expect(nextElement).toBeInTheDocument();
+});
+
 test('renders process group when given processGroupId', async () => {
   render(
     <BrowserRouter>

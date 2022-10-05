@@ -10,10 +10,11 @@ describe('process-models', () => {
     const uuid = () => Cypress._.random(0, 1e6);
     const id = uuid();
     const groupId = 'acceptance-tests-group-one';
+    const groupDisplayName = 'Acceptance Tests Group One';
     const modelDisplayName = `Test Model 2 ${id}`;
     const newModelDisplayName = `${modelDisplayName} edited`;
     const modelId = `test-model-2-${id}`;
-    cy.contains(groupId).click();
+    cy.contains(groupDisplayName).click();
     cy.createModel(groupId, modelId, modelDisplayName);
     cy.contains(`Process Group: ${groupId}`).click();
     cy.contains(modelId);
@@ -44,6 +45,7 @@ describe('process-models', () => {
     const uuid = () => Cypress._.random(0, 1e6);
     const id = uuid();
     const groupId = 'acceptance-tests-group-one';
+    const groupDisplayName = 'Acceptance Tests Group One';
     const modelDisplayName = `Test Model 2 ${id}`;
     const modelId = `test-model-2-${id}`;
 
@@ -51,7 +53,7 @@ describe('process-models', () => {
     const dmnFileName = `dmn_test_file_${id}`;
     const jsonFileName = `json_test_file_${id}`;
 
-    cy.contains(groupId).click();
+    cy.contains(groupDisplayName).click();
     cy.createModel(groupId, modelId, modelDisplayName);
     cy.contains(`Process Group: ${groupId}`).click();
     cy.contains(modelId);
@@ -119,10 +121,11 @@ describe('process-models', () => {
     const uuid = () => Cypress._.random(0, 1e6);
     const id = uuid();
     const groupId = 'acceptance-tests-group-one';
+    const groupDisplayName = 'Acceptance Tests Group One';
     const modelDisplayName = `Test Model 2 ${id}`;
     const modelId = `test-model-2-${id}`;
     cy.contains('Add a process group');
-    cy.contains(groupId).click();
+    cy.contains(groupDisplayName).click();
     cy.createModel(groupId, modelId, modelDisplayName);
 
     // seeing if getBySel works better, because we are seeing tests fail in CI
@@ -160,7 +163,17 @@ describe('process-models', () => {
   });
 
   it('can paginate items', () => {
-    cy.contains('acceptance-tests-group-one').click();
+    cy.contains('Acceptance Tests Group One').click();
     cy.basicPaginationTest();
+  });
+
+  it('can allow searching for model', () => {
+    cy.get('[name=process-model-selection]').click();
+    cy.get('[name=process-model-selection]').type('model-3');
+    cy.get(
+      `[aria-label="acceptance-tests-group-one/acceptance-tests-model-3"]`
+    ).click();
+
+    cy.contains('Process Instances').click();
   });
 });
