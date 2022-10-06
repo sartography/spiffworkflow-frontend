@@ -1,20 +1,44 @@
 import { Link } from 'react-router-dom';
 import Breadcrumb from 'react-bootstrap/Breadcrumb';
+import { BreadcrumbItem } from '../interfaces';
 
 type OwnProps = {
   processModelId?: string;
   processGroupId?: string;
   linkProcessModel?: boolean;
+  hotCrumbs?: BreadcrumbItem[];
 };
 
 export default function ProcessBreadcrumb({
   processModelId,
   processGroupId,
+  hotCrumbs,
   linkProcessModel = false,
 }: OwnProps) {
   let processGroupBreadcrumb = null;
   let processModelBreadcrumb = null;
-
+  if (hotCrumbs) {
+    const lastItem = hotCrumbs.pop();
+    if (lastItem === undefined) {
+      return null;
+    }
+    const lastCrumb = <Breadcrumb.Item active>{lastItem[0]}</Breadcrumb.Item>;
+    const leadingCrumbLinks = hotCrumbs.map((crumb) => {
+      const valueLabel = crumb[0];
+      const url = crumb[1];
+      return (
+        <Breadcrumb.Item key={valueLabel} linkAs={Link} linkProps={{ to: url }}>
+          {valueLabel}
+        </Breadcrumb.Item>
+      );
+    });
+    return (
+      <Breadcrumb>
+        {leadingCrumbLinks}
+        {lastCrumb}
+      </Breadcrumb>
+    );
+  }
   if (processModelId) {
     if (linkProcessModel) {
       processModelBreadcrumb = (
