@@ -46,7 +46,7 @@ export default function SecretNew() {
           <Form.Control
             type="text"
             value={key}
-            onChange={(e) => setKey(slugifyString(e.target.value))}
+            onChange={(e) => setKey(e.target.value)}
           />
         </Form.Group>
         <Form.Group className="mb-3" controlId="formIdentifier">
