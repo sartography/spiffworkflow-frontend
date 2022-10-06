@@ -81,7 +81,11 @@ export default function SecretShow() {
                 {(row as SecretAllowedProcessModel).id}
               </Link>
             </td>
-            <td>{(row as SecretAllowedProcessModel).allowed_relative_path}</td>
+            <td>
+              <Link to={`/admin/secrets/allowed_model/edit/${(row as any).id}`}>
+                {(row as SecretAllowedProcessModel).allowed_relative_path}
+              </Link>
+            </td>
             <td>
               <MdDelete
                 onClick={() =>
