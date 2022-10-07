@@ -90,7 +90,7 @@ export default function TaskShow() {
   const formElement = (taskToUse: any) => {
     let formUiSchema;
     let taskData = taskToUse.data;
-    let jsonSchema = JSON.parse(taskToUse.form_schema);
+    let jsonSchema = taskToUse.form_schema;
     let reactFragmentToHideSubmitButton = null;
     if (taskToUse.type === 'Manual Task') {
       taskData = {};
