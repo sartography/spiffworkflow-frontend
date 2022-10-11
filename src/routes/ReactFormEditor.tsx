@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import Editor from '@monaco-editor/react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { Button, Modal } from 'react-bootstrap';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 import HttpService from '../services/HttpService';
@@ -13,11 +13,25 @@ export default function ReactFormEditor() {
   const params = useParams();
   const [showFileNameEditor, setShowFileNameEditor] = useState(false);
   const [newFileName, setNewFileName] = useState('');
+  const searchParams = useSearchParams()[0];
   const handleShowFileNameEditor = () => setShowFileNameEditor(true);
   const navigate = useNavigate();
 
   const [processModelFile, setProcessModelFile] = useState(null);
   const [processModelFileContents, setProcessModelFileContents] = useState('');
+
+  const fileExtension = (() => {
+    if (params.file_name) {
+      const matches = params.file_name.match(/\.([a-z]+)/);
+      if (matches !== null && matches.length > 1) {
+        return matches[1];
+      }
+    }
+
+    return searchParams.get('file_ext') ?? 'json';
+  })();
+
+  const editorDefaultLanguage = fileExtension === 'md' ? 'markdown' : 'json';
 
   useEffect(() => {
     const processResult = (result: any) => {
@@ -35,7 +49,7 @@ export default function ReactFormEditor() {
 
   const navigateToProcessModelFile = (_result: any) => {
     if (!params.file_name) {
-      const fileNameWithExtension = `${newFileName}.json`;
+      const fileNameWithExtension = `${newFileName}.${fileExtension}`;
       navigate(
         `/admin/process-models/${params.process_group_id}/${params.process_model_id}/form/${fileNameWithExtension}`
       );
@@ -48,7 +62,7 @@ export default function ReactFormEditor() {
     let fileNameWithExtension = params.file_name;
 
     if (newFileName) {
-      fileNameWithExtension = `${newFileName}.json`;
+      fileNameWithExtension = `${newFileName}.${fileExtension}`;
       httpMethod = 'POST';
     } else {
       url += `/${fileNameWithExtension}`;
@@ -103,7 +117,6 @@ export default function ReactFormEditor() {
   };
 
   const newFileNameBox = () => {
-    const fileExtension = '.json';
     return (
       <Modal show={showFileNameEditor} onHide={handleFileNameCancel}>
         <Modal.Header closeButton>
@@ -119,7 +132,7 @@ export default function ReactFormEditor() {
               onChange={(e) => setNewFileName(e.target.value)}
               autoFocus
             />
-            {fileExtension}
+            .{fileExtension}
           </span>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleFileNameCancel}>
@@ -160,7 +173,7 @@ export default function ReactFormEditor() {
         <Editor
           height={600}
           width="auto"
-          defaultLanguage="json"
+          defaultLanguage={editorDefaultLanguage}
           defaultValue={processModelFileContents || ''}
           onChange={(value) => setProcessModelFileContents(value || '')}
         />
