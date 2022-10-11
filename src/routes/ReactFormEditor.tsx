@@ -13,7 +13,7 @@ export default function ReactFormEditor() {
   const params = useParams();
   const [showFileNameEditor, setShowFileNameEditor] = useState(false);
   const [newFileName, setNewFileName] = useState('');
-  const [searchParams, _] = useSearchParams();
+  const searchParams = useSearchParams()[0];
   const handleShowFileNameEditor = () => setShowFileNameEditor(true);
   const navigate = useNavigate();
 
