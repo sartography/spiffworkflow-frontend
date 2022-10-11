@@ -158,7 +158,7 @@ export default function ProcessModelShow() {
             {primarySuffix}
           </li>
         );
-      } else if (processModelFile.name.match(/\.(json)$/)) {
+      } else if (processModelFile.name.match(/\.(json|md)$/)) {
         constructedTag = (
           <li key={processModelFile.name}>
             <Link
@@ -241,10 +241,18 @@ export default function ProcessModelShow() {
         <Button
           href={`/admin/process-models/${
             (processModel as any).process_group_id
-          }/${(processModel as any).id}/form`}
+          }/${(processModel as any).id}/form?file_ext=json`}
           variant="info"
         >
           Add New JSON File
+        </Button>
+        <Button
+          href={`/admin/process-models/${
+            (processModel as any).process_group_id
+          }/${(processModel as any).id}/form?file_ext=md`}
+          variant="info"
+        >
+          Add New Markdown File
         </Button>
       </Stack>
     );
