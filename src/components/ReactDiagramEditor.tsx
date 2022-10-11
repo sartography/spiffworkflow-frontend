@@ -64,6 +64,7 @@ type OwnProps = {
   completedTasksBpmnIds?: string[] | null;
   saveDiagram?: (..._args: any[]) => any;
   onDeleteFile?: (..._args: any[]) => any;
+  onSetPrimaryFile?: (..._args: any[]) => any;
   diagramXML?: string | null;
   fileName?: string;
   onLaunchScriptEditor?: (..._args: any[]) => any;
@@ -81,6 +82,7 @@ export default function ReactDiagramEditor({
   completedTasksBpmnIds,
   saveDiagram,
   onDeleteFile,
+  onSetPrimaryFile,
   diagramXML,
   fileName,
   onLaunchScriptEditor,
@@ -409,6 +411,12 @@ export default function ReactDiagramEditor({
     }
   }
 
+  function handleSetPrimaryFile() {
+    if (onSetPrimaryFile) {
+      onSetPrimaryFile(fileName);
+    }
+  }
+
   const downloadXmlFile = () => {
     (diagramModelerState as any)
       .saveXML({ format: true })
@@ -441,6 +449,9 @@ export default function ReactDiagramEditor({
               onConfirmation={handleDelete}
               buttonLabel="Delete"
             />
+          )}
+          {onSetPrimaryFile && (
+            <Button onClick={handleSetPrimaryFile}>Set as primary file</Button>
           )}
           <Button onClick={downloadXmlFile}>Download xml</Button>
         </>

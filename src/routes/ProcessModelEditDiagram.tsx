@@ -12,6 +12,7 @@ import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 import HttpService from '../services/HttpService';
 import ErrorContext from '../contexts/ErrorContext';
 import { makeid } from '../helpers';
+import { ProcessModel } from '../interfaces';
 
 export default function ProcessModelEditDiagram() {
   const [showFileNameEditor, setShowFileNameEditor] = useState(false);
@@ -66,6 +67,20 @@ export default function ProcessModelEditDiagram() {
   const [bpmnXmlForDiagramRendering, setBpmnXmlForDiagramRendering] =
     useState(null);
 
+  const [processModel, setProcessModel] = useState<ProcessModel | null>(null);
+
+  const processModelPath = `process-models/${params.process_group_id}/${params.process_model_id}`;
+
+  useEffect(() => {
+    const processResult = (result: ProcessModel) => {
+      setProcessModel(result);
+    };
+    HttpService.makeCallToBackend({
+      path: `/${processModelPath}`,
+      successCallback: processResult,
+    });
+  }, [processModelPath]);
+
   useEffect(() => {
     const processResult = (result: any) => {
       setProcessModelFile(result);
@@ -74,11 +89,11 @@ export default function ProcessModelEditDiagram() {
 
     if (params.file_name) {
       HttpService.makeCallToBackend({
-        path: `/process-models/${params.process_group_id}/${params.process_model_id}/files/${params.file_name}`,
+        path: `/${processModelPath}/files/${params.file_name}`,
         successCallback: processResult,
       });
     }
-  }, [params]);
+  }, [processModelPath, params]);
 
   const handleFileNameCancel = () => {
     setShowFileNameEditor(false);
@@ -146,6 +161,24 @@ export default function ProcessModelEditDiagram() {
       path: url,
       successCallback: navigateToProcessModelShow,
       httpMethod,
+    });
+  };
+
+  const onSetPrimaryFile = (fileName = params.file_name) => {
+    const url = `/process-models/${params.process_group_id}/${params.process_model_id}`;
+    const httpMethod = 'PUT';
+
+    const navigateToProcessModelShow = (_httpResult: any) => {
+      navigate(`/admin${url}`);
+    };
+    const processModelToPass = {
+      primary_file_name: fileName,
+    };
+    HttpService.makeCallToBackend({
+      path: url,
+      successCallback: navigateToProcessModelShow,
+      httpMethod,
+      postBody: processModelToPass,
     });
   };
 
@@ -555,10 +588,20 @@ export default function ProcessModelEditDiagram() {
           saveDiagram={saveDiagram}
           onDeleteFile={onDeleteFile}
           diagramXML={bpmnXmlForDiagramRendering}
-          fileName={processModelFile ? (processModelFile as any).name : null}
+          fileName={params.file_name}
           diagramType="dmn"
         />
       );
+    }
+    // let this be undefined (so we won't display the button) unless the
+    // current primary_file_name is different from the one we're looking at.
+    let onSetPrimaryFileCallback;
+    if (
+      processModel &&
+      params.file_name &&
+      params.file_name !== processModel.primary_file_name
+    ) {
+      onSetPrimaryFileCallback = onSetPrimaryFile;
     }
     return (
       <ReactDiagramEditor
@@ -566,8 +609,9 @@ export default function ProcessModelEditDiagram() {
         processGroupId={params.process_group_id || ''}
         saveDiagram={saveDiagram}
         onDeleteFile={onDeleteFile}
+        onSetPrimaryFile={onSetPrimaryFileCallback}
         diagramXML={bpmnXmlForDiagramRendering}
-        fileName={processModelFile ? (processModelFile as any).name : null}
+        fileName={params.file_name}
         diagramType="bpmn"
         onLaunchScriptEditor={onLaunchScriptEditor}
         onServiceTasksRequested={onServiceTasksRequested}
