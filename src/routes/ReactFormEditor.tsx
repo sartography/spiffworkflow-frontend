@@ -28,7 +28,7 @@ export default function ReactFormEditor() {
       }
     }
 
-    return searchParams.get('file_ext') ?? 'json'
+    return searchParams.get('file_ext') ?? 'json';
   })();
 
   const editorDefaultLanguage = fileExtension === 'md' ? 'markdown' : 'json';
