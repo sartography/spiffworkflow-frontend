@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Stack, Table, Button } from 'react-bootstrap';
-import { MdDelete } from 'react-icons/md';
 import HttpService from '../services/HttpService';
-import { Secret, SecretAllowedProcessModel } from '../interfaces';
+import { Secret } from '../interfaces';
 import ButtonWithConfirmation from '../components/ButtonWithConfirmation';
 
 export default function SecretShow() {
@@ -26,9 +25,9 @@ export default function SecretShow() {
     }
   };
 
-  const reloadSecret = (_result: any) => {
-    window.location.reload();
-  };
+  // const reloadSecret = (_result: any) => {
+  //   window.location.reload();
+  // };
 
   const updateSecretValue = () => {
     if (secret && secretValue) {
@@ -60,58 +59,6 @@ export default function SecretShow() {
       successCallback: navigateToSecrets,
       httpMethod: 'DELETE',
     });
-  };
-
-  const deleteAllowedProcess = (id: any) => {
-    HttpService.makeCallToBackend({
-      path: `/secrets/allowed_process_paths/${id}`,
-      successCallback: reloadSecret,
-      httpMethod: 'DELETE',
-    });
-  };
-
-  const buildAllowedProcessesTable = (secretToUse: Secret) => {
-    console.log(`secretToUse: ${secretToUse}`);
-    const rows = secretToUse.allowed_processes.map(
-      (row: SecretAllowedProcessModel) => {
-        return (
-          <tr key={secretToUse.key}>
-            <td>
-              <Link to={`/admin/secrets/allowed_model/edit/${(row as any).id}`}>
-                {(row as SecretAllowedProcessModel).id}
-              </Link>
-            </td>
-            <td>
-              <Link to={`/admin/secrets/allowed_model/edit/${(row as any).id}`}>
-                {(row as SecretAllowedProcessModel).allowed_relative_path}
-              </Link>
-            </td>
-            <td>
-              <MdDelete
-                onClick={() =>
-                  deleteAllowedProcess((row as SecretAllowedProcessModel).id)
-                }
-              />
-            </td>
-          </tr>
-        );
-      }
-    );
-    if (secretToUse.allowed_processes.length > 0) {
-      return (
-        <Table striped bordered>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Relative Path to Model</th>
-              <th>Delete</th>
-            </tr>
-          </thead>
-          <tbody>{rows}</tbody>
-        </Table>
-      );
-    }
-    return <p>No Allowed Processes</p>;
   };
 
   if (secret) {
@@ -152,13 +99,6 @@ export default function SecretShow() {
             </tbody>
           </Table>
         </div>
-        <Stack direction="horizontal" gap={3}>
-          <h3>Allowed Models</h3>
-          <Button href={`/admin/secrets/allowed_model/new/${secret.key}`}>
-            Add Model
-          </Button>
-        </Stack>
-        <div>{buildAllowedProcessesTable(secret)}</div>
       </>
     );
   }
