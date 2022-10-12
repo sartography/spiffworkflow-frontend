@@ -3,6 +3,8 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import Form from '@rjsf/core';
 import { Button, Stack } from 'react-bootstrap';
 
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import HttpService from '../services/HttpService';
 import ErrorContext from '../contexts/ErrorContext';
 
@@ -15,15 +17,17 @@ export default function TaskShow() {
   const setErrorMessage = (useContext as any)(ErrorContext)[1];
 
   useEffect(() => {
+    setErrorMessage('');
     HttpService.makeCallToBackend({
       path: `/tasks/${params.process_instance_id}/${params.task_id}`,
       successCallback: setTask,
+      failureCallback: setErrorMessage,
     });
     HttpService.makeCallToBackend({
       path: `/process-instance/${params.process_instance_id}/tasks`,
       successCallback: setUserTasks,
     });
-  }, [params]);
+  }, [params, setErrorMessage]);
 
   const processSubmitResult = (result: any) => {
     setErrorMessage('');
@@ -90,13 +94,11 @@ export default function TaskShow() {
   const formElement = (taskToUse: any) => {
     let formUiSchema;
     let taskData = taskToUse.data;
-    let jsonSchema = JSON.parse(taskToUse.form_schema);
+    let jsonSchema = taskToUse.form_schema;
     let reactFragmentToHideSubmitButton = null;
     if (taskToUse.type === 'Manual Task') {
       taskData = {};
       jsonSchema = {
-        title: 'Instructions',
-        description: taskToUse.properties.instructionsForEndUser,
         type: 'object',
         required: [],
         properties: {
@@ -140,6 +142,20 @@ export default function TaskShow() {
     );
   };
 
+  const instructionsElement = (taskToUse: any) => {
+    let instructions = '';
+    if (taskToUse.type === 'Manual Task') {
+      instructions = taskToUse.properties.instructionsForEndUser;
+    }
+    return (
+      <div className="markdown">
+        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+          {instructions}
+        </ReactMarkdown>
+      </div>
+    );
+  };
+
   if (task) {
     const taskToUse = task as any;
     let statusString = '';
@@ -149,11 +165,12 @@ export default function TaskShow() {
 
     return (
       <main>
-        {buildTaskNavigation()}
+        <div>{buildTaskNavigation()}</div>
         <h3>
           Task: {taskToUse.title} ({taskToUse.process_model_display_name})
           {statusString}
         </h3>
+        {instructionsElement(taskToUse)}
         {formElement(taskToUse)}
       </main>
     );

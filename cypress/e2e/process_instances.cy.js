@@ -38,8 +38,10 @@ const updateBpmnPythonScriptWithMonaco = (
   elementId = 'process_script'
 ) => {
   cy.get(`g[data-element-id=${elementId}]`).click().should('exist');
+  // sometimes, we click on the script task and panel doesn't update to include script task stuff. not sure why.
   cy.contains(/^Script$/).click();
   cy.contains('Launch Editor').click();
+  // sometimes, Loading... appears for more than 4 seconds. not sure why.
   cy.contains('Loading...').should('not.exist');
   cy.get('.monaco-editor textarea:first')
     .click()
