@@ -86,6 +86,7 @@ backendCallProps) => {
         successCallback(result);
       } else if (is403) {
         // Hopefully we can make this service a hook and use the error message context directly
+        // eslint-disable-next-line no-alert
         alert(result.message);
       } else {
         let message = 'A server error occurred.';
@@ -96,6 +97,8 @@ backendCallProps) => {
           failureCallback(message);
         } else {
           console.error(message);
+          // eslint-disable-next-line no-alert
+          alert(message);
         }
       }
     })
