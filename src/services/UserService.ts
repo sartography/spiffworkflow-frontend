@@ -1,6 +1,15 @@
 import jwt from 'jwt-decode';
 import { BACKEND_BASE_URL } from '../config';
 
+type testType = { [key: string]: string };
+const testObject: testType = { hello: 'we_create' };
+console.log('testObject', testObject);
+// console.log('testObject', testObject);
+if (!('bye' in testObject)) {
+  testObject.bye = 'we_create';
+}
+console.log('testObject', testObject);
+
 // NOTE: this currently stores the jwt token in local storage
 // which is considered insecure. Server set cookies seem to be considered
 // the most secure but they require both frontend and backend to be on the same

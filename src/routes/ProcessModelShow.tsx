@@ -7,6 +7,14 @@ import HttpService from '../services/HttpService';
 import ErrorContext from '../contexts/ErrorContext';
 import { RecentProcessModel } from '../interfaces';
 
+import ability from '../services/PermissionService';
+
+console.log(ability.can('read', 'Post')); // true
+console.log(ability.can('read', 'User')); // true
+console.log(ability.can('update', 'User')); // true
+console.log(ability.can('delete', 'User')); // false
+console.log(ability.cannot('delete', 'User')); // true
+
 const storeRecentProcessModelInLocalStorage = (
   processModelForStorage: any,
   params: any
@@ -61,6 +69,11 @@ const storeRecentProcessModelInLocalStorage = (
   }
 };
 
+type PermissionListType = { [key: string]: { [key: string]: boolean } };
+type PermissionListFullResult = {
+  results: PermissionListType;
+};
+
 export default function ProcessModelShow() {
   const params = useParams();
   const setErrorMessage = (useContext as any)(ErrorContext)[1];
@@ -68,6 +81,12 @@ export default function ProcessModelShow() {
   const [processModel, setProcessModel] = useState({});
   const [processInstanceResult, setProcessInstanceResult] = useState(null);
   const [reloadModel, setReloadModel] = useState(false);
+  const [permissionList, setPermissionList] = useState<PermissionListType>({});
+
+  const targetUris = {
+    processModelPath: `/process-models/${params.process_group_id}/${params.process_model_id}`,
+    processInstancesPath: `/process-models/${params.process_group_id}/${params.process_model_id}/process-instances`,
+  };
 
   useEffect(() => {
     const processResult = (result: object) => {
@@ -75,11 +94,28 @@ export default function ProcessModelShow() {
       setReloadModel(false);
       storeRecentProcessModelInLocalStorage(result, params);
     };
+    const processPermissionResult = (result: PermissionListFullResult) => {
+      setPermissionList(result.results);
+    };
     HttpService.makeCallToBackend({
       path: `/process-models/${params.process_group_id}/${params.process_model_id}`,
       successCallback: processResult,
     });
-  }, [params, reloadModel]);
+
+    const permissionRequestData: any = {
+      requests_to_check: {
+        [`/v1.0${targetUris.processModelPath}`]: ['GET'],
+        [`/v1.0${targetUris.processInstancesPath}`]: ['POST'],
+      },
+    };
+    HttpService.makeCallToBackend({
+      path: `/permissions-check`,
+      httpMethod: 'POST',
+      successCallback: processPermissionResult,
+      postBody: permissionRequestData,
+      failureCallback: setErrorMessage,
+    });
+  }, [params, reloadModel, setPermissionList, setErrorMessage]);
 
   const processModelRun = (processInstance: any) => {
     setErrorMessage('');
@@ -209,11 +245,17 @@ export default function ProcessModelShow() {
   };
 
   const processModelButtons = () => {
-    return (
-      <Stack direction="horizontal" gap={3}>
+    let processModleRunButtonElement = null;
+    if (permissionList[`/v1.0${targetUris.processInstancesPath}`].POST) {
+      processModleRunButtonElement = (
         <Button onClick={processInstanceCreateAndRun} variant="primary">
           Run
         </Button>
+      );
+    }
+    return (
+      <Stack direction="horizontal" gap={3}>
+        {processModleRunButtonElement}
         <Button
           href={`/admin/process-models/${
             (processModel as any).process_group_id
@@ -258,7 +300,10 @@ export default function ProcessModelShow() {
     );
   };
 
-  if (Object.keys(processModel).length > 1) {
+  if (
+    Object.keys(processModel).length > 0 &&
+    Object.keys(permissionList).length > 0
+  ) {
     return (
       <>
         <ProcessBreadcrumb
