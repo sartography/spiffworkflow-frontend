@@ -25,3 +25,8 @@ export interface ProcessModel {
 
 // tuple of display value and URL
 export type BreadcrumbItem = [displayValue: string, url?: string];
+
+export interface ErrorForDisplay {
+  message: string;
+  sentry_link?: string;
+}
