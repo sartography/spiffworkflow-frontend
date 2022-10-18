@@ -30,3 +30,14 @@ export interface ErrorForDisplay {
   message: string;
   sentry_link?: string;
 }
+
+export interface AuthenticationParam {
+  id: string;
+  type: string;
+  required: boolean;
+}
+
+export interface AuthenticationItem {
+  id: string;
+  parameters: AuthenticationParam[];
+}
