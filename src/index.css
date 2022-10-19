@@ -86,3 +86,11 @@ span.bjs-crumb {
 .markdown tbody tr:nth-of-type(odd) {
   background: rgba(0,0,0,.05);
 }
+
+/* Json Web Form CSS Fix - Bootsrtram now requries that each li have a "list-inline-item", also have a PR
+ in */
+.list-inline>li {
+  display: inline-block;
+  padding-right: 5px;
+  padding-left: 5px;
+}
