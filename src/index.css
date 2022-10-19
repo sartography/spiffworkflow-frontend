@@ -87,8 +87,8 @@ span.bjs-crumb {
   background: rgba(0,0,0,.05);
 }
 
-/* Json Web Form CSS Fix - Bootsrtram now requries that each li have a "list-inline-item", also have a PR
- in */
+/* Json Web Form CSS Fix - Bootstrap now requries that each li have a "list-inline-item." Also have a PR
+ in on this with the react-jsonschema-form repo. This is just a patch fix to allow date inputs to layout a little more cleanly */
 .list-inline>li {
   display: inline-block;
   padding-right: 5px;
