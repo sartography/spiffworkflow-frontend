@@ -68,6 +68,7 @@ type OwnProps = {
   diagramXML?: string | null;
   fileName?: string;
   onLaunchScriptEditor?: (..._args: any[]) => any;
+  onLaunchMarkdownEditor?: (..._args: any[]) => any;
   onElementClick?: (..._args: any[]) => any;
   onServiceTasksRequested?: (..._args: any[]) => any;
   url?: string;
@@ -86,6 +87,7 @@ export default function ReactDiagramEditor({
   diagramXML,
   fileName,
   onLaunchScriptEditor,
+  onLaunchMarkdownEditor,
   onElementClick,
   onServiceTasksRequested,
   url,
@@ -190,6 +192,17 @@ export default function ReactDiagramEditor({
       }
     }
 
+    function handleLaunchMarkdownEditor(
+      element: any,
+      value: string,
+      eventBus: any
+    ) {
+      if (onLaunchMarkdownEditor) {
+        setPerformingXmlUpdates(true);
+        onLaunchMarkdownEditor(element, value, eventBus);
+      }
+    }
+
     function handleElementClick(event: any) {
       if (onElementClick) {
         onElementClick(event.element);
@@ -204,12 +217,20 @@ export default function ReactDiagramEditor({
 
     setDiagramModelerState(diagramModeler);
 
-    diagramModeler.on('script.editor.launch', (event: any) => {
+    diagramModeler.on('spiff.script.edit', (event: any) => {
       const { error, element, scriptType, script, eventBus } = event;
       if (error) {
         console.log(error);
       }
       handleLaunchScriptEditor(element, script, scriptType, eventBus);
+    });
+
+    diagramModeler.on('spiff.markdown.edit', (event: any) => {
+      const { error, element, value, eventBus } = event;
+      if (error) {
+        console.log(error);
+      }
+      handleLaunchMarkdownEditor(element, value, eventBus);
     });
 
     // 'element.hover',
@@ -229,6 +250,7 @@ export default function ReactDiagramEditor({
     diagramModelerState,
     diagramType,
     onLaunchScriptEditor,
+    onLaunchMarkdownEditor,
     onElementClick,
     onServiceTasksRequested,
   ]);

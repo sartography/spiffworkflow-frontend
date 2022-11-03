@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from 'react';
+import {useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { Button, Modal, Stack } from 'react-bootstrap';
 import Container from 'react-bootstrap/Container';
@@ -7,6 +7,7 @@ import Col from 'react-bootstrap/Col';
 
 import Editor from '@monaco-editor/react';
 
+import MDEditor from '@uiw/react-md-editor'
 import ReactDiagramEditor from '../components/ReactDiagramEditor';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 import HttpService from '../services/HttpService';
@@ -25,6 +26,11 @@ export default function ProcessModelEditDiagram() {
   const [scriptElement, setScriptElement] = useState(null);
   const [showScriptEditor, setShowScriptEditor] = useState(false);
   const handleShowScriptEditor = () => setShowScriptEditor(true);
+
+  const [markdownText, setMarkdownText] = useState<string | undefined>('');
+  const [markdownEventBus, setMarkdownEventBus] = useState<any>(null);
+  const [showMarkdownEditor, setShowMarkdownEditor] = useState(false);
+  const handleShowMarkdownEditor = () => setShowMarkdownEditor(true);
 
   const editorRef = useRef(null);
   const monacoRef = useRef(null);
@@ -298,7 +304,7 @@ export default function ProcessModelEditDiagram() {
   };
 
   const handleScriptEditorClose = () => {
-    scriptEventBus.fire('script.editor.update', {
+    scriptEventBus.fire('spiff.script.update', {
       scriptType,
       script: scriptText,
       element: scriptElement,
@@ -589,6 +595,46 @@ export default function ProcessModelEditDiagram() {
       </Modal>
     );
   };
+  const onLaunchMarkdownEditor = (
+    element: any,
+    markdown: string,
+    eventBus: any
+  ) => {
+    setMarkdownText(markdown || '');
+    setMarkdownEventBus(eventBus);
+    handleShowMarkdownEditor();
+  };
+  const handleMarkdownEditorClose = () => {
+    markdownEventBus.fire('spiff.markdown.update', {
+      value: markdownText,
+    });
+    setShowMarkdownEditor(false);
+  };
+
+  const markdownEditor = () => {
+    return (
+      <Modal
+        size="xl"
+        show={showMarkdownEditor}
+        onHide={handleMarkdownEditorClose}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Edit Markdown Content</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+            <MDEditor
+              value={markdownText}
+              onChange={setMarkdownText}
+            />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleMarkdownEditorClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  };
 
   const isDmn = () => {
     const fileName = params.file_name || '';
@@ -631,6 +677,7 @@ export default function ProcessModelEditDiagram() {
         diagramType="bpmn"
         onLaunchScriptEditor={onLaunchScriptEditor}
         onServiceTasksRequested={onServiceTasksRequested}
+        onLaunchMarkdownEditor={onLaunchMarkdownEditor}
       />
     );
   };
@@ -651,6 +698,7 @@ export default function ProcessModelEditDiagram() {
         {appropriateEditor()}
         {newFileNameBox()}
         {scriptEditor()}
+        {markdownEditor()}
 
         <div id="diagram-container" />
       </>
