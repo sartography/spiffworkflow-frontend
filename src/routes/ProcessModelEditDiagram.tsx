@@ -1,5 +1,5 @@
-import {useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useContext, useEffect, useRef, useState } from 'react';
+import { generatePath, useNavigate, useParams, useSearchParams} from 'react-router-dom';
 import { Button, Modal, Stack } from 'react-bootstrap';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -13,11 +13,12 @@ import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 import HttpService from '../services/HttpService';
 import ErrorContext from '../contexts/ErrorContext';
 import { makeid } from '../helpers';
-import { ProcessModel } from '../interfaces';
+import { ProcessFile, ProcessModel } from '../interfaces';
 
 export default function ProcessModelEditDiagram() {
   const [showFileNameEditor, setShowFileNameEditor] = useState(false);
   const handleShowFileNameEditor = () => setShowFileNameEditor(true);
+  const [processModel, setProcessModel] = useState<ProcessModel | null>(null);
 
   const [scriptText, setScriptText] = useState<string>('');
   const [scriptType, setScriptType] = useState<string>('');
@@ -75,8 +76,6 @@ export default function ProcessModelEditDiagram() {
   const [bpmnXmlForDiagramRendering, setBpmnXmlForDiagramRendering] =
     useState(null);
 
-  const [processModel, setProcessModel] = useState<ProcessModel | null>(null);
-
   const processModelPath = `process-models/${params.process_group_id}/${params.process_model_id}`;
 
   useEffect(() => {
@@ -90,7 +89,7 @@ export default function ProcessModelEditDiagram() {
   }, [processModelPath]);
 
   useEffect(() => {
-    const processResult = (result: any) => {
+    const fileResult = (result: any) => {
       setProcessModelFile(result);
       setBpmnXmlForDiagramRendering(result.file_contents);
     };
@@ -98,7 +97,7 @@ export default function ProcessModelEditDiagram() {
     if (params.file_name) {
       HttpService.makeCallToBackend({
         path: `/${processModelPath}/files/${params.file_name}`,
-        successCallback: processResult,
+        successCallback: fileResult,
       });
     }
   }, [processModelPath, params]);
@@ -294,7 +293,6 @@ export default function ProcessModelEditDiagram() {
     // we should update this to act like updating scripts
     // where we pass an event to bpmn-js
     setScriptModeling(modeling);
-
     setScriptText(script || '');
     setScriptType(scriptTypeString);
     setScriptEventBus(eventBus);
@@ -622,10 +620,7 @@ export default function ProcessModelEditDiagram() {
           <Modal.Title>Edit Markdown Content</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-            <MDEditor
-              value={markdownText}
-              onChange={setMarkdownText}
-            />
+          <MDEditor value={markdownText} onChange={setMarkdownText} />
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleMarkdownEditorClose}>
@@ -634,6 +629,63 @@ export default function ProcessModelEditDiagram() {
         </Modal.Footer>
       </Modal>
     );
+  };
+
+  const findFileNameForReferenceId = (id: string, type: string): ProcessFile | null =>  {
+    // Given a reference id (like a process_id, or decision_id) finds the file
+    // that contains that reference and returns it.
+    let matchFile = null;
+    if (processModel) {
+      const files = processModel.files.filter((f) => f.type === type);
+      files.some((file) => {
+        if (file.references.some((ref) => ref.id === id)) {
+          matchFile = file;
+          return true;
+        }
+        return false;
+      });
+    }
+    return matchFile;
+  };
+
+  const onLaunchBpmnEditor = (processId: string) => {
+    const file = findFileNameForReferenceId(processId, 'bpmn');
+    if (file) {
+      const path = generatePath(
+        '/admin/process-models/:process_group_id/:process_model_id/files/:file_name',
+        {
+          process_group_id: params.process_group_id,
+          process_model_id: params.process_model_id,
+          file_name: file.name,
+        }
+      );
+      window.open(path);
+    }
+  };
+  const onLaunchJsonEditor = (fileName: string) => {
+    const path = generatePath(
+      '/admin/process-models/:process_group_id/:process_model_id/form/:file_name',
+      {
+        process_group_id: params.process_group_id,
+        process_model_id: params.process_model_id,
+        file_name: fileName,
+      }
+    );
+    window.open(path);
+  };
+  const onLaunchDmnEditor = (processId: string) => {
+    const file = findFileNameForReferenceId(processId, 'dmn');
+    if (file) {
+      const path = generatePath(
+        '/admin/process-models/:process_group_id/:process_model_id/files/:file_name',
+        {
+          process_group_id: params.process_group_id,
+          process_model_id: params.process_model_id,
+          file_name: file.name,
+        }
+      );
+      window.open(path);
+    }
   };
 
   const isDmn = () => {
@@ -678,6 +730,9 @@ export default function ProcessModelEditDiagram() {
         onLaunchScriptEditor={onLaunchScriptEditor}
         onServiceTasksRequested={onServiceTasksRequested}
         onLaunchMarkdownEditor={onLaunchMarkdownEditor}
+        onLaunchBpmnEditor={onLaunchBpmnEditor}
+        onLaunchJsonEditor={onLaunchJsonEditor}
+        onLaunchDmnEditor={onLaunchDmnEditor}
       />
     );
   };

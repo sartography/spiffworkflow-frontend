@@ -69,6 +69,9 @@ type OwnProps = {
   fileName?: string;
   onLaunchScriptEditor?: (..._args: any[]) => any;
   onLaunchMarkdownEditor?: (..._args: any[]) => any;
+  onLaunchBpmnEditor?: (..._args: any[]) => any;
+  onLaunchJsonEditor?: (..._args: any[]) => any;
+  onLaunchDmnEditor?: (..._args: any[]) => any;
   onElementClick?: (..._args: any[]) => any;
   onServiceTasksRequested?: (..._args: any[]) => any;
   url?: string;
@@ -88,6 +91,9 @@ export default function ReactDiagramEditor({
   fileName,
   onLaunchScriptEditor,
   onLaunchMarkdownEditor,
+  onLaunchBpmnEditor,
+  onLaunchJsonEditor,
+  onLaunchDmnEditor,
   onElementClick,
   onServiceTasksRequested,
   url,
@@ -233,6 +239,24 @@ export default function ReactDiagramEditor({
       handleLaunchMarkdownEditor(element, value, eventBus);
     });
 
+    diagramModeler.on('spiff.callactivity.edit', (event: any) => {
+      if (onLaunchBpmnEditor) {
+        onLaunchBpmnEditor(event.processId);
+      }
+    });
+
+    diagramModeler.on('spiff.file.edit', (event: any) => {
+      if (onLaunchJsonEditor) {
+        onLaunchJsonEditor(event.value);
+      }
+    });
+
+    diagramModeler.on('spiff.dmn.edit', (event: any) => {
+      if (onLaunchDmnEditor) {
+        onLaunchDmnEditor(event.value);
+      }
+    });
+
     // 'element.hover',
     // 'element.out',
     // 'element.click',
@@ -246,6 +270,8 @@ export default function ReactDiagramEditor({
     diagramModeler.on('spiff.service_tasks.requested', (event: any) => {
       handleServiceTasksRequested(event);
     });
+
+
   }, [
     diagramModelerState,
     diagramType,
