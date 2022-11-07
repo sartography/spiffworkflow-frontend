@@ -31,6 +31,8 @@ export default function ProcessModelEditDiagram() {
   const [markdownText, setMarkdownText] = useState<string | undefined>('');
   const [markdownEventBus, setMarkdownEventBus] = useState<any>(null);
   const [showMarkdownEditor, setShowMarkdownEditor] = useState(false);
+
+
   const handleShowMarkdownEditor = () => setShowMarkdownEditor(true);
 
   const editorRef = useRef(null);
@@ -254,6 +256,34 @@ export default function ProcessModelEditDiagram() {
       path: `/service_tasks`,
       successCallback: makeApiHandler(event),
     });
+  };
+
+  const onJsonFilesRequested = (event: any) => {
+    if (processModel) {
+      const jsonFiles = processModel.files.filter((f) => f.type === 'json');
+      const options = jsonFiles.map((f) => {
+        return { label: f.name, value: f.name };
+      });
+      event.eventBus.fire('spiff.json_files.returned', { options });
+    } else {
+      console.log("There is no process Model.")
+    }
+  };
+
+  const onDmnFilesRequested = (event: any) => {
+    if (processModel) {
+      const dmnFiles = processModel.files.filter((f) => f.type === 'dmn');
+      const options: any[] = [];
+      dmnFiles.forEach((file) => {
+        file.references.forEach( (ref) => {
+          options.push({ label: ref.name, value: ref.id });
+        });
+      });
+      console.log("Options", options);
+      event.eventBus.fire('spiff.dmn_files.returned', { options });
+    } else {
+      console.log("There is no process model.")
+    }
   };
 
   const getScriptUnitTestElements = (element: any) => {
@@ -631,6 +661,7 @@ export default function ProcessModelEditDiagram() {
     );
   };
 
+
   const findFileNameForReferenceId = (id: string, type: string): ProcessFile | null =>  {
     // Given a reference id (like a process_id, or decision_id) finds the file
     // that contains that reference and returns it.
@@ -732,7 +763,9 @@ export default function ProcessModelEditDiagram() {
         onLaunchMarkdownEditor={onLaunchMarkdownEditor}
         onLaunchBpmnEditor={onLaunchBpmnEditor}
         onLaunchJsonEditor={onLaunchJsonEditor}
+        onJsonFilesRequested={onJsonFilesRequested}
         onLaunchDmnEditor={onLaunchDmnEditor}
+        onDmnFilesRequested={onDmnFilesRequested}
       />
     );
   };

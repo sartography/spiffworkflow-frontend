@@ -74,6 +74,8 @@ type OwnProps = {
   onLaunchDmnEditor?: (..._args: any[]) => any;
   onElementClick?: (..._args: any[]) => any;
   onServiceTasksRequested?: (..._args: any[]) => any;
+  onJsonFilesRequested?: (..._args: any[]) => any;
+  onDmnFilesRequested?: (..._args: any[]) => any;
   url?: string;
 };
 
@@ -96,6 +98,8 @@ export default function ReactDiagramEditor({
   onLaunchDmnEditor,
   onElementClick,
   onServiceTasksRequested,
+  onJsonFilesRequested,
+  onDmnFilesRequested,
   url,
 }: OwnProps) {
   const [diagramXMLString, setDiagramXMLString] = useState('');
@@ -105,6 +109,7 @@ export default function ReactDiagramEditor({
   const alreadyImportedXmlRef = useRef(false);
 
   useEffect(() => {
+
     if (diagramModelerState) {
       return;
     }
@@ -271,6 +276,21 @@ export default function ReactDiagramEditor({
       handleServiceTasksRequested(event);
     });
 
+    diagramModeler.on('spiff.json_files.requested', (event: any) => {
+      if(onJsonFilesRequested) {
+        onJsonFilesRequested(event);
+      }
+    });
+
+    diagramModeler.on('spiff.dmn_files.requested', (event: any) => {
+      if(onDmnFilesRequested) {
+        onDmnFilesRequested(event);
+      }
+    });
+
+    diagramModeler.on('spiff.json_files.requested', (event: any) => {
+      handleServiceTasksRequested(event);
+    });
 
   }, [
     diagramModelerState,
@@ -279,6 +299,8 @@ export default function ReactDiagramEditor({
     onLaunchMarkdownEditor,
     onElementClick,
     onServiceTasksRequested,
+    onJsonFilesRequested,
+    onDmnFilesRequested,
   ]);
 
   useEffect(() => {
