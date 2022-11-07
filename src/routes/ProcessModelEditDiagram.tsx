@@ -1,5 +1,10 @@
 import { useContext, useEffect, useRef, useState } from 'react';
-import { generatePath, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import {
+  generatePath,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from 'react-router-dom';
 // @ts-ignore
 import { Button, Modal, Stack, Content } from '@carbon/react';
 import Row from 'react-bootstrap/Row';
