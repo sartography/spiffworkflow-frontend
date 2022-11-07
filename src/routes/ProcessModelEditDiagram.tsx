@@ -1,5 +1,10 @@
 import { useContext, useEffect, useRef, useState } from 'react';
-import { generatePath, useNavigate, useParams, useSearchParams} from 'react-router-dom';
+import {
+  generatePath,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from 'react-router-dom';
 import { Button, Modal, Stack } from 'react-bootstrap';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -7,7 +12,7 @@ import Col from 'react-bootstrap/Col';
 
 import Editor from '@monaco-editor/react';
 
-import MDEditor from '@uiw/react-md-editor'
+import MDEditor from '@uiw/react-md-editor';
 import ReactDiagramEditor from '../components/ReactDiagramEditor';
 import ProcessBreadcrumb from '../components/ProcessBreadcrumb';
 import HttpService from '../services/HttpService';
@@ -31,7 +36,6 @@ export default function ProcessModelEditDiagram() {
   const [markdownText, setMarkdownText] = useState<string | undefined>('');
   const [markdownEventBus, setMarkdownEventBus] = useState<any>(null);
   const [showMarkdownEditor, setShowMarkdownEditor] = useState(false);
-
 
   const handleShowMarkdownEditor = () => setShowMarkdownEditor(true);
 
@@ -266,7 +270,7 @@ export default function ProcessModelEditDiagram() {
       });
       event.eventBus.fire('spiff.json_files.returned', { options });
     } else {
-      console.log("There is no process Model.")
+      console.log('There is no process Model.');
     }
   };
 
@@ -275,14 +279,14 @@ export default function ProcessModelEditDiagram() {
       const dmnFiles = processModel.files.filter((f) => f.type === 'dmn');
       const options: any[] = [];
       dmnFiles.forEach((file) => {
-        file.references.forEach( (ref) => {
+        file.references.forEach((ref) => {
           options.push({ label: ref.name, value: ref.id });
         });
       });
-      console.log("Options", options);
+      console.log('Options', options);
       event.eventBus.fire('spiff.dmn_files.returned', { options });
     } else {
-      console.log("There is no process model.")
+      console.log('There is no process model.');
     }
   };
 
@@ -661,8 +665,10 @@ export default function ProcessModelEditDiagram() {
     );
   };
 
-
-  const findFileNameForReferenceId = (id: string, type: string): ProcessFile | null =>  {
+  const findFileNameForReferenceId = (
+    id: string,
+    type: string
+  ): ProcessFile | null => {
     // Given a reference id (like a process_id, or decision_id) finds the file
     // that contains that reference and returns it.
     let matchFile = null;
@@ -771,7 +777,7 @@ export default function ProcessModelEditDiagram() {
   };
 
   // if a file name is not given then this is a new model and the ReactDiagramEditor component will handle it
-  if (bpmnXmlForDiagramRendering || !params.file_name) {
+  if ((bpmnXmlForDiagramRendering || !params.file_name) && processModel) {
     return (
       <>
         <ProcessBreadcrumb

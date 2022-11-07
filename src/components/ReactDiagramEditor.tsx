@@ -109,7 +109,6 @@ export default function ReactDiagramEditor({
   const alreadyImportedXmlRef = useRef(false);
 
   useEffect(() => {
-
     if (diagramModelerState) {
       return;
     }
@@ -277,13 +276,13 @@ export default function ReactDiagramEditor({
     });
 
     diagramModeler.on('spiff.json_files.requested', (event: any) => {
-      if(onJsonFilesRequested) {
+      if (onJsonFilesRequested) {
         onJsonFilesRequested(event);
       }
     });
 
     diagramModeler.on('spiff.dmn_files.requested', (event: any) => {
-      if(onDmnFilesRequested) {
+      if (onDmnFilesRequested) {
         onDmnFilesRequested(event);
       }
     });
@@ -291,7 +290,6 @@ export default function ReactDiagramEditor({
     diagramModeler.on('spiff.json_files.requested', (event: any) => {
       handleServiceTasksRequested(event);
     });
-
   }, [
     diagramModelerState,
     diagramType,
