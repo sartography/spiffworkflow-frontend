@@ -244,6 +244,9 @@ export default function ReactDiagramEditor({
       handleLaunchMarkdownEditor(element, value, eventBus);
     });
 
+    /**
+     * fixme:  this is not in use yet, we need the ability to find bpmn files by id.
+     */
     diagramModeler.on('spiff.callactivity.edit', (event: any) => {
       if (onLaunchBpmnEditor) {
         onLaunchBpmnEditor(event.processId);
